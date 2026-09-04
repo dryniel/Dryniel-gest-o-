@@ -98,10 +98,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // ==================================================
 
     function mostrarSecao(nome) {
+    const secao = encontrarSecao(nome);
 
-        const secao = encontrarSecao(nome);
+    if (!secao) {
+        console.warn('DRYNIEL: seção não encontrada:', nome);
+        return;
+    }
 
-        if (!secao) {
-
-            console.warn(
-                'DRYNIEL
+    esconderSecoes();
+    secao.style.display = "block";
+}
