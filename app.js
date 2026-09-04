@@ -1,320 +1,107 @@
+// ======================================================
+// DRYNIEL - APP.JS
+// Versão limpa e segura
+// ======================================================
+
 document.addEventListener("DOMContentLoaded", function () {
 
-  console.log("DRYNIEL: aplicativo carregado corretamente");
+    console.log("DRYNIEL: app.js carregado com sucesso.");
 
-  // =====================================================
-  // FUNÇÕES AUXILIARES
-  // =====================================================
+    // ==================================================
+    // LOCALIZAR SEÇÕES
+    // ==================================================
 
-  function normalizarTexto(texto) {
-    return (texto || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim();
-  }
+    function encontrarSecao(nome) {
 
-  // Possíveis nomes usados no HTML para cada tela
-  const secoes = {
-    inicio: [
-      "inicio",
-      "home"
-    ],
+        if (!nome) {
+            return null;
+        }
 
-    clientes: [
-      "clientes",
-      "cliente"
-    ],
+        // Primeiro tenta pelo ID exato
+        let secao = document.getElementById(nome);
 
-    orcamentos: [
-      "orcamentos",
-      "orcamento"
-    ],
+        if (secao) {
+            return secao;
+        }
 
-    material: [
-      "material",
-      "materiais"
-    ],
+        // Tenta algumas variações comuns
+        const possibilidades = [
+            nome,
+            nome.toLowerCase(),
+            "secao-" + nome,
+            "tela-" + nome,
+            nome + "-secao",
+            nome + "-tela"
+        ];
 
-    configuracao: [
-      "configuracao",
-      "configuracoes"
-    ]
-  };
+        for (const id of possibilidades) {
 
+            secao = document.getElementById(id);
 
-  // =====================================================
-  // LOCALIZAR UMA SEÇÃO
-  // =====================================================
+            if (secao) {
+                return secao;
+            }
+        }
 
-  function encontrarSecao(nome) {
-
-    nome = normalizarTexto(nome);
-
-    const nomesPossiveis = secoes[nome] || [nome];
-
-    for (const id of nomesPossiveis) {
-
-      const elemento = document.getElementById(id);
-
-      if (elemento) {
-        return elemento;
-      }
-
-    }
-
-    return null;
-  }
-
-
-  // =====================================================
-  // ESCONDER TODAS AS TELAS
-  // =====================================================
-
-  function esconderSecoes() {
-
-    const ids = new Set();
-
-    Object.values(secoes).forEach(lista => {
-      lista.forEach(id => ids.add(id));
-    });
-
-    ids.forEach(id => {
-
-      const elemento = document.getElementById(id);
-
-      if (elemento) {
-        elemento.style.display = "none";
-      }
-
-    });
-
-  }
-
-
-  // =====================================================
-  // MOSTRAR UMA TELA
-  // =====================================================
-
-  function mostrarSecao(nome) {
-
-    nome = normalizarTexto(nome);
-
-    const destino = encontrarSecao(nome);
-
-    if (!destino) {
-
-      console.warn(
-        "DRYNIEL: seção não encontrada:",
-        nome
-      );
-
-      return false;
-    }
-
-    esconderSecoes();
-
-    destino.style.display = "";
-
-    if (
-      getComputedStyle(destino).display === "none"
-    ) {
-      destino.style.display = "block";
-    }
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-
-    return true;
-  }
-
-
-  // Deixa a função disponível globalmente
-  window.mostrarSecao = mostrarSecao;
-
-
-  // =====================================================
-  // DESCOBRIR O TEXTO DO BOTÃO
-  // =====================================================
-
-  function textoDoElemento(elemento) {
-
-    const texto =
-      elemento.innerText ||
-      elemento.textContent ||
-      elemento.getAttribute("aria-label") ||
-      elemento.getAttribute("title") ||
-      "";
-
-    return normalizarTexto(texto);
-  }
-
-
-  // =====================================================
-  // CLIQUES NOS BOTÕES
-  // =====================================================
-
-  document.addEventListener("click", function (event) {
-
-    const botao = event.target.closest(
-      "button, a, [role='button'], .btn, .botao, .menu-item"
-    );
-
-    if (!botao) {
-      return;
+        return null;
     }
 
 
-    // ---------------------------------------------
-    // DATA-SECTION
-    // ---------------------------------------------
+    // ==================================================
+    // PEGAR TODAS AS SEÇÕES DO APLICATIVO
+    // ==================================================
 
-    const dataSection =
-      botao.dataset.section ||
-      botao.dataset.secao ||
-      botao.dataset.target;
+    function obterSecoes() {
 
-    if (dataSection) {
+        const seletores = [
+            ".secao",
+            ".tela",
+            ".page",
+            ".pagina",
+            "[data-secao]"
+        ];
 
-      const alvo = normalizarTexto(
-        dataSection.replace("#", "")
-      );
+        const elementos = [];
 
-      if (mostrarSecao(alvo)) {
-        event.preventDefault();
-        return;
-      }
+        seletores.forEach(function (seletor) {
 
+            document.querySelectorAll(seletor).forEach(function (elemento) {
+
+                if (!elementos.includes(elemento)) {
+                    elementos.push(elemento);
+                }
+
+            });
+
+        });
+
+        return elementos;
     }
 
 
-    // ---------------------------------------------
-    // HREF
-    // ---------------------------------------------
+    // ==================================================
+    // ESCONDER SEÇÕES
+    // ==================================================
 
-    const href = botao.getAttribute("href");
+    function esconderSecoes() {
 
-    if (
-      href &&
-      href.startsWith("#") &&
-      href.length > 1
-    ) {
+        const secoes = obterSecoes();
 
-      const alvo = normalizarTexto(
-        href.substring(1)
-      );
-
-      if (mostrarSecao(alvo)) {
-        event.preventDefault();
-        return;
-      }
-
+        secoes.forEach(function (secao) {
+            secao.style.display = "none";
+        });
     }
 
 
-    // ---------------------------------------------
-    // TEXTO DO BOTÃO
-    // ---------------------------------------------
+    // ==================================================
+    // MOSTRAR UMA SEÇÃO
+    // ==================================================
 
-    const texto = textoDoElemento(botao);
+    function mostrarSecao(nome) {
 
+        const secao = encontrarSecao(nome);
 
-    // INÍCIO
-    if (
-      texto.includes("inicio") ||
-      texto.includes("home") ||
-      texto.includes("voltar")
-    ) {
+        if (!secao) {
 
-      event.preventDefault();
-
-      mostrarSecao("inicio");
-
-      return;
-    }
-
-
-    // CLIENTES
-    if (
-      texto.includes("cliente")
-    ) {
-
-      event.preventDefault();
-
-      mostrarSecao("clientes");
-
-      return;
-    }
-
-
-    // ORÇAMENTOS
-    if (
-      texto.includes("orcamento")
-    ) {
-
-      event.preventDefault();
-
-      mostrarSecao("orcamentos");
-
-      return;
-    }
-
-
-    // MATERIAL / MATERIAIS
-    if (
-      texto.includes("material")
-    ) {
-
-      event.preventDefault();
-
-      mostrarSecao("material");
-
-      return;
-    }
-
-
-    // CONFIGURAÇÕES
-    if (
-      texto.includes("configuracao") ||
-      texto.includes("configuracoes")
-    ) {
-
-      event.preventDefault();
-
-      mostrarSecao("configuracao");
-
-      return;
-    }
-
-  });
-
-
-  // =====================================================
-  // TELA INICIAL
-  // =====================================================
-
-  const inicio = encontrarSecao("inicio");
-
-  if (inicio) {
-
-    esconderSecoes();
-
-    inicio.style.display = "";
-
-    if (
-      getComputedStyle(inicio).display === "none"
-    ) {
-      inicio.style.display = "block";
-    }
-
-  } else {
-
-    console.warn(
-      "DRYNIEL: tela inicial não encontrada."
-    );
-
-  }
-
-});
+            console.warn(
+                'DRYNIEL
