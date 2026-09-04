@@ -1,49 +1,26 @@
-# DRYNIEL Gestão — primeira versão
+# DRYNIEL Gestão
 
-Base funcional em Flutter para Android do aplicativo **DRYNIEL Gestão**.
+Protótipo web responsivo para controle da DRYNIEL Construção a Seco.
 
-## O que já está nesta versão
+## Recursos desta versão
+- Orçamentos
+- Obras
+- Gastos por categoria
+- Diárias de funcionários
+- Financeiro resumido
+- Clientes
+- Dados salvos no próprio navegador com `localStorage`
 
-- Painel inicial com faturamento, gastos, diárias e lucro estimado.
-- Cadastro simples de orçamentos.
-- Transformação visual de orçamento/cliente em obra.
-- Lançamento de gastos por categoria e obra.
-- Lançamento de diárias de funcionários por obra.
-- Resumo financeiro por obra e geral.
-- Persistência local simples usando SharedPreferences.
-- Geração/visualização de orçamento em PDF.
-- Identidade visual baseada no logo oficial DRYNIEL: azul `#1E2C59` e bege `#9B8F7B`.
+## Como publicar no GitHub Pages
+1. Envie todos os arquivos deste pacote para a raiz do repositório.
+2. No GitHub, abra **Settings > Pages**.
+3. Em **Build and deployment**, escolha **Deploy from a branch**.
+4. Selecione a branch `main` e a pasta `/ (root)`.
+5. Salve e aguarde o link ser publicado.
 
-## Como executar
-
-1. Instale Flutter e Android Studio no computador.
-2. Na pasta deste projeto, execute:
-
-```bash
-flutter create --platforms=android .
-flutter pub get
-flutter run
-```
-
-> O comando `flutter create` adiciona a pasta Android necessária para compilar o APK. Os arquivos `lib/`, `assets/` e `pubspec.yaml` deste pacote são a base do app.
-
-## Gerar APK
-
-```bash
-flutter build apk --release
-```
-
-O APK normalmente será criado em:
-
-`build/app/outputs/flutter-apk/app-release.apk`
-
-## Próximas melhorias previstas
-
-- Cadastro completo de clientes e serviços recorrentes.
-- Status de orçamento (rascunho, enviado, aprovado, recusado).
-- Contas a receber e pagamentos parciais.
-- Fotos e documentos por obra.
-- Foto de comprovantes de gastos.
-- Relatórios por período e exportação.
-- Backup em nuvem e login.
-- Compartilhamento direto do PDF pelo WhatsApp.
+## Arquivos
+- `index.html`
+- `styles.css`
+- `app.js`
+- `manifest.json`
+- `README.md`
