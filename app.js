@@ -1,123 +1,320 @@
-
 document.addEventListener("DOMContentLoaded", function () {
 
-  // Função para mostrar uma seção da página
-  function mostrarSecao(nome) {
-    const secoes = document.querySelectorAll(
-      "section, .page, .pagina, .screen, .tela"
-    );
+  console.log("DRYNIEL: aplicativo carregado corretamente");
 
-    let encontrou = false;
+  // =====================================================
+  // FUNÇÕES AUXILIARES
+  // =====================================================
 
-    secoes.forEach(function (secao) {
-      const identificador =
-        ((secao.id || "") + " " + (secao.className || ""))
-          .toString()
-          .toLowerCase();
-
-      if (identificador.includes(nome.toLowerCase())) {
-        secao.style.display = "";
-        encontrou = true;
-      } else {
-        secao.style.display = "none";
-      }
-    });
-
-    return encontrou;
+  function normalizarTexto(texto) {
+    return (texto || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
   }
 
-  // Procura todos os botões e links
-  const botoes = document.querySelectorAll(
-    "button, a, [role='button'], .btn, .button"
-  );
+  // Possíveis nomes usados no HTML para cada tela
+  const secoes = {
+    inicio: [
+      "inicio",
+      "home"
+    ],
 
-  botoes.forEach(function (botao) {
+    clientes: [
+      "clientes",
+      "cliente"
+    ],
 
-    botao.addEventListener("click", function (event) {
+    orcamentos: [
+      "orcamentos",
+      "orcamento"
+    ],
 
-      const texto =
-        (botao.innerText ||
-          botao.textContent ||
-          botao.getAttribute("aria-label") ||
-          "")
-          .trim()
-          .toLowerCase();
+    material: [
+      "material",
+      "materiais"
+    ],
 
-      // ORÇAMENTOS
-      if (texto.includes("orçamento") ||
-          texto.includes("orcamento")) {
+    configuracao: [
+      "configuracao",
+      "configuracoes"
+    ]
+  };
 
-        event.preventDefault();
 
-        if (!mostrarSecao("orcamento")) {
-          mostrarSecao("orçamento");
-        }
+  // =====================================================
+  // LOCALIZAR UMA SEÇÃO
+  // =====================================================
 
-        return;
+  function encontrarSecao(nome) {
+
+    nome = normalizarTexto(nome);
+
+    const nomesPossiveis = secoes[nome] || [nome];
+
+    for (const id of nomesPossiveis) {
+
+      const elemento = document.getElementById(id);
+
+      if (elemento) {
+        return elemento;
       }
 
-      // CLIENTES
-      if (texto.includes("cliente")) {
+    }
 
-        event.preventDefault();
-        mostrarSecao("cliente");
-        return;
-      }
+    return null;
+  }
 
-      // SERVIÇOS
-      if (texto.includes("serviço") ||
-          texto.includes("servico")) {
 
-        event.preventDefault();
+  // =====================================================
+  // ESCONDER TODAS AS TELAS
+  // =====================================================
 
-        if (!mostrarSecao("servico")) {
-          mostrarSecao("serviço");
-        }
+  function esconderSecoes() {
 
-        return;
-      }
+    const ids = new Set();
 
-      // MATERIAIS
-      if (texto.includes("material")) {
+    Object.values(secoes).forEach(lista => {
+      lista.forEach(id => ids.add(id));
+    });
 
-        event.preventDefault();
-        mostrarSecao("material");
-        return;
-      }
+    ids.forEach(id => {
 
-      // CONFIGURAÇÕES
-      if (texto.includes("configuração") ||
-          texto.includes("configuracao")) {
+      const elemento = document.getElementById(id);
 
-        event.preventDefault();
-
-        if (!mostrarSecao("configuracao")) {
-          mostrarSecao("configuração");
-        }
-
-        return;
-      }
-
-      // VOLTAR / INÍCIO
-      if (
-        texto.includes("voltar") ||
-        texto.includes("início") ||
-        texto.includes("inicio")
-      ) {
-
-        event.preventDefault();
-
-        if (!mostrarSecao("home")) {
-          mostrarSecao("inicio");
-        }
-
-        return;
+      if (elemento) {
+        elemento.style.display = "none";
       }
 
     });
+
+  }
+
+
+  // =====================================================
+  // MOSTRAR UMA TELA
+  // =====================================================
+
+  function mostrarSecao(nome) {
+
+    nome = normalizarTexto(nome);
+
+    const destino = encontrarSecao(nome);
+
+    if (!destino) {
+
+      console.warn(
+        "DRYNIEL: seção não encontrada:",
+        nome
+      );
+
+      return false;
+    }
+
+    esconderSecoes();
+
+    destino.style.display = "";
+
+    if (
+      getComputedStyle(destino).display === "none"
+    ) {
+      destino.style.display = "block";
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+    return true;
+  }
+
+
+  // Deixa a função disponível globalmente
+  window.mostrarSecao = mostrarSecao;
+
+
+  // =====================================================
+  // DESCOBRIR O TEXTO DO BOTÃO
+  // =====================================================
+
+  function textoDoElemento(elemento) {
+
+    const texto =
+      elemento.innerText ||
+      elemento.textContent ||
+      elemento.getAttribute("aria-label") ||
+      elemento.getAttribute("title") ||
+      "";
+
+    return normalizarTexto(texto);
+  }
+
+
+  // =====================================================
+  // CLIQUES NOS BOTÕES
+  // =====================================================
+
+  document.addEventListener("click", function (event) {
+
+    const botao = event.target.closest(
+      "button, a, [role='button'], .btn, .botao, .menu-item"
+    );
+
+    if (!botao) {
+      return;
+    }
+
+
+    // ---------------------------------------------
+    // DATA-SECTION
+    // ---------------------------------------------
+
+    const dataSection =
+      botao.dataset.section ||
+      botao.dataset.secao ||
+      botao.dataset.target;
+
+    if (dataSection) {
+
+      const alvo = normalizarTexto(
+        dataSection.replace("#", "")
+      );
+
+      if (mostrarSecao(alvo)) {
+        event.preventDefault();
+        return;
+      }
+
+    }
+
+
+    // ---------------------------------------------
+    // HREF
+    // ---------------------------------------------
+
+    const href = botao.getAttribute("href");
+
+    if (
+      href &&
+      href.startsWith("#") &&
+      href.length > 1
+    ) {
+
+      const alvo = normalizarTexto(
+        href.substring(1)
+      );
+
+      if (mostrarSecao(alvo)) {
+        event.preventDefault();
+        return;
+      }
+
+    }
+
+
+    // ---------------------------------------------
+    // TEXTO DO BOTÃO
+    // ---------------------------------------------
+
+    const texto = textoDoElemento(botao);
+
+
+    // INÍCIO
+    if (
+      texto.includes("inicio") ||
+      texto.includes("home") ||
+      texto.includes("voltar")
+    ) {
+
+      event.preventDefault();
+
+      mostrarSecao("inicio");
+
+      return;
+    }
+
+
+    // CLIENTES
+    if (
+      texto.includes("cliente")
+    ) {
+
+      event.preventDefault();
+
+      mostrarSecao("clientes");
+
+      return;
+    }
+
+
+    // ORÇAMENTOS
+    if (
+      texto.includes("orcamento")
+    ) {
+
+      event.preventDefault();
+
+      mostrarSecao("orcamentos");
+
+      return;
+    }
+
+
+    // MATERIAL / MATERIAIS
+    if (
+      texto.includes("material")
+    ) {
+
+      event.preventDefault();
+
+      mostrarSecao("material");
+
+      return;
+    }
+
+
+    // CONFIGURAÇÕES
+    if (
+      texto.includes("configuracao") ||
+      texto.includes("configuracoes")
+    ) {
+
+      event.preventDefault();
+
+      mostrarSecao("configuracao");
+
+      return;
+    }
 
   });
 
-  console.log("DRYNIEL: aplicativo carregado com sucesso.");
+
+  // =====================================================
+  // TELA INICIAL
+  // =====================================================
+
+  const inicio = encontrarSecao("inicio");
+
+  if (inicio) {
+
+    esconderSecoes();
+
+    inicio.style.display = "";
+
+    if (
+      getComputedStyle(inicio).display === "none"
+    ) {
+      inicio.style.display = "block";
+    }
+
+  } else {
+
+    console.warn(
+      "DRYNIEL: tela inicial não encontrada."
+    );
+
+  }
 
 });
