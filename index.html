@@ -1,141 +1,202 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#111827" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DRYNIEL Gestão</title>
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div>
-      <div class="brand">DRYNIEL</div>
-      <div class="subtitle">CONSTRUÇÃO A SECO</div>
-    </div>
-    <button class="icon-btn" id="resetBtn" title="Limpar dados de teste">↻</button>
-  </header>
-
-  <main class="app">
-    <section id="inicio" class="screen active">
-      <div class="hero">
-        <h1>Gestão da sua obra em um só lugar</h1>
-        <p>Orçamentos, obras, gastos, funcionários e financeiro.</p>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="brand">DRYNIEL</div>
+        <div class="brand-subtitle">CONSTRUÇÃO A SECO</div>
       </div>
+      <button id="themeBtn" class="icon-btn" aria-label="Alternar tema">☾</button>
+    </header>
 
-      <div class="summary-grid">
-        <div class="card metric"><span>Faturamento</span><strong id="fatTotal">R$ 0,00</strong></div>
-        <div class="card metric"><span>Gastos</span><strong id="gastosTotal">R$ 0,00</strong></div>
-        <div class="card metric"><span>Diárias</span><strong id="diariasTotal">R$ 0,00</strong></div>
-        <div class="card metric"><span>Lucro estimado</span><strong id="lucroTotal">R$ 0,00</strong></div>
-      </div>
-
-      <h2>Acesso rápido</h2>
-      <div class="menu-grid">
-        <button data-go="orcamentos">＋<span>Orçamentos</span></button>
-        <button data-go="obras">⌂<span>Obras</span></button>
-        <button data-go="gastos">$<span>Gastos</span></button>
-        <button data-go="funcionarios">👷<span>Funcionários</span></button>
-        <button data-go="financeiro">▤<span>Financeiro</span></button>
-        <button data-go="clientes">👤<span>Clientes</span></button>
-      </div>
-    </section>
-
-    <section id="orcamentos" class="screen">
-      <div class="section-head"><h1>Orçamentos</h1><button class="primary" id="novoOrcBtn">+ Novo</button></div>
-      <form id="orcForm" class="card form hidden">
-        <label>Cliente<input id="orcCliente" required /></label>
-        <label>Endereço<input id="orcEndereco" /></label>
-        <label>Descrição<textarea id="orcDescricao" rows="3" placeholder="Ex.: Instalação de forro drywall"></textarea></label>
-        <div class="two-cols">
-          <label>Quantidade<input id="orcQtd" value="1" /></label>
-          <label>Valor (R$)<input id="orcValor" type="number" step="0.01" min="0" required /></label>
+    <main>
+      <section id="home" class="screen active">
+        <div class="hero">
+          <p class="eyebrow">DRYNIEL GESTÃO</p>
+          <h1>Seu negócio mais organizado.</h1>
+          <p>Orçamentos, obras, gastos, funcionários e financeiro em um só lugar.</p>
         </div>
-        <label>Observações<textarea id="orcObs" rows="2"></textarea></label>
-        <button class="primary" type="submit">Salvar orçamento</button>
-      </form>
-      <div id="orcList" class="list"></div>
-    </section>
 
-    <section id="obras" class="screen">
-      <div class="section-head"><h1>Obras</h1><button class="primary" id="novaObraBtn">+ Nova</button></div>
-      <form id="obraForm" class="card form hidden">
-        <label>Nome da obra<input id="obraNome" required /></label>
-        <label>Cliente<input id="obraCliente" required /></label>
-        <label>Endereço<input id="obraEndereco" /></label>
-        <label>Valor do orçamento<input id="obraValor" type="number" step="0.01" min="0" /></label>
-        <button class="primary" type="submit">Salvar obra</button>
-      </form>
-      <div id="obraList" class="list"></div>
-    </section>
-
-    <section id="gastos" class="screen">
-      <div class="section-head"><h1>Gastos</h1><button class="primary" id="novoGastoBtn">+ Novo gasto</button></div>
-      <form id="gastoForm" class="card form hidden">
-        <label>Categoria
-          <select id="gastoCategoria">
-            <option>Combustível</option><option>Alimentação</option><option>Ferramentas</option>
-            <option>Materiais</option><option>Transporte</option><option>Outros</option>
-          </select>
-        </label>
-        <label>Obra<input id="gastoObra" /></label>
-        <label>Valor (R$)<input id="gastoValor" type="number" step="0.01" min="0" required /></label>
-        <label>Data<input id="gastoData" type="date" required /></label>
-        <label>Observação<input id="gastoObs" /></label>
-        <button class="primary" type="submit">Salvar gasto</button>
-      </form>
-      <div id="gastoList" class="list"></div>
-    </section>
-
-    <section id="funcionarios" class="screen">
-      <div class="section-head"><h1>Funcionários / Diárias</h1><button class="primary" id="novaDiariaBtn">+ Nova diária</button></div>
-      <form id="diariaForm" class="card form hidden">
-        <label>Funcionário<input id="diariaNome" required /></label>
-        <label>Função<input id="diariaFuncao" placeholder="Ex.: Ajudante, Montador..." /></label>
-        <label>Obra<input id="diariaObra" /></label>
-        <div class="two-cols">
-          <label>Valor da diária<input id="diariaValor" type="number" step="0.01" min="0" required /></label>
-          <label>Data<input id="diariaData" type="date" required /></label>
+        <div class="summary-grid">
+          <article class="summary-card"><span>Faturamento em orçamentos</span><strong id="faturamento">R$ 0,00</strong></article>
+          <article class="summary-card"><span>Gastos</span><strong id="gastos">R$ 0,00</strong></article>
+          <article class="summary-card"><span>Obras</span><strong id="obras">0</strong></article>
+          <article class="summary-card"><span>Orçamentos</span><strong id="orcamentos">0</strong></article>
         </div>
-        <button class="primary" type="submit">Salvar diária</button>
-      </form>
-      <div id="diariaList" class="list"></div>
-    </section>
 
-    <section id="financeiro" class="screen">
-      <h1>Financeiro</h1>
-      <div class="summary-grid">
-        <div class="card metric"><span>Entradas</span><strong id="finEntradas">R$ 0,00</strong></div>
-        <div class="card metric"><span>Gastos</span><strong id="finGastos">R$ 0,00</strong></div>
-        <div class="card metric"><span>Diárias</span><strong id="finDiarias">R$ 0,00</strong></div>
-        <div class="card metric"><span>Resultado</span><strong id="finResultado">R$ 0,00</strong></div>
+        <h2>Atalhos</h2>
+        <div class="menu-grid">
+          <button class="menu-card" data-screen="novo-orcamento">＋<span>Novo orçamento</span></button>
+          <button class="menu-card" data-screen="meus-orcamentos">▤<span>Meus orçamentos</span></button>
+          <button class="menu-card" data-screen="obras-screen">⌂<span>Obras</span></button>
+          <button class="menu-card" data-screen="gastos-screen">$<span>Gastos</span></button>
+          <button class="menu-card" data-screen="funcionarios-screen">👥<span>Funcionários</span></button>
+          <button class="menu-card" data-screen="financeiro-screen">▥<span>Financeiro</span></button>
+          <button class="menu-card" data-screen="clientes-screen">◎<span>Clientes</span></button>
+          <button class="menu-card" data-screen="servicos-screen">⚒<span>Serviços</span></button>
+        </div>
+      </section>
+
+      <section id="novo-orcamento" class="screen">
+        <div class="section-head">
+          <button class="back-btn">←</button>
+          <div>
+            <p class="eyebrow">ORÇAMENTO</p>
+            <h2>Novo orçamento</h2>
+          </div>
+        </div>
+
+        <form id="budgetForm">
+          <div class="card form-grid">
+            <label>
+              Cliente
+              <input id="cliente" type="text" placeholder="Nome do cliente" required>
+            </label>
+
+            <label>
+              Telefone
+              <input id="telefone" type="text" placeholder="(11) 99999-9999">
+            </label>
+
+            <label class="full">
+              Endereço da obra
+              <input id="endereco" type="text" placeholder="Rua, número, bairro, cidade">
+            </label>
+
+            <label>
+              Validade
+              <input id="validade" type="text" value="A definir" placeholder="Ex.: 10 dias">
+            </label>
+
+            <label>
+              Data
+              <input id="dataOrcamento" type="date">
+            </label>
+          </div>
+
+          <div class="card services-card">
+            <div class="card-head">
+              <div>
+                <p class="eyebrow">SERVIÇOS</p>
+                <h3>Itens do orçamento</h3>
+              </div>
+              <button id="addServiceBtn" type="button" class="secondary-btn">+ Adicionar serviço</button>
+            </div>
+
+            <div id="serviceList" class="service-list"></div>
+
+            <div class="budget-summary">
+              <div>
+                <span>Quantidade de serviços</span>
+                <strong id="serviceCount">0</strong>
+              </div>
+              <div>
+                <span>Total geral</span>
+                <strong id="budgetTotal">R$ 0,00</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="card form-grid">
+            <label class="full">
+              Observações
+              <textarea id="observacoes" rows="5" placeholder="Ex.: material incluso, prazo, condições de pagamento..."></textarea>
+            </label>
+
+            <button id="saveBudgetBtn" class="primary-btn full" type="submit">Salvar orçamento</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="meus-orcamentos" class="screen">
+        <div class="section-head">
+          <button class="back-btn">←</button>
+          <div>
+            <p class="eyebrow">ORÇAMENTOS</p>
+            <h2>Meus orçamentos</h2>
+          </div>
+        </div>
+        <div id="budgetList" class="list-stack"></div>
+      </section>
+
+
+      <section id="orcamento-detalhes" class="screen">
+        <div class="section-head">
+          <button class="back-to-budgets back-btn">←</button>
+          <div>
+            <p class="eyebrow">ORÇAMENTO</p>
+            <h2>Detalhes</h2>
+          </div>
+        </div>
+        <div id="budgetDetails"></div>
+      </section>
+
+      <section id="obras-screen" class="screen"><div class="section-head"><button class="back-btn">←</button><div><p class="eyebrow">GESTÃO</p><h2>Obras</h2></div></div><div class="empty-card">Área pronta para cadastro e acompanhamento das obras.</div></section>
+      <section id="gastos-screen" class="screen"><div class="section-head"><button class="back-btn">←</button><div><p class="eyebrow">CONTROLE</p><h2>Gastos</h2></div></div><div class="empty-card">Área pronta para registrar materiais, combustível, alimentação e outros gastos.</div></section>
+      <section id="funcionarios-screen" class="screen"><div class="section-head"><button class="back-btn">←</button><div><p class="eyebrow">EQUIPE</p><h2>Funcionários</h2></div></div><div class="empty-card">Área pronta para funcionários, funções e diárias.</div></section>
+      <section id="financeiro-screen" class="screen"><div class="section-head"><button class="back-btn">←</button><div><p class="eyebrow">FINANCEIRO</p><h2>Financeiro</h2></div></div><div class="empty-card">Área pronta para entradas, saídas, saldo e lucro estimado.</div></section>
+      <section id="clientes-screen" class="screen"><div class="section-head"><button class="back-btn">←</button><div><p class="eyebrow">CADASTROS</p><h2>Clientes</h2></div></div><div class="empty-card">Área pronta para cadastro de clientes e histórico de serviços.</div></section>
+      <section id="servicos-screen" class="screen"><div class="section-head"><button class="back-btn">←</button><div><p class="eyebrow">TABELA</p><h2>Serviços</h2></div></div><div class="empty-card">Área pronta para cadastrar serviços e preços padrão.</div></section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-screen="home">⌂<span>Início</span></button>
+      <button class="nav-btn" data-screen="meus-orcamentos">▤<span>Orçamentos</span></button>
+      <button class="nav-btn" data-screen="obras-screen">◫<span>Obras</span></button>
+      <button class="nav-btn" data-screen="financeiro-screen">$<span>Financeiro</span></button>
+    </nav>
+  </div>
+
+  <template id="serviceTemplate">
+    <article class="service-item">
+      <div class="service-number">1</div>
+
+      <label class="service-description">
+        Descrição do serviço
+        <input class="item-description" type="text" placeholder="Ex.: Instalação de forro drywall" required>
+      </label>
+
+      <label>
+        Quantidade
+        <input class="item-quantity" type="number" min="0" step="0.01" value="1" required>
+      </label>
+
+      <label>
+        Unidade
+        <select class="item-unit">
+          <option value="un.">un.</option>
+          <option value="m²">m²</option>
+          <option value="m/l">m/l</option>
+          <option value="diária">diária</option>
+          <option value="serviço">serviço</option>
+        </select>
+      </label>
+
+      <label>
+        Valor unitário
+        <input class="item-unit-price" type="number" min="0" step="0.01" value="0" required>
+      </label>
+
+      <div class="item-total-box">
+        <span>Total</span>
+        <strong class="item-total">R$ 0,00</strong>
       </div>
-      <div class="card">
-        <h3>Resumo</h3>
-        <p class="muted">O resultado é calculado automaticamente com base nos orçamentos, gastos e diárias cadastrados.</p>
-      </div>
-    </section>
 
-    <section id="clientes" class="screen">
-      <div class="section-head"><h1>Clientes</h1><button class="primary" id="novoClienteBtn">+ Novo</button></div>
-      <form id="clienteForm" class="card form hidden">
-        <label>Nome<input id="clienteNome" required /></label>
-        <label>Telefone<input id="clienteTelefone" /></label>
-        <label>Endereço<input id="clienteEndereco" /></label>
-        <button class="primary" type="submit">Salvar cliente</button>
-      </form>
-      <div id="clienteList" class="list"></div>
-    </section>
-  </main>
+      <label class="service-notes">
+        Detalhes
+        <textarea class="item-notes" rows="3" placeholder="Descrição complementar do serviço"></textarea>
+      </label>
 
-  <nav class="bottom-nav">
-    <button class="active" data-go="inicio">⌂<span>Início</span></button>
-    <button data-go="obras">▣<span>Obras</span></button>
-    <button data-go="gastos">$<span>Gastos</span></button>
-    <button data-go="funcionarios">👷<span>Diárias</span></button>
-    <button data-go="financeiro">▤<span>Financeiro</span></button>
-  </nav>
+      <button type="button" class="remove-service-btn">Remover</button>
+    </article>
+  </template>
 
   <script src="app.js"></script>
 </body>
