@@ -1,813 +1,902 @@
-const $ = id => document.getElementById(id);
+const screens = document.querySelectorAll(".screen");
+const navButtons = document.querySelectorAll(".nav-btn");
+const menuButtons = document.querySelectorAll(".menu-card");
 
-const STORAGE = {
-  orcamentos: 'dryniel_orcamentos',
-  obras: 'dryniel_obras',
-  gastos: 'dryniel_gastos',
-  diarias: 'dryniel_diarias',
-  clientes: 'dryniel_clientes'
-};
+const budgetForm = document.getElementById("budgetForm");
+const budgetList = document.getElementById("budgetList");
+const budgetDetails = document.getElementById("budgetDetails");
 
-let orcamentos = carregar(STORAGE.orcamentos);
-let obras = carregar(STORAGE.obras);
-let gastos = carregar(STORAGE.gastos);
-let diarias = carregar(STORAGE.diarias);
-let clientes = carregar(STORAGE.clientes);
+const serviceList = document.getElementById("serviceList");
+const serviceTemplate = document.getElementById("serviceTemplate");
+
+const addServiceBtn = document.getElementById("addServiceBtn");
+const newBudgetBtn = document.getElementById("newBudgetBtn");
+const themeBtn = document.getElementById("themeBtn");
+
+const budgetTotal = document.getElementById("budgetTotal");
+const serviceCount = document.getElementById("serviceCount");
+
+const clientName = document.getElementById("clientName");
+const clientAddress = document.getElementById("clientAddress");
+const budgetNotes = document.getElementById("budgetNotes");
+
+let budgets =
+  JSON.parse(localStorage.getItem("dryniel_budgets")) || [];
 
 
-function carregar(chave) {
-  try {
-    return JSON.parse(localStorage.getItem(chave)) || [];
-  } catch {
-    return [];
-  }
+/* =========================
+   FORMATAÇÃO
+========================= */
+
+function formatCurrency(value) {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  }).format(Number(value) || 0);
 }
 
 
-function salvar(chave, dados) {
-  localStorage.setItem(chave, JSON.stringify(dados));
-}
+/* =========================
+   NAVEGAÇÃO
+========================= */
 
+function showScreen(screenId) {
 
-function moeda(valor) {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  }).format(Number(valor) || 0);
-}
-
-
-function escapar(texto = '') {
-  return String(texto)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
-
-
-function abrirTela(id) {
-
-  document.querySelectorAll('.screen').forEach(tela => {
-    tela.classList.remove('active');
+  screens.forEach(screen => {
+    screen.classList.remove("active");
   });
 
-  const tela = $(id);
+  const target = document.getElementById(screenId);
 
-  if (tela) {
-    tela.classList.add('active');
+  if (target) {
+    target.classList.add("active");
   }
 
-  document.querySelectorAll('.bottom-nav button').forEach(botao => {
-    botao.classList.toggle(
-      'active',
-      botao.dataset.go === id
+  navButtons.forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.screen === screenId
     );
   });
 
   window.scrollTo({
     top: 0,
-    behavior: 'smooth'
+    behavior: "smooth"
   });
 }
 
 
-document.querySelectorAll('[data-go]').forEach(botao => {
+menuButtons.forEach(button => {
 
-  botao.addEventListener('click', () => {
+  button.addEventListener("click", () => {
 
-    abrirTela(botao.dataset.go);
+    const screenId = button.dataset.screen;
+
+    showScreen(screenId);
 
   });
 
 });
 
 
-function alternarFormulario(id) {
+navButtons.forEach(button => {
 
-  const form = $(id);
+  button.addEventListener("click", () => {
 
-  form.classList.toggle('hidden');
+    const screenId = button.dataset.screen;
 
-}
+    showScreen(screenId);
 
-
-$('novoOrcBtn').addEventListener('click', () => {
-  alternarFormulario('orcForm');
-});
-
-
-$('novaObraBtn').addEventListener('click', () => {
-  alternarFormulario('obraForm');
-});
-
-
-$('novoGastoBtn').addEventListener('click', () => {
-
-  $('gastoData').valueAsDate = new Date();
-
-  alternarFormulario('gastoForm');
-
-});
-
-
-$('novaDiariaBtn').addEventListener('click', () => {
-
-  $('diariaData').valueAsDate = new Date();
-
-  alternarFormulario('diariaForm');
-
-});
-
-
-$('novoClienteBtn').addEventListener('click', () => {
-  alternarFormulario('clienteForm');
-});
-
-
-$('orcForm').addEventListener('submit', evento => {
-
-  evento.preventDefault();
-
-  const quantidade =
-    Number($('orcQtd').value) || 1;
-
-  const valor =
-    Number($('orcValor').value) || 0;
-
-  const orçamento = {
-
-    id: Date.now(),
-
-    cliente:
-      $('orcCliente').value.trim(),
-
-    endereco:
-      $('orcEndereco').value.trim(),
-
-    descricao:
-      $('orcDescricao').value.trim(),
-
-    quantidade,
-
-    valor,
-
-    total:
-      quantidade * valor,
-
-    observacoes:
-      $('orcObs').value.trim(),
-
-    data:
-      new Date().toISOString()
-
-  };
-
-  orcamentos.push(orçamento);
-
-  salvar(
-    STORAGE.orcamentos,
-    orcamentos
-  );
-
-  evento.target.reset();
-
-  $('orcQtd').value = 1;
-
-  evento.target.classList.add('hidden');
-
-  renderTudo();
-
-});
-
-
-$('obraForm').addEventListener('submit', evento => {
-
-  evento.preventDefault();
-
-  const obra = {
-
-    id: Date.now(),
-
-    nome:
-      $('obraNome').value.trim(),
-
-    cliente:
-      $('obraCliente').value.trim(),
-
-    endereco:
-      $('obraEndereco').value.trim(),
-
-    valor:
-      Number($('obraValor').value) || 0
-
-  };
-
-  obras.push(obra);
-
-  salvar(
-    STORAGE.obras,
-    obras
-  );
-
-  evento.target.reset();
-
-  evento.target.classList.add('hidden');
-
-  renderTudo();
-
-});
-
-
-$('gastoForm').addEventListener('submit', evento => {
-
-  evento.preventDefault();
-
-  const gasto = {
-
-    id: Date.now(),
-
-    categoria:
-      $('gastoCategoria').value,
-
-    obra:
-      $('gastoObra').value.trim(),
-
-    valor:
-      Number($('gastoValor').value) || 0,
-
-    data:
-      $('gastoData').value,
-
-    observacao:
-      $('gastoObs').value.trim()
-
-  };
-
-  gastos.push(gasto);
-
-  salvar(
-    STORAGE.gastos,
-    gastos
-  );
-
-  evento.target.reset();
-
-  evento.target.classList.add('hidden');
-
-  renderTudo();
-
-});
-
-
-$('diariaForm').addEventListener('submit', evento => {
-
-  evento.preventDefault();
-
-  const diaria = {
-
-    id: Date.now(),
-
-    nome:
-      $('diariaNome').value.trim(),
-
-    funcao:
-      $('diariaFuncao').value.trim(),
-
-    obra:
-      $('diariaObra').value.trim(),
-
-    valor:
-      Number($('diariaValor').value) || 0,
-
-    data:
-      $('diariaData').value
-
-  };
-
-  diarias.push(diaria);
-
-  salvar(
-    STORAGE.diarias,
-    diarias
-  );
-
-  evento.target.reset();
-
-  evento.target.classList.add('hidden');
-
-  renderTudo();
-
-});
-
-
-$('clienteForm').addEventListener('submit', evento => {
-
-  evento.preventDefault();
-
-  const cliente = {
-
-    id: Date.now(),
-
-    nome:
-      $('clienteNome').value.trim(),
-
-    telefone:
-      $('clienteTelefone').value.trim(),
-
-    endereco:
-      $('clienteEndereco').value.trim()
-
-  };
-
-  clientes.push(cliente);
-
-  salvar(
-    STORAGE.clientes,
-    clientes
-  );
-
-  evento.target.reset();
-
-  evento.target.classList.add('hidden');
-
-  renderTudo();
-
-});
-
-
-function excluir(tipo, id) {
-
-  if (!confirm('Deseja realmente excluir este registro?')) {
-    return;
-  }
-
-  if (tipo === 'orcamento') {
-
-    orcamentos =
-      orcamentos.filter(item => item.id !== id);
-
-    salvar(
-      STORAGE.orcamentos,
-      orcamentos
-    );
-
-  }
-
-
-  if (tipo === 'obra') {
-
-    obras =
-      obras.filter(item => item.id !== id);
-
-    salvar(
-      STORAGE.obras,
-      obras
-    );
-
-  }
-
-
-  if (tipo === 'gasto') {
-
-    gastos =
-      gastos.filter(item => item.id !== id);
-
-    salvar(
-      STORAGE.gastos,
-      gastos
-    );
-
-  }
-
-
-  if (tipo === 'diaria') {
-
-    diarias =
-      diarias.filter(item => item.id !== id);
-
-    salvar(
-      STORAGE.diarias,
-      diarias
-    );
-
-  }
-
-
-  if (tipo === 'cliente') {
-
-    clientes =
-      clientes.filter(item => item.id !== id);
-
-    salvar(
-      STORAGE.clientes,
-      clientes
-    );
-
-  }
-
-  renderTudo();
-
-}
-
-
-window.excluir = excluir;
-
-
-function renderOrcamentos() {
-
-  const lista = $('orcList');
-
-  if (!orcamentos.length) {
-
-    lista.innerHTML =
-      '<div class="empty">Nenhum orçamento cadastrado.</div>';
-
-    return;
-
-  }
-
-  lista.innerHTML = orcamentos
-    .slice()
-    .reverse()
-    .map(item => `
-
-      <div class="list-item">
-
-        <div class="row">
-
-          <div>
-
-            <strong>
-              ${escapar(item.cliente)}
-            </strong>
-
-            <div class="muted">
-              ${escapar(item.descricao || 'Sem descrição')}
-            </div>
-
-            <div class="tag">
-              Quantidade: ${item.quantidade}
-            </div>
-
-          </div>
-
-          <div class="amount">
-            ${moeda(item.total)}
-          </div>
-
-        </div>
-
-        <p class="muted">
-          ${escapar(item.endereco || '')}
-        </p>
-
-        <button
-          class="danger"
-          onclick="excluir('orcamento', ${item.id})"
-        >
-          Excluir
-        </button>
-
-      </div>
-
-    `)
-    .join('');
-
-}
-
-
-function renderObras() {
-
-  const lista = $('obraList');
-
-  if (!obras.length) {
-
-    lista.innerHTML =
-      '<div class="empty">Nenhuma obra cadastrada.</div>';
-
-    return;
-
-  }
-
-  lista.innerHTML = obras
-    .slice()
-    .reverse()
-    .map(item => `
-
-      <div class="list-item">
-
-        <div class="row">
-
-          <div>
-
-            <strong>
-              ${escapar(item.nome)}
-            </strong>
-
-            <div class="muted">
-              ${escapar(item.cliente)}
-            </div>
-
-          </div>
-
-          <div class="amount">
-            ${moeda(item.valor)}
-          </div>
-
-        </div>
-
-        <p class="muted">
-          ${escapar(item.endereco || '')}
-        </p>
-
-        <button
-          class="danger"
-          onclick="excluir('obra', ${item.id})"
-        >
-          Excluir
-        </button>
-
-      </div>
-
-    `)
-    .join('');
-
-}
-
-
-function renderGastos() {
-
-  const lista = $('gastoList');
-
-  if (!gastos.length) {
-
-    lista.innerHTML =
-      '<div class="empty">Nenhum gasto cadastrado.</div>';
-
-    return;
-
-  }
-
-  lista.innerHTML = gastos
-    .slice()
-    .reverse()
-    .map(item => `
-
-      <div class="list-item">
-
-        <div class="row">
-
-          <div>
-
-            <strong>
-              ${escapar(item.categoria)}
-            </strong>
-
-            <div class="muted">
-              ${escapar(item.obra || 'Sem obra')}
-            </div>
-
-          </div>
-
-          <div class="amount">
-            ${moeda(item.valor)}
-          </div>
-
-        </div>
-
-        <div class="tag">
-          ${escapar(item.data || '')}
-        </div>
-
-        <p class="muted">
-          ${escapar(item.observacao || '')}
-        </p>
-
-        <button
-          class="danger"
-          onclick="excluir('gasto', ${item.id})"
-        >
-          Excluir
-        </button>
-
-      </div>
-
-    `)
-    .join('');
-
-}
-
-
-function renderDiarias() {
-
-  const lista = $('diariaList');
-
-  if (!diarias.length) {
-
-    lista.innerHTML =
-      '<div class="empty">Nenhuma diária cadastrada.</div>';
-
-    return;
-
-  }
-
-  lista.innerHTML = diarias
-    .slice()
-    .reverse()
-    .map(item => `
-
-      <div class="list-item">
-
-        <div class="row">
-
-          <div>
-
-            <strong>
-              ${escapar(item.nome)}
-            </strong>
-
-            <div class="muted">
-              ${escapar(item.funcao || '')}
-            </div>
-
-            <div class="muted">
-              ${escapar(item.obra || '')}
-            </div>
-
-          </div>
-
-          <div class="amount">
-            ${moeda(item.valor)}
-          </div>
-
-        </div>
-
-        <div class="tag">
-          ${escapar(item.data || '')}
-        </div>
-
-        <br><br>
-
-        <button
-          class="danger"
-          onclick="excluir('diaria', ${item.id})"
-        >
-          Excluir
-        </button>
-
-      </div>
-
-    `)
-    .join('');
-
-}
-
-
-function renderClientes() {
-
-  const lista = $('clienteList');
-
-  if (!clientes.length) {
-
-    lista.innerHTML =
-      '<div class="empty">Nenhum cliente cadastrado.</div>';
-
-    return;
-
-  }
-
-  lista.innerHTML = clientes
-    .slice()
-    .reverse()
-    .map(item => `
-
-      <div class="list-item">
-
-        <strong>
-          ${escapar(item.nome)}
-        </strong>
-
-        <p class="muted">
-          ${escapar(item.telefone || '')}
-        </p>
-
-        <p class="muted">
-          ${escapar(item.endereco || '')}
-        </p>
-
-        <button
-          class="danger"
-          onclick="excluir('cliente', ${item.id})"
-        >
-          Excluir
-        </button>
-
-      </div>
-
-    `)
-    .join('');
-
-}
-
-
-function atualizarFinanceiro() {
-
-  const faturamento = orcamentos.reduce(
-    (total, item) =>
-      total + Number(item.total || 0),
-    0
-  );
-
-  const totalGastos = gastos.reduce(
-    (total, item) =>
-      total + Number(item.valor || 0),
-    0
-  );
-
-  const totalDiarias = diarias.reduce(
-    (total, item) =>
-      total + Number(item.valor || 0),
-    0
-  );
-
-  const resultado =
-    faturamento -
-    totalGastos -
-    totalDiarias;
-
-
-  $('fatTotal').textContent =
-    moeda(faturamento);
-
-  $('gastosTotal').textContent =
-    moeda(totalGastos);
-
-  $('diariasTotal').textContent =
-    moeda(totalDiarias);
-
-  $('lucroTotal').textContent =
-    moeda(resultado);
-
-
-  $('finEntradas').textContent =
-    moeda(faturamento);
-
-  $('finGastos').textContent =
-    moeda(totalGastos);
-
-  $('finDiarias').textContent =
-    moeda(totalDiarias);
-
-  $('finResultado').textContent =
-    moeda(resultado);
-
-}
-
-
-function renderTudo() {
-
-  renderOrcamentos();
-
-  renderObras();
-
-  renderGastos();
-
-  renderDiarias();
-
-  renderClientes();
-
-  atualizarFinanceiro();
-
-}
-
-
-$('resetBtn').addEventListener('click', () => {
-
-  const confirmar = confirm(
-    'Apagar todos os dados cadastrados no aplicativo?'
-  );
-
-  if (!confirmar) {
-    return;
-  }
-
-  Object.values(STORAGE).forEach(chave => {
-    localStorage.removeItem(chave);
   });
 
-  orcamentos = [];
-  obras = [];
-  gastos = [];
-  diarias = [];
-  clientes = [];
-
-  renderTudo();
-
-  abrirTela('inicio');
-
 });
 
 
-renderTudo();
+document
+  .querySelectorAll(".back-to-budgets")
+  .forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      showScreen("budgetsScreen");
+
+    });
+
+  });
+
+
+/* =========================
+   TEMA
+========================= */
+
+const savedTheme =
+  localStorage.getItem("dryniel_theme");
+
+if (savedTheme === "dark") {
+  document.body.classList.add("dark");
+}
+
+
+if (themeBtn) {
+
+  themeBtn.addEventListener("click", () => {
+
+    document.body.classList.toggle("dark");
+
+    const theme =
+      document.body.classList.contains("dark")
+        ? "dark"
+        : "light";
+
+    localStorage.setItem(
+      "dryniel_theme",
+      theme
+    );
+
+  });
+
+}
+
+
+/* =========================
+   SERVIÇOS
+========================= */
+
+function addService(data = {}) {
+
+  const fragment =
+    serviceTemplate.content.cloneNode(true);
+
+  const serviceItem =
+    fragment.querySelector(".service-item");
+
+  const description =
+    fragment.querySelector(".service-description");
+
+  const quantity =
+    fragment.querySelector(".service-quantity");
+
+  const value =
+    fragment.querySelector(".service-value");
+
+  const removeButton =
+    fragment.querySelector(".remove-service-btn");
+
+
+  description.value =
+    data.description || "";
+
+  quantity.value =
+    data.quantity || 1;
+
+  value.value =
+    data.value || "";
+
+
+  quantity.addEventListener(
+    "input",
+    calculateBudget
+  );
+
+  value.addEventListener(
+    "input",
+    calculateBudget
+  );
+
+
+  removeButton.addEventListener(
+    "click",
+    () => {
+
+      serviceItem.remove();
+
+      updateServiceNumbers();
+
+      calculateBudget();
+
+    }
+  );
+
+
+  serviceList.appendChild(fragment);
+
+  updateServiceNumbers();
+
+  calculateBudget();
+}
+
+
+/* =========================
+   NUMERAÇÃO DOS SERVIÇOS
+========================= */
+
+function updateServiceNumbers() {
+
+  const services =
+    serviceList.querySelectorAll(
+      ".service-item"
+    );
+
+  services.forEach(
+    (service, index) => {
+
+      const title =
+        service.querySelector(
+          ".service-number"
+        );
+
+      title.textContent =
+        "Serviço " + (index + 1);
+
+    }
+  );
+
+}
+
+
+/* =========================
+   CÁLCULO DO ORÇAMENTO
+========================= */
+
+function calculateBudget() {
+
+  const services =
+    serviceList.querySelectorAll(
+      ".service-item"
+    );
+
+  let total = 0;
+
+  services.forEach(service => {
+
+    const quantity =
+      Number(
+        service.querySelector(
+          ".service-quantity"
+        ).value
+      ) || 0;
+
+    const value =
+      Number(
+        service.querySelector(
+          ".service-value"
+        ).value
+      ) || 0;
+
+    const subtotal =
+      quantity * value;
+
+    total += subtotal;
+
+    const subtotalElement =
+      service.querySelector(
+        ".service-subtotal-value"
+      );
+
+    subtotalElement.textContent =
+      formatCurrency(subtotal);
+
+  });
+
+
+  serviceCount.textContent =
+    services.length;
+
+  budgetTotal.textContent =
+    formatCurrency(total);
+
+}
+
+
+/* =========================
+   BOTÃO ADICIONAR SERVIÇO
+========================= */
+
+if (addServiceBtn) {
+
+  addServiceBtn.addEventListener(
+    "click",
+    () => {
+
+      addService();
+
+    }
+  );
+
+}
+
+
+/* =========================
+   NOVO ORÇAMENTO
+========================= */
+
+function clearBudgetForm() {
+
+  budgetForm.reset();
+
+  serviceList.innerHTML = "";
+
+  addService();
+
+  calculateBudget();
+}
+
+
+if (newBudgetBtn) {
+
+  newBudgetBtn.addEventListener(
+    "click",
+    () => {
+
+      clearBudgetForm();
+
+      showScreen("budgetsScreen");
+
+      clientName.focus();
+
+    }
+  );
+
+}
+
+
+/* =========================
+   SALVAR ORÇAMENTO
+========================= */
+
+budgetForm.addEventListener(
+  "submit",
+  event => {
+
+    event.preventDefault();
+
+
+    const name =
+      clientName.value.trim();
+
+    const address =
+      clientAddress.value.trim();
+
+    const notes =
+      budgetNotes.value.trim();
+
+
+    if (!name) {
+
+      alert(
+        "Informe o nome do cliente."
+      );
+
+      clientName.focus();
+
+      return;
+
+    }
+
+
+    const serviceElements =
+      serviceList.querySelectorAll(
+        ".service-item"
+      );
+
+
+    if (serviceElements.length === 0) {
+
+      alert(
+        "Adicione pelo menos um serviço."
+      );
+
+      return;
+
+    }
+
+
+    const services = [];
+
+    let total = 0;
+
+
+    serviceElements.forEach(service => {
+
+      const description =
+        service
+          .querySelector(
+            ".service-description"
+          )
+          .value
+          .trim();
+
+      const quantity =
+        Number(
+          service.querySelector(
+            ".service-quantity"
+          ).value
+        ) || 0;
+
+      const value =
+        Number(
+          service.querySelector(
+            ".service-value"
+          ).value
+        ) || 0;
+
+      const subtotal =
+        quantity * value;
+
+
+      if (description) {
+
+        services.push({
+          description,
+          quantity,
+          value,
+          subtotal
+        });
+
+        total += subtotal;
+
+      }
+
+    });
+
+
+    if (services.length === 0) {
+
+      alert(
+        "Preencha pelo menos um serviço."
+      );
+
+      return;
+
+    }
+
+
+    const budget = {
+
+      id: Date.now(),
+
+      client: name,
+
+      address,
+
+      notes,
+
+      services,
+
+      total,
+
+      createdAt:
+        new Date().toISOString()
+
+    };
+
+
+    budgets.unshift(budget);
+
+
+    localStorage.setItem(
+      "dryniel_budgets",
+      JSON.stringify(budgets)
+    );
+
+
+    renderBudgets();
+
+    clearBudgetForm();
+
+
+    alert(
+      "Orçamento salvo com sucesso!"
+    );
+
+  }
+);
+
+
+/* =========================
+   MOSTRAR ORÇAMENTOS
+========================= */
+
+function renderBudgets() {
+
+  budgetList.innerHTML = "";
+
+
+  if (budgets.length === 0) {
+
+    budgetList.innerHTML = `
+      <div class="card">
+        <p>Nenhum orçamento salvo.</p>
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  budgets.forEach(budget => {
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "budget-card";
+
+
+    const serviceQuantity =
+      Array.isArray(budget.services)
+        ? budget.services.length
+        : 1;
+
+
+    card.innerHTML = `
+
+      <h3>${escapeHTML(
+        budget.client || "Cliente"
+      )}</h3>
+
+      ${
+        budget.address
+          ? `<p>${escapeHTML(
+              budget.address
+            )}</p>`
+          : ""
+      }
+
+      <p>
+        ${serviceQuantity}
+        ${
+          serviceQuantity === 1
+            ? "serviço"
+            : "serviços"
+        }
+      </p>
+
+      <div class="budget-card-total">
+        ${formatCurrency(
+          getBudgetTotal(budget)
+        )}
+      </div>
+
+      <div class="budget-actions">
+
+        <button
+          class="view-budget-btn"
+          type="button"
+        >
+          Ver detalhes
+        </button>
+
+        <button
+          class="delete-budget-btn"
+          type="button"
+        >
+          Excluir
+        </button>
+
+      </div>
+    `;
+
+
+    card
+      .querySelector(
+        ".view-budget-btn"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          showBudgetDetails(
+            budget.id
+          );
+
+        }
+      );
+
+
+    card
+      .querySelector(
+        ".delete-budget-btn"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          deleteBudget(
+            budget.id
+          );
+
+        }
+      );
+
+
+    budgetList.appendChild(card);
+
+  });
+
+}
+
+
+/* =========================
+   TOTAL COMPATÍVEL COM
+   ORÇAMENTOS ANTIGOS
+========================= */
+
+function getBudgetTotal(budget) {
+
+  if (
+    typeof budget.total === "number"
+  ) {
+    return budget.total;
+  }
+
+
+  if (
+    Array.isArray(budget.services)
+  ) {
+
+    return budget.services.reduce(
+      (sum, service) => {
+
+        const quantity =
+          Number(
+            service.quantity
+          ) || 0;
+
+        const value =
+          Number(
+            service.value
+          ) || 0;
+
+        return (
+          sum +
+          quantity * value
+        );
+
+      },
+      0
+    );
+
+  }
+
+
+  return (
+    Number(budget.value) || 0
+  );
+
+}
+
+
+/* =========================
+   DETALHES DO ORÇAMENTO
+========================= */
+
+function showBudgetDetails(id) {
+
+  const budget =
+    budgets.find(
+      item => item.id === id
+    );
+
+
+  if (!budget) {
+    return;
+  }
+
+
+  let servicesHTML = "";
+
+
+  if (
+    Array.isArray(budget.services)
+  ) {
+
+    budget.services.forEach(
+      (service, index) => {
+
+        const subtotal =
+          Number(
+            service.subtotal
+          ) ||
+          (
+            Number(service.quantity) *
+            Number(service.value)
+          );
+
+
+        servicesHTML += `
+
+          <div class="detail-service">
+
+            <strong>
+              Serviço ${index + 1}
+            </strong>
+
+            <p>
+              ${escapeHTML(
+                service.description
+              )}
+            </p>
+
+            <p>
+              Quantidade:
+              ${service.quantity}
+            </p>
+
+            <p>
+              Valor unitário:
+              ${formatCurrency(
+                service.value
+              )}
+            </p>
+
+            <p>
+              <strong>
+                Subtotal:
+                ${formatCurrency(
+                  subtotal
+                )}
+              </strong>
+            </p>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+  } else {
+
+    servicesHTML = `
+
+      <div class="detail-service">
+
+        <p>
+          ${escapeHTML(
+            budget.description || ""
+          )}
+        </p>
+
+        <p>
+          Quantidade:
+          ${budget.quantity || 1}
+        </p>
+
+      </div>
+
+    `;
+
+  }
+
+
+  budgetDetails.innerHTML = `
+
+    <div class="card">
+
+      <h2>
+        ${escapeHTML(
+          budget.client || "Cliente"
+        )}
+      </h2>
+
+      ${
+        budget.address
+          ? `
+            <p>
+              ${escapeHTML(
+                budget.address
+              )}
+            </p>
+          `
+          : ""
+      }
+
+      ${servicesHTML}
+
+      ${
+        budget.notes
+          ? `
+            <div class="detail-service">
+
+              <strong>
+                Observações
+              </strong>
+
+              <p>
+                ${escapeHTML(
+                  budget.notes
+                )}
+              </p>
+
+            </div>
+          `
+          : ""
+      }
+
+      <div class="detail-total">
+
+        <span>Total</span>
+
+        <span>
+          ${formatCurrency(
+            getBudgetTotal(budget)
+          )}
+        </span>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  showScreen(
+    "budgetDetailsScreen"
+  );
+
+}
+
+
+/* =========================
+   EXCLUIR ORÇAMENTO
+========================= */
+
+function deleteBudget(id) {
+
+  const confirmed =
+    confirm(
+      "Deseja excluir este orçamento?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  budgets =
+    budgets.filter(
+      budget =>
+        budget.id !== id
+    );
+
+
+  localStorage.setItem(
+    "dryniel_budgets",
+    JSON.stringify(budgets)
+  );
+
+
+  renderBudgets();
+
+}
+
+
+/* =========================
+   SEGURANÇA DO TEXTO
+========================= */
+
+function escapeHTML(text) {
+
+  const div =
+    document.createElement("div");
+
+  div.textContent =
+    text == null
+      ? ""
+      : String(text);
+
+  return div.innerHTML;
+
+}
+
+
+/* =========================
+   INICIALIZAÇÃO
+========================= */
+
+renderBudgets();
+
+clearBudgetForm();
