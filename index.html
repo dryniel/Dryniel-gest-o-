@@ -1,48 +1,121 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DRYNIEL - Construção a Seco</title>
-  <link rel="stylesheet" href="style.css" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <meta
+    name="theme-color"
+    content="#0b5d73"
+  />
+
+  <title>
+    DRYNIEL - Construção a Seco
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  />
 </head>
+
 
 <body>
 
+
+  <!-- =====================================================
+       CABEÇALHO
+  ====================================================== -->
+
   <header class="top-header">
-    <div>
-      <h1>DRYNIEL</h1>
-      <p>CONSTRUÇÃO A SECO</p>
+
+    <div class="brand">
+
+      <h1>
+        DRYNIEL
+      </h1>
+
+      <p>
+        CONSTRUÇÃO A SECO
+      </p>
+
     </div>
 
-    <button id="themeBtn" class="theme-btn" type="button">
+
+    <button
+      id="themeBtn"
+      class="theme-btn"
+      type="button"
+      aria-label="Alterar tema"
+    >
       ↻
     </button>
+
   </header>
 
 
+
+  <!-- =====================================================
+       CONTEÚDO PRINCIPAL
+  ====================================================== -->
+
   <main>
 
-    <!-- =========================
+
+    <!-- ===================================================
          TELA INÍCIO
-    ========================== -->
-    <section id="homeScreen" class="screen active">
+    ==================================================== -->
+
+    <section
+      id="homeScreen"
+      class="screen active"
+    >
 
       <div class="page-header">
-        <h2>Início</h2>
+
+        <div>
+
+          <h2>
+            Início
+          </h2>
+
+          <p>
+            Gestão da DRYNIEL
+          </p>
+
+        </div>
+
       </div>
 
+
       <div class="menu-grid">
+
 
         <button
           class="menu-card"
           data-screen="budgetsScreen"
           type="button"
         >
-          <span class="menu-icon">▤</span>
-          <strong>Orçamentos</strong>
-          <small>Criar e consultar</small>
+
+          <span class="menu-icon">
+            ▤
+          </span>
+
+          <strong>
+            Orçamentos
+          </strong>
+
+          <small>
+            Criar e consultar
+          </small>
+
         </button>
+
 
 
         <button
@@ -50,228 +123,208 @@
           data-screen="worksScreen"
           type="button"
         >
-          <span class="menu-icon">▣</span>
-          <strong>Obras</strong>
-          <small>Controle de obras</small>
+
+          <span class="menu-icon">
+            ▣
+          </span>
+
+          <strong>
+            Obras
+          </strong>
+
+          <small>
+            Cadastrar obras
+          </small>
+
         </button>
+
 
 
         <button
           class="menu-card"
-          data-screen="expensesScreen"
+          data-screen="employeesScreen"
           type="button"
         >
-          <span class="menu-icon">$</span>
-          <strong>Gastos</strong>
-          <small>Registrar despesas</small>
+
+          <span class="menu-icon">
+            ♙
+          </span>
+
+          <strong>
+            Funcionários
+          </strong>
+
+          <small>
+            Diárias e pagamentos
+          </small>
+
         </button>
 
-
-        <button
-          class="menu-card"
-          data-screen="dailyScreen"
-          type="button"
-        >
-          <span class="menu-icon">👷</span>
-          <strong>Diárias</strong>
-          <small>Funcionários</small>
-        </button>
-
-
-        <button
-          class="menu-card"
-          data-screen="financeScreen"
-          type="button"
-        >
-          <span class="menu-icon">▤</span>
-          <strong>Financeiro</strong>
-          <small>Resumo financeiro</small>
-        </button>
 
       </div>
 
     </section>
 
 
-    <!-- =========================
+
+    <!-- ===================================================
          TELA ORÇAMENTOS
-    ========================== -->
-    <section id="budgetsScreen" class="screen">
+    ==================================================== -->
+
+    <section
+      id="budgetsScreen"
+      class="screen"
+    >
+
 
       <div class="page-header">
 
-        <h2>Orçamentos</h2>
+        <div>
+
+          <h2>
+            Orçamentos
+          </h2>
+
+          <p>
+            Crie e consulte seus orçamentos
+          </p>
+
+        </div>
+
 
         <button
           id="newBudgetBtn"
           class="primary-btn small-btn"
           type="button"
         >
-          + Novo
+          Novo
         </button>
 
       </div>
 
 
-      <form id="budgetForm" class="card">
 
-        <label for="clientName">
-          Cliente
-        </label>
+      <!-- FORMULÁRIO DO ORÇAMENTO -->
 
-        <input
-          id="clientName"
-          type="text"
-          autocomplete="off"
-          placeholder="Nome do cliente"
-        />
+      <form
+        id="budgetForm"
+        class="card"
+      >
 
 
-        <label for="clientAddress">
-          Endereço
-        </label>
-
-        <input
-          id="clientAddress"
-          type="text"
-          autocomplete="off"
-          placeholder="Endereço da obra"
-        />
+        <h3>
+          Dados do cliente
+        </h3>
 
 
-        <div class="services-title">
-          <h3>Serviços</h3>
+        <div class="form-group">
+
+          <label
+            for="clientName"
+          >
+            Nome do cliente
+          </label>
+
+          <input
+            id="clientName"
+            type="text"
+            placeholder="Nome do cliente"
+            autocomplete="name"
+          />
+
         </div>
 
 
-        <!-- LISTA DE SERVIÇOS -->
-        <div id="serviceList"></div>
+
+        <div class="form-group">
+
+          <label
+            for="clientAddress"
+          >
+            Endereço
+          </label>
+
+          <input
+            id="clientAddress"
+            type="text"
+            placeholder="Endereço do cliente ou da obra"
+          />
+
+        </div>
 
 
-        <!-- =========================
-             TEMPLATE DE SERVIÇO
-        ========================== -->
-        <template id="serviceTemplate">
 
-          <div class="service-item">
+        <div class="section-title-row">
 
-            <div class="service-top">
-
-              <strong class="service-number">
-                Serviço
-              </strong>
-
-              <button
-                type="button"
-                class="remove-service-btn"
-              >
-                Excluir
-              </button>
-
-            </div>
+          <h3>
+            Serviços
+          </h3>
 
 
-            <label>
-              Descrição
-            </label>
+          <button
+            id="addServiceBtn"
+            class="secondary-btn small-btn"
+            type="button"
+          >
+            + Serviço
+          </button>
 
-            <textarea
-              class="service-description"
-              placeholder="Ex.: Instalação de forro drywall"
-              rows="3"
-            ></textarea>
-
-
-            <div class="service-values">
-
-              <div>
-
-                <label>
-                  Quantidade
-                </label>
-
-                <input
-                  class="service-quantity"
-                  type="number"
-                  min="1"
-                  step="1"
-                  value="1"
-                />
-
-              </div>
+        </div>
 
 
-              <div>
 
-                <label>
-                  Valor unitário (R$)
-                </label>
-
-                <input
-                  class="service-value"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  inputmode="decimal"
-                  placeholder="0,00"
-                />
-
-              </div>
-
-            </div>
-
-
-            <div class="service-subtotal">
-
-              Subtotal:
-
-              <strong class="service-subtotal-value">
-                R$ 0,00
-              </strong>
-
-            </div>
-
-          </div>
-
-        </template>
-
-
-        <button
-          id="addServiceBtn"
-          class="secondary-btn"
-          type="button"
+        <div
+          id="serviceList"
+          class="service-list"
         >
-          + Adicionar serviço
-        </button>
+        </div>
 
 
-        <label for="budgetNotes">
-          Observações
-        </label>
 
-        <textarea
-          id="budgetNotes"
-          rows="4"
-          placeholder="Informações adicionais do orçamento"
-        ></textarea>
+        <div class="form-group">
+
+          <label
+            for="budgetNotes"
+          >
+            Observações
+          </label>
+
+          <textarea
+            id="budgetNotes"
+            rows="4"
+            placeholder="Ex.: Material incluso, prazo, condições etc."
+          ></textarea>
+
+        </div>
+
 
 
         <div class="budget-summary">
 
           <div>
-            <span>Serviços</span>
 
-            <strong id="serviceCount">
+            <span>
+              Serviços
+            </span>
+
+            <strong
+              id="serviceCount"
+            >
               0
             </strong>
+
           </div>
 
 
-          <div class="total-box">
+          <div>
 
-            <span>Total</span>
+            <span>
+              Total
+            </span>
 
-            <strong id="budgetTotal">
+            <strong
+              id="budgetTotal"
+            >
               R$ 0,00
             </strong>
 
@@ -280,10 +333,10 @@
         </div>
 
 
+
         <button
-          id="saveBudgetBtn"
-          class="primary-btn"
           type="submit"
+          class="primary-btn full-btn"
         >
           Salvar orçamento
         </button>
@@ -291,136 +344,530 @@
       </form>
 
 
-      <!-- LISTA DE ORÇAMENTOS SALVOS -->
-      <div id="budgetList"></div>
+
+      <!-- LISTA DE ORÇAMENTOS -->
+
+      <div class="section-title">
+
+        <h3>
+          Orçamentos salvos
+        </h3>
+
+      </div>
+
+
+      <div
+        id="budgetList"
+        class="list-container"
+      >
+      </div>
+
 
     </section>
 
 
-    <!-- =========================
+
+    <!-- ===================================================
          DETALHES DO ORÇAMENTO
-    ========================== -->
+    ==================================================== -->
+
     <section
       id="budgetDetailsScreen"
       class="screen"
     >
 
-      <button
-        class="back-btn back-to-budgets"
-        type="button"
+
+      <div class="page-header">
+
+        <button
+          class="back-btn back-to-budgets"
+          type="button"
+        >
+          ← Voltar
+        </button>
+
+
+        <h2>
+          Detalhes
+        </h2>
+
+      </div>
+
+
+      <div
+        id="budgetDetails"
       >
-        ← Voltar
-      </button>
-
-
-      <div id="budgetDetails"></div>
+      </div>
 
     </section>
 
 
-    <!-- =========================
+
+    <!-- ===================================================
          TELA OBRAS
-    ========================== -->
-    <section id="worksScreen" class="screen">
+    ==================================================== -->
+
+    <section
+      id="worksScreen"
+      class="screen"
+    >
+
 
       <div class="page-header">
-        <h2>Obras</h2>
+
+        <div>
+
+          <h2>
+            Obras
+          </h2>
+
+          <p>
+            Cadastre e acompanhe suas obras
+          </p>
+
+        </div>
+
       </div>
 
-      <div class="card">
 
-        <p>
-          Em breve teremos o controle de obras aqui.
-        </p>
+
+      <form
+        id="workForm"
+        class="card"
+      >
+
+
+        <h3>
+          Nova obra
+        </h3>
+
+
+
+        <div class="form-group">
+
+          <label
+            for="workName"
+          >
+            Nome da obra
+          </label>
+
+          <input
+            id="workName"
+            type="text"
+            placeholder="Ex.: Reforma apartamento"
+          />
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label
+            for="workClient"
+          >
+            Cliente
+          </label>
+
+          <input
+            id="workClient"
+            type="text"
+            placeholder="Nome do cliente"
+          />
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label
+            for="workAddress"
+          >
+            Endereço da obra
+          </label>
+
+          <input
+            id="workAddress"
+            type="text"
+            placeholder="Endereço"
+          />
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label
+            for="workNotes"
+          >
+            Observações
+          </label>
+
+          <textarea
+            id="workNotes"
+            rows="4"
+            placeholder="Informações sobre a obra"
+          ></textarea>
+
+        </div>
+
+
+
+        <button
+          type="submit"
+          class="primary-btn full-btn"
+        >
+          Cadastrar obra
+        </button>
+
+      </form>
+
+
+
+      <div class="section-title">
+
+        <h3>
+          Obras cadastradas
+        </h3>
 
       </div>
+
+
+      <div
+        id="workList"
+        class="list-container"
+      >
+      </div>
+
 
     </section>
 
 
-    <!-- =========================
-         TELA GASTOS
-    ========================== -->
-    <section id="expensesScreen" class="screen">
+
+    <!-- ===================================================
+         TELA FUNCIONÁRIOS
+    ==================================================== -->
+
+    <section
+      id="employeesScreen"
+      class="screen"
+    >
+
 
       <div class="page-header">
-        <h2>Gastos</h2>
+
+        <div>
+
+          <h2>
+            Funcionários
+          </h2>
+
+          <p>
+            Controle de diárias
+          </p>
+
+        </div>
+
       </div>
 
-      <div class="card">
 
-        <p>
-          Em breve teremos o controle de gastos aqui.
-        </p>
+
+      <form
+        id="employeeForm"
+        class="card"
+      >
+
+
+        <h3>
+          Novo funcionário
+        </h3>
+
+
+
+        <div class="form-group">
+
+          <label
+            for="employeeName"
+          >
+            Nome
+          </label>
+
+          <input
+            id="employeeName"
+            type="text"
+            placeholder="Nome do funcionário"
+            autocomplete="name"
+          />
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label
+            for="employeePhone"
+          >
+            Telefone
+          </label>
+
+          <input
+            id="employeePhone"
+            type="tel"
+            placeholder="(11) 99999-9999"
+            autocomplete="tel"
+          />
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label
+            for="employeeDailyRate"
+          >
+            Valor da diária
+          </label>
+
+          <input
+            id="employeeDailyRate"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="Ex.: 200"
+          />
+
+        </div>
+
+
+
+        <button
+          type="submit"
+          class="primary-btn full-btn"
+        >
+          Cadastrar funcionário
+        </button>
+
+      </form>
+
+
+
+      <div class="section-title">
+
+        <h3>
+          Funcionários cadastrados
+        </h3>
 
       </div>
+
+
+      <div
+        id="employeeList"
+        class="list-container"
+      >
+      </div>
+
 
     </section>
 
 
-    <!-- =========================
-         TELA DIÁRIAS / FUNCIONÁRIOS
-    ========================== -->
-    <section id="dailyScreen" class="screen">
+
+    <!-- ===================================================
+         PÁGINA INDIVIDUAL DO FUNCIONÁRIO
+    ==================================================== -->
+
+    <section
+      id="employeeDetailsScreen"
+      class="screen"
+    >
+
 
       <div class="page-header">
-        <h2>Funcionários</h2>
-      </div>
+
+        <button
+          class="back-btn back-to-employees"
+          type="button"
+        >
+          ← Voltar
+        </button>
 
 
-      <div class="card">
-
-        <p>
-          Aqui será criado o controle individual
-          de diárias de cada funcionário.
-        </p>
-
-        <p>
-          Cada funcionário terá sua própria página,
-          histórico de diárias e total acumulado.
-        </p>
+        <h2>
+          Funcionário
+        </h2>
 
       </div>
+
+
+
+      <div
+        id="employeeDetails"
+      >
+      </div>
+
 
     </section>
 
-
-    <!-- =========================
-         TELA FINANCEIRO
-    ========================== -->
-    <section id="financeScreen" class="screen">
-
-      <div class="page-header">
-        <h2>Financeiro</h2>
-      </div>
-
-
-      <div class="card">
-
-        <p>
-          Em breve teremos o resumo financeiro aqui.
-        </p>
-
-      </div>
-
-    </section>
 
   </main>
 
 
-  <!-- =========================
-       MENU INFERIOR
-  ========================== -->
+
+  <!-- =====================================================
+       TEMPLATE DE SERVIÇO
+  ====================================================== -->
+
+  <template
+    id="serviceTemplate"
+  >
+
+    <div class="service-item card">
+
+
+      <div class="service-header">
+
+        <strong
+          class="service-number"
+        >
+          Serviço
+        </strong>
+
+
+        <button
+          type="button"
+          class="remove-service-btn"
+          aria-label="Excluir serviço"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+
+      <div class="form-group">
+
+        <label>
+          Descrição
+        </label>
+
+        <textarea
+          class="service-description"
+          rows="3"
+          placeholder="Descreva o serviço"
+        ></textarea>
+
+      </div>
+
+
+
+      <div class="service-fields">
+
+
+        <div class="form-group">
+
+          <label>
+            Quantidade
+          </label>
+
+          <input
+            class="service-quantity"
+            type="number"
+            min="0"
+            step="0.01"
+            value="1"
+          />
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label>
+            Valor unitário
+          </label>
+
+          <input
+            class="service-value"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="0,00"
+          />
+
+        </div>
+
+
+      </div>
+
+
+
+      <div class="service-subtotal">
+
+        <span>
+          Subtotal
+        </span>
+
+        <strong
+          class="service-subtotal-value"
+        >
+          R$ 0,00
+        </strong>
+
+      </div>
+
+
+    </div>
+
+  </template>
+
+
+
+  <!-- =====================================================
+       NAVEGAÇÃO INFERIOR
+  ====================================================== -->
+
   <nav class="bottom-nav">
 
+
     <button
-      class="nav-btn"
+      class="nav-btn active"
       data-screen="homeScreen"
       type="button"
     >
-      <span>⌂</span>
-      <small>Início</small>
+
+      <span class="nav-icon">
+       ⌂
+      </span>
+
+      <span>
+        Início
+      </span>
+
     </button>
+
+
+
+    <button
+      class="nav-btn"
+      data-screen="budgetsScreen"
+      type="button"
+    >
+
+      <span class="nav-icon">
+        ▤
+      </span>
+
+      <span>
+        Orçamentos
+      </span>
+
+    </button>
+
 
 
     <button
@@ -428,44 +875,49 @@
       data-screen="worksScreen"
       type="button"
     >
-      <span>▣</span>
-      <small>Obras</small>
+
+      <span class="nav-icon">
+        ▣
+      </span>
+
+      <span>
+        Obras
+      </span>
+
     </button>
+
 
 
     <button
       class="nav-btn"
-      data-screen="expensesScreen"
+      data-screen="employeesScreen"
       type="button"
     >
-      <span>$</span>
-      <small>Gastos</small>
+
+      <span class="nav-icon">
+        ♙
+      </span>
+
+      <span>
+        Funcionários
+      </span>
+
     </button>
 
-
-    <button
-      class="nav-btn"
-      data-screen="dailyScreen"
-      type="button"
-    >
-      <span>👷</span>
-      <small>Diárias</small>
-    </button>
-
-
-    <button
-      class="nav-btn"
-      data-screen="financeScreen"
-      type="button"
-    >
-      <span>▤</span>
-      <small>Financeiro</small>
-    </button>
 
   </nav>
 
 
-  <script src="app.js"></script>
+
+  <!-- =====================================================
+       JAVASCRIPT
+  ====================================================== -->
+
+  <script
+    src="app.js"
+  ></script>
+
 
 </body>
+
 </html>
