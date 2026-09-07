@@ -1,12 +1,6 @@
-/* =========================================================
-   DRYNIEL - CONSTRUÇÃO A SECO
-   STYLE.CSS COMPLETO
-========================================================= */
-
-
-/* =========================================================
+/* =========================
    RESET
-========================================================= */
+========================= */
 
 * {
   box-sizing: border-box;
@@ -14,128 +8,131 @@
   padding: 0;
 }
 
-
-/* =========================================================
-   VARIÁVEIS
-========================================================= */
-
 :root {
   --bg: #f3f5f7;
   --card: #ffffff;
   --text: #17202a;
-  --muted: #6d7882;
+  --muted: #68737d;
 
   --primary: #0b5d73;
   --primary-dark: #07495b;
-  --primary-light: #e7f3f6;
+  --primary-light: #e8f3f6;
 
   --border: #dce2e7;
 
   --danger: #c0392b;
-  --danger-dark: #922b21;
+  --danger-light: #fbeaea;
 
   --success: #1e8449;
+  --success-dark: #176b3b;
+  --success-light: #e9f6ee;
 
-  --shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --warning: #b9770e;
 
-  --radius: 14px;
+  --shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+
+  --radius: 12px;
 }
 
 
-/* =========================================================
+/* =========================
    BODY
-========================================================= */
+========================= */
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   font-family: Arial, Helvetica, sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  padding-bottom: 95px;
+  padding-bottom: 90px;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
 }
 
 
-/* =========================================================
-   MODO ESCURO
-========================================================= */
-
-body.dark {
-  --bg: #11181d;
-  --card: #1b252b;
-  --text: #f2f5f6;
-  --muted: #aeb9bf;
-  --border: #344249;
-  --primary-light: #173740;
-  --shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-}
-
-
-/* =========================================================
+/* =========================
    CABEÇALHO
-========================================================= */
+========================= */
 
 .top-header {
   background: var(--primary);
   color: #ffffff;
-  padding: 17px 18px;
+
+  min-height: 82px;
+
+  padding: 16px 18px;
+
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+
   position: sticky;
   top: 0;
   z-index: 100;
+
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .brand h1 {
   font-size: 25px;
   letter-spacing: 2px;
-  line-height: 1;
+  font-weight: 800;
 }
 
 .brand p {
+  margin-top: 3px;
   font-size: 11px;
-  margin-top: 5px;
-  letter-spacing: 1.5px;
+  letter-spacing: 1.8px;
   opacity: 0.9;
 }
-
-
-/* =========================================================
-   BOTÃO DO TEMA
-========================================================= */
 
 .theme-btn {
   width: 42px;
   height: 42px;
-  border: 0;
+
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.14);
+
+  background: rgba(255, 255, 255, 0.1);
   color: #ffffff;
+
   font-size: 22px;
-  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.theme-btn:active {
-  transform: scale(0.95);
-}
 
+/* =========================
+   CONTAINER
+========================= */
 
-/* =========================================================
-   CONTEÚDO PRINCIPAL
-========================================================= */
-
-main {
+.app-container {
   width: 100%;
   max-width: 900px;
+
   margin: 0 auto;
-  padding: 16px;
+  padding: 18px 14px 30px;
 }
 
 
-/* =========================================================
+/* =========================
    TELAS
-========================================================= */
+========================= */
 
 .screen {
   display: none;
@@ -146,73 +143,66 @@ main {
 }
 
 
-/* =========================================================
+/* =========================
    CABEÇALHO DAS PÁGINAS
-========================================================= */
+========================= */
 
 .page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .page-header h2 {
-  font-size: 24px;
-  line-height: 1.2;
+  font-size: 25px;
+  color: var(--text);
 }
 
 .page-header p {
   color: var(--muted);
   font-size: 14px;
-  margin-top: 4px;
+  margin-top: 5px;
+}
+
+.page-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 }
 
 
-/* =========================================================
-   CARDS
-========================================================= */
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  box-shadow: var(--shadow);
-  margin-bottom: 16px;
-}
-
-.card h3 {
-  margin-bottom: 14px;
-}
-
-
-/* =========================================================
-   MENU PRINCIPAL
-========================================================= */
+/* =========================
+   MENU INICIAL
+========================= */
 
 .menu-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 14px;
 }
 
 .menu-card {
-  min-height: 145px;
+  width: 100%;
+  min-height: 95px;
+
   border: 1px solid var(--border);
   border-radius: var(--radius);
+
   background: var(--card);
   color: var(--text);
-  padding: 18px 14px;
-  box-shadow: var(--shadow);
-  cursor: pointer;
+
+  padding: 18px;
 
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
+  align-items: center;
+  gap: 18px;
+
   text-align: left;
+
+  box-shadow: var(--shadow);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .menu-card:active {
@@ -220,42 +210,97 @@ main {
 }
 
 .menu-icon {
-  width: 43px;
-  height: 43px;
+  width: 55px;
+  height: 55px;
+
+  flex-shrink: 0;
+
   border-radius: 12px;
-  background: var(--primary-light);
-  color: var(--primary);
+
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  margin-bottom: 12px;
+
+  background: var(--primary-light);
+  color: var(--primary);
+
+  font-size: 30px;
+  font-weight: bold;
 }
 
-.menu-card strong {
-  font-size: 17px;
+.menu-text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
-.menu-card small {
+.menu-text strong {
+  font-size: 18px;
+}
+
+.menu-text small {
   color: var(--muted);
-  margin-top: 5px;
   font-size: 13px;
 }
 
 
-/* =========================================================
+/* =========================
+   CARDS
+========================= */
+
+.card {
+  background: var(--card);
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+
+  padding: 17px;
+
+  margin-bottom: 16px;
+
+  box-shadow: var(--shadow);
+}
+
+.card h3 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.card-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 14px;
+}
+
+.card-title-row h3 {
+  margin-bottom: 0;
+}
+
+
+/* =========================
    FORMULÁRIOS
-========================================================= */
+========================= */
 
 .form-group {
   margin-bottom: 15px;
 }
 
-.form-group label,
-form label {
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+label {
   display: block;
-  margin-bottom: 7px;
-  font-size: 14px;
+
+  margin-bottom: 6px;
+
+  color: var(--text);
+
+  font-size: 13px;
   font-weight: 700;
 }
 
@@ -263,56 +308,68 @@ input,
 textarea,
 select {
   width: 100%;
+
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 13px;
-  font-family: inherit;
-  font-size: 16px;
+  border-radius: 9px;
+
   background: var(--card);
   color: var(--text);
+
+  padding: 12px 13px;
+
   outline: none;
+
+  font-size: 16px;
 }
 
 textarea {
   resize: vertical;
+  min-height: 85px;
 }
 
 input:focus,
 textarea:focus,
 select:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(11, 93, 115, 0.12);
+
+  box-shadow:
+    0 0 0 3px rgba(11, 93, 115, 0.1);
 }
 
-input::placeholder,
-textarea::placeholder {
-  color: var(--muted);
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
 
-/* =========================================================
+/* =========================
    BOTÕES
-========================================================= */
-
-button {
-  font-family: inherit;
-}
+========================= */
 
 .primary-btn,
 .secondary-btn,
-.back-btn,
-.delete-work-btn,
-.delete-day-btn,
-.view-budget-btn,
-.delete-budget-btn,
-.open-employee-btn,
-.delete-employee-btn {
-  border: 0;
-  border-radius: 10px;
-  padding: 11px 14px;
-  font-size: 14px;
+.success-btn,
+.danger-btn,
+.back-btn {
+  border: none;
+  border-radius: 9px;
+
+  padding: 11px 15px;
+
   font-weight: 700;
-  cursor: pointer;
+
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.primary-btn:active,
+.secondary-btn:active,
+.success-btn:active,
+.danger-btn:active,
+.back-btn:active {
+  transform: scale(0.97);
 }
 
 .primary-btn {
@@ -320,7 +377,7 @@ button {
   color: #ffffff;
 }
 
-.primary-btn:active {
+.primary-btn:hover {
   background: var(--primary-dark);
 }
 
@@ -329,403 +386,406 @@ button {
   color: var(--primary);
 }
 
+.success-btn {
+  background: var(--success);
+  color: #ffffff;
+}
+
+.success-btn:hover {
+  background: var(--success-dark);
+}
+
+.danger-btn {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+.back-btn {
+  background: transparent;
+  color: var(--primary);
+
+  padding-left: 0;
+
+  margin-bottom: 12px;
+}
+
 .full-btn {
   width: 100%;
 }
 
-.small-btn {
-  padding: 9px 12px;
-  font-size: 13px;
-}
 
-.back-btn {
-  background: var(--card);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-
-.view-budget-btn,
-.open-employee-btn {
-  background: var(--primary);
-  color: #ffffff;
-}
-
-.delete-budget-btn,
-.delete-employee-btn,
-.delete-work-btn,
-.delete-day-btn {
-  background: #fcebea;
-  color: var(--danger);
-}
-
-body.dark .delete-budget-btn,
-body.dark .delete-employee-btn,
-body.dark .delete-work-btn,
-body.dark .delete-day-btn {
-  background: #3b2220;
-  color: #ff8f84;
-}
-
-
-/* =========================================================
-   TÍTULOS DE SEÇÃO
-========================================================= */
-
-.section-title {
-  margin: 22px 0 12px;
-}
-
-.section-title h3 {
-  font-size: 18px;
-}
-
-.section-title-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin: 22px 0 12px;
-}
-
-
-/* =========================================================
-   SERVIÇOS
-========================================================= */
-
-.service-list {
-  margin-bottom: 14px;
-}
+/* =========================
+   SERVIÇOS DO ORÇAMENTO
+========================= */
 
 .service-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: var(--bg);
+
   padding: 14px;
+
+  margin-bottom: 14px;
 }
 
 .service-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
+
+  margin-bottom: 12px;
 }
 
-.service-number {
-  font-size: 16px;
+.service-title {
+  color: var(--primary);
 }
 
 .remove-service-btn {
-  width: 36px;
-  height: 36px;
-  border: 0;
+  width: 34px;
+  height: 34px;
+
+  border: none;
   border-radius: 50%;
-  background: #fcebea;
+
+  background: var(--danger-light);
   color: var(--danger);
-  font-size: 24px;
-  cursor: pointer;
-}
 
-body.dark .remove-service-btn {
-  background: #3b2220;
-  color: #ff8f84;
-}
+  font-size: 22px;
+  line-height: 1;
 
-.service-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .service-subtotal {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid var(--border);
-  padding-top: 12px;
-  margin-top: 4px;
-}
 
-.service-subtotal span {
+  border-top: 1px solid var(--border);
+
+  margin-top: 5px;
+  padding-top: 12px;
+
   color: var(--muted);
+
+  font-size: 14px;
 }
 
 .service-subtotal strong {
-  color: var(--primary);
+  color: var(--text);
 }
 
 
-/* =========================================================
+/* =========================
    RESUMO DO ORÇAMENTO
-========================================================= */
+========================= */
 
-.budget-summary {
+.summary-card {
   background: var(--primary-light);
-  border-radius: 12px;
-  padding: 14px;
-  margin: 18px 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
 }
 
-.budget-summary div {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.budget-summary span {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.budget-summary strong {
-  font-size: 18px;
-  color: var(--primary);
-}
-
-
-/* =========================================================
-   LISTAS
-========================================================= */
-
-.list-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-
-/* =========================================================
-   CARDS DE ORÇAMENTO
-========================================================= */
-
-.budget-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  box-shadow: var(--shadow);
-}
-
-.budget-card h3 {
-  font-size: 18px;
-  margin-bottom: 6px;
-}
-
-.budget-card p {
-  color: var(--muted);
-  font-size: 14px;
-  margin-top: 4px;
-}
-
-.budget-card-total {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--primary);
-  margin-top: 14px;
-}
-
-.budget-actions {
-  display: flex;
-  gap: 9px;
-  margin-top: 14px;
-}
-
-.budget-actions button {
-  flex: 1;
-}
-
-
-/* =========================================================
-   DETALHES DO ORÇAMENTO
-========================================================= */
-
-.detail-service {
-  border-top: 1px solid var(--border);
-  padding: 14px 0;
-}
-
-.detail-service:first-of-type {
-  margin-top: 14px;
-}
-
-.detail-service p {
-  margin-top: 6px;
-  line-height: 1.5;
-}
-
-.detail-total {
-  margin-top: 14px;
-  padding: 15px;
-  background: var(--primary-light);
-  border-radius: 12px;
-
+.summary-line {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  font-weight: 700;
+  padding: 7px 0;
 }
 
-.detail-total span:last-child {
-  color: var(--primary);
-  font-size: 21px;
-}
+.total-line {
+  border-top: 1px solid var(--border);
 
-
-/* =========================================================
-   OBRAS
-========================================================= */
-
-.work-card h3 {
-  margin-bottom: 8px;
-}
-
-.work-card p {
   margin-top: 6px;
-  color: var(--muted);
-  line-height: 1.45;
+  padding-top: 14px;
+
+  margin-bottom: 15px;
+
+  font-size: 20px;
 }
 
-.delete-work-btn {
-  margin-top: 14px;
-  width: 100%;
+.total-line strong {
+  color: var(--primary);
 }
 
 
-/* =========================================================
-   FUNCIONÁRIOS
-========================================================= */
+/* =========================
+   LISTAS SALVAS
+========================= */
 
-.employee-card h3 {
-  margin-bottom: 8px;
-}
-
-.employee-card p {
-  color: var(--muted);
-  margin-top: 5px;
-  line-height: 1.45;
-}
-
-.employee-card p strong {
-  color: var(--text);
-}
-
-.employee-total {
-  margin-top: 14px;
-  padding: 12px;
-  background: var(--primary-light);
-  border-radius: 10px;
-
+.saved-list {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 10px;
 }
 
-.employee-total strong {
-  color: var(--primary);
-}
-
-
-/* =========================================================
-   PERFIL DO FUNCIONÁRIO
-========================================================= */
-
-.employee-profile h2 {
-  margin-bottom: 10px;
-}
-
-.employee-profile p {
-  margin-top: 7px;
+.empty-message {
   color: var(--muted);
-}
+  text-align: center;
 
-.employee-profile p strong {
-  color: var(--text);
-}
+  padding: 20px 10px;
 
-
-/* =========================================================
-   HISTÓRICO DE DIÁRIAS
-========================================================= */
-
-.daily-history {
-  margin-top: 20px;
-}
-
-.daily-history h3 {
-  margin-bottom: 12px;
-}
-
-.daily-item {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 10px;
-  box-shadow: var(--shadow);
-
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.daily-item p {
-  color: var(--muted);
-  margin-top: 5px;
   font-size: 14px;
 }
 
-.daily-item > div:last-child {
-  text-align: right;
-  min-width: 100px;
+.list-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: var(--bg);
+
+  padding: 13px;
 }
 
-.daily-item > div:last-child strong {
+.list-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 10px;
+}
+
+.list-item-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.list-item-subtitle {
+  color: var(--muted);
+
+  font-size: 13px;
+
+  margin-top: 4px;
+}
+
+.list-item-value {
+  color: var(--primary);
+
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.list-actions {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  margin-top: 12px;
+}
+
+.list-actions button {
+  flex: 1;
+
+  min-width: 90px;
+
+  border: none;
+  border-radius: 8px;
+
+  padding: 9px 10px;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+/* =========================
+   DETALHES DO ORÇAMENTO
+========================= */
+
+.details-area {
+  margin-top: 15px;
+}
+
+.details-card {
+  background: var(--card);
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+
+  padding: 17px;
+
+  box-shadow: var(--shadow);
+}
+
+.details-card h3 {
+  margin-bottom: 12px;
+}
+
+.details-card p {
+  margin-bottom: 7px;
+  line-height: 1.5;
+}
+
+.details-service {
+  border-top: 1px solid var(--border);
+
+  padding: 12px 0;
+}
+
+.details-total {
+  border-top: 2px solid var(--primary);
+
+  margin-top: 10px;
+  padding-top: 14px;
+
+  display: flex;
+  justify-content: space-between;
+
+  font-size: 20px;
+  font-weight: 800;
+}
+
+
+/* =========================
+   FUNCIONÁRIOS
+========================= */
+
+.employee-summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 10px;
+
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: var(--card);
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  padding: 15px 10px;
+
+  text-align: center;
+
+  box-shadow: var(--shadow);
+}
+
+.stat-card span {
+  display: block;
+
+  color: var(--muted);
+
+  font-size: 12px;
+
+  margin-bottom: 7px;
+}
+
+.stat-card strong {
+  color: var(--primary);
+
+  font-size: 17px;
+}
+
+
+/* =========================
+   HISTÓRICO
+========================= */
+
+.history-item {
+  border-left: 4px solid var(--primary);
+
+  background: var(--bg);
+
+  border-radius: 7px;
+
+  padding: 12px;
+
+  margin-bottom: 9px;
+}
+
+.history-item.payment {
+  border-left-color: var(--success);
+}
+
+.history-item strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.history-item small {
+  color: var(--muted);
+}
+
+
+/* =========================
+   STATUS DAS OBRAS
+========================= */
+
+.status-badge {
+  display: inline-block;
+
+  padding: 5px 9px;
+
+  border-radius: 20px;
+
+  margin-top: 8px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  background: var(--primary-light);
   color: var(--primary);
 }
 
-.delete-day-btn {
-  display: block;
-  margin-top: 10px;
-  margin-left: auto;
-  padding: 7px 10px;
-  font-size: 12px;
-}
 
-
-/* =========================================================
-   MENU INFERIOR
-========================================================= */
+/* =========================
+   NAVEGAÇÃO INFERIOR
+========================= */
 
 .bottom-nav {
   position: fixed;
+
   bottom: 0;
   left: 0;
-  width: 100%;
+  right: 0;
+
+  height: 72px;
 
   background: var(--card);
+
   border-top: 1px solid var(--border);
 
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns:
+    repeat(4, 1fr);
 
   z-index: 200;
-  padding-bottom: env(safe-area-inset-bottom);
+
+  box-shadow:
+    0 -2px 10px rgba(0, 0, 0, 0.07);
+
+  padding-bottom:
+    env(safe-area-inset-bottom);
 }
 
 .nav-btn {
-  border: 0;
+  border: none;
+
   background: transparent;
   color: var(--muted);
-  padding: 10px 4px 9px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
 
-  font-size: 11px;
-  cursor: pointer;
+  gap: 3px;
+}
+
+.nav-btn span {
+  font-size: 22px;
+}
+
+.nav-btn small {
+  font-size: 10px;
 }
 
 .nav-btn.active {
@@ -733,84 +793,87 @@ body.dark .remove-service-btn {
   font-weight: 700;
 }
 
-.nav-icon {
-  font-size: 21px;
-  line-height: 1;
+
+/* =========================
+   TEMA ESCURO
+========================= */
+
+body.dark-theme {
+  --bg: #11181c;
+  --card: #1b252b;
+  --text: #f0f4f5;
+  --muted: #a9b4b9;
+
+  --primary: #1b829c;
+  --primary-dark: #156b81;
+  --primary-light: #18343d;
+
+  --border: #344249;
+
+  --danger-light: #3b2222;
+  --success-light: #1d3829;
+
+  --shadow:
+    0 3px 12px rgba(0, 0, 0, 0.25);
 }
 
 
-/* =========================================================
-   RESPONSIVIDADE
-========================================================= */
+/* =========================
+   TELAS MAIORES
+========================= */
 
-@media (max-width: 600px) {
+@media (min-width: 650px) {
 
-  main {
-    padding: 14px;
-  }
-
-  .page-header h2 {
-    font-size: 22px;
+  .app-container {
+    padding: 25px 20px 40px;
   }
 
   .menu-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:
+      repeat(3, 1fr);
   }
 
   .menu-card {
-    min-height: 132px;
-    padding: 15px 12px;
+    flex-direction: column;
+    justify-content: center;
+
+    min-height: 160px;
+
+    text-align: center;
   }
 
-  .service-fields {
+  .employee-summary-grid {
+    grid-template-columns:
+      repeat(4, 1fr);
+  }
+}
+
+
+/* =========================
+   CELULARES PEQUENOS
+========================= */
+
+@media (max-width: 380px) {
+
+  .app-container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .form-row {
     grid-template-columns: 1fr;
     gap: 0;
   }
 
-  .budget-actions {
-    flex-direction: column;
+  .page-header-row {
+    align-items: flex-start;
   }
 
-  .daily-item {
-    flex-direction: column;
+  .primary-btn {
+    font-size: 14px;
   }
-
-  .daily-item > div:last-child {
-    width: 100%;
-    text-align: left;
-  }
-
-  .delete-day-btn {
-    margin-left: 0;
-  }
-
-}
-
-
-/* =========================================================
-   TELAS MUITO PEQUENAS
-========================================================= */
-
-@media (max-width: 380px) {
-
-  .menu-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .menu-card {
-    min-height: 110px;
-  }
-
-  .brand h1 {
-    font-size: 22px;
-  }
-
-  .nav-btn {
-    font-size: 10px;
-  }
-
-  .nav-icon {
-    font-size: 19px;
-  }
-
 }
