@@ -1,189 +1,160 @@
-/* =========================
-   ELEMENTOS PRINCIPAIS
-========================= */
-
 const screens = document.querySelectorAll(".screen");
 const navButtons = document.querySelectorAll(".nav-btn");
 const menuButtons = document.querySelectorAll(".menu-card");
 
 const themeBtn = document.getElementById("themeBtn");
 
-
-/* =========================
-   ORÇAMENTOS
-========================= */
-
 const budgetForm = document.getElementById("budgetForm");
 const budgetList = document.getElementById("budgetList");
 const budgetDetails = document.getElementById("budgetDetails");
-
 const serviceList = document.getElementById("serviceList");
 const serviceTemplate = document.getElementById("serviceTemplate");
-
 const addServiceBtn = document.getElementById("addServiceBtn");
 const newBudgetBtn = document.getElementById("newBudgetBtn");
-
 const budgetTotal = document.getElementById("budgetTotal");
 const serviceCount = document.getElementById("serviceCount");
 
 const clientName = document.getElementById("clientName");
 const clientAddress = document.getElementById("clientAddress");
 const budgetNotes = document.getElementById("budgetNotes");
-
-
-/* =========================
-   OBRAS
-========================= */
+const editingBudgetId = document.getElementById("editingBudgetId");
 
 const workForm = document.getElementById("workForm");
 const workList = document.getElementById("workList");
-
 const workName = document.getElementById("workName");
 const workClient = document.getElementById("workClient");
 const workAddress = document.getElementById("workAddress");
-const workStatus = document.getElementById("workStatus");
-
-
-/* =========================
-   FUNCIONÁRIOS
-========================= */
+const workNotes = document.getElementById("workNotes");
+const editingWorkId = document.getElementById("editingWorkId");
 
 const employeeForm = document.getElementById("employeeForm");
 const employeeList = document.getElementById("employeeList");
-
 const employeeName = document.getElementById("employeeName");
-const employeeDailyRate =
-  document.getElementById("employeeDailyRate");
+const employeeDailyRate = document.getElementById("employeeDailyRate");
 
-const employeeDetailsName =
-  document.getElementById("employeeDetailsName");
-
-const employeeTotalDays =
-  document.getElementById("employeeTotalDays");
-
-const employeeTotalValue =
-  document.getElementById("employeeTotalValue");
-
-const employeePaidValue =
-  document.getElementById("employeePaidValue");
-
-const employeeBalanceValue =
-  document.getElementById("employeeBalanceValue");
-
-const employeeHistory =
-  document.getElementById("employeeHistory");
-
-const backEmployeesBtn =
-  document.getElementById("backEmployeesBtn");
-
-
-/* =========================
-   DIÁRIAS
-========================= */
+const employeeDetailsTitle =
+  document.getElementById("employeeDetailsTitle");
 
 const dailyForm = document.getElementById("dailyForm");
 const dailyDate = document.getElementById("dailyDate");
-const dailyQuantity =
-  document.getElementById("dailyQuantity");
+const dailyQuantity = document.getElementById("dailyQuantity");
 const dailyNote = document.getElementById("dailyNote");
+const dailyList = document.getElementById("dailyList");
+
+const paymentForm = document.getElementById("paymentForm");
+const paymentDate = document.getElementById("paymentDate");
+const paymentAmount = document.getElementById("paymentAmount");
+const paymentNote = document.getElementById("paymentNote");
+const paymentList = document.getElementById("paymentList");
+
+const employeeDaysTotal =
+  document.getElementById("employeeDaysTotal");
+
+const employeeGrossTotal =
+  document.getElementById("employeeGrossTotal");
+
+const employeePaidTotal =
+  document.getElementById("employeePaidTotal");
+
+const employeeBalance =
+  document.getElementById("employeeBalance");
 
 
 /* =========================
-   PAGAMENTOS
+   DADOS
 ========================= */
 
-const paymentForm =
-  document.getElementById("paymentForm");
+let budgets = loadData("dryniel_budgets", []);
+let works = loadData("dryniel_works", []);
+let employees = loadData("dryniel_employees", []);
 
-const paymentDate =
-  document.getElementById("paymentDate");
-
-const paymentValue =
-  document.getElementById("paymentValue");
+let currentEmployeeId = null;
 
 
 /* =========================
-   DADOS SALVOS
+   FUNÇÕES GERAIS
 ========================= */
 
-let budgets =
-  JSON.parse(localStorage.getItem("dryniel_budgets")) || [];
+function loadData(key, fallback) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(key));
 
-let works =
-  JSON.parse(localStorage.getItem("dryniel_works")) || [];
+    return Array.isArray(saved)
+      ? saved
+      : fallback;
 
-let employees =
-  JSON.parse(localStorage.getItem("dryniel_employees")) || [];
+  } catch (error) {
+    return fallback;
+  }
+}
 
-let editingBudgetId = null;
-let selectedEmployeeId = null;
+
+function saveData(key, value) {
+  localStorage.setItem(
+    key,
+    JSON.stringify(value)
+  );
+}
 
 
-/* =========================
-   FUNÇÕES AUXILIARES
-========================= */
-
-function generateId() {
-  return Date.now() + Math.floor(Math.random() * 100000);
+function makeId() {
+  return (
+    Date.now().toString(36) +
+    Math.random()
+      .toString(36)
+      .slice(2, 8)
+  );
 }
 
 
 function formatCurrency(value) {
 
-  const number = Number(value) || 0;
-
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL"
-  }).format(number);
+  return new Intl.NumberFormat(
+    "pt-BR",
+    {
+      style: "currency",
+      currency: "BRL"
+    }
+  ).format(
+    Number(value) || 0
+  );
 }
 
 
-function formatDate(date) {
+function formatDate(dateString) {
 
-  if (!date) return "";
-
-  const parts = date.split("-");
-
-  if (parts.length !== 3) {
-    return date;
+  if (!dateString) {
+    return "-";
   }
 
-  return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  const parts =
+    dateString.split("-");
+
+  if (parts.length !== 3) {
+    return dateString;
+  }
+
+  return (
+    parts[2] +
+    "/" +
+    parts[1] +
+    "/" +
+    parts[0]
+  );
 }
 
 
-function escapeHTML(value) {
+function escapeHtml(value) {
 
-  const div = document.createElement("div");
+  const div =
+    document.createElement("div");
 
-  div.textContent = value ?? "";
+  div.textContent =
+    value == null
+      ? ""
+      : String(value);
 
   return div.innerHTML;
-}
-
-
-function saveBudgets() {
-  localStorage.setItem(
-    "dryniel_budgets",
-    JSON.stringify(budgets)
-  );
-}
-
-
-function saveWorks() {
-  localStorage.setItem(
-    "dryniel_works",
-    JSON.stringify(works)
-  );
-}
-
-
-function saveEmployees() {
-  localStorage.setItem(
-    "dryniel_employees",
-    JSON.stringify(employees)
-  );
 }
 
 
@@ -193,66 +164,109 @@ function saveEmployees() {
 
 function showScreen(screenId) {
 
-  screens.forEach(screen => {
-    screen.classList.remove("active");
+  screens.forEach(function(screen) {
+
+    if (screen.id === screenId) {
+      screen.classList.add("active");
+
+    } else {
+      screen.classList.remove("active");
+    }
+
   });
 
-  const target =
-    document.getElementById(screenId);
 
-  if (target) {
-    target.classList.add("active");
-  }
+  navButtons.forEach(function(button) {
+
+    if (
+      button.dataset.screen ===
+      screenId
+    ) {
+
+      button.classList.add("active");
+
+    } else {
+
+      button.classList.remove("active");
+    }
+
+  });
 
 
-  navButtons.forEach(button => {
+  window.scrollTo(0, 0);
+}
 
-    button.classList.toggle(
-      "active",
-      button.dataset.screen === screenId
+
+navButtons.forEach(function(button) {
+
+  button.addEventListener(
+    "click",
+    function() {
+
+      showScreen(
+        button.dataset.screen
+      );
+
+    }
+  );
+
+});
+
+
+menuButtons.forEach(function(button) {
+
+  button.addEventListener(
+    "click",
+    function() {
+
+      showScreen(
+        button.dataset.screen
+      );
+
+    }
+  );
+
+});
+
+
+document
+  .querySelectorAll(
+    ".back-to-budgets"
+  )
+  .forEach(function(button) {
+
+    button.addEventListener(
+      "click",
+      function() {
+
+        showScreen(
+          "budgetsScreen"
+        );
+
+      }
     );
 
   });
 
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-}
+document
+  .querySelectorAll(
+    ".back-to-employees"
+  )
+  .forEach(function(button) {
 
+    button.addEventListener(
+      "click",
+      function() {
 
-menuButtons.forEach(button => {
+        showScreen(
+          "employeesScreen"
+        );
 
-  button.addEventListener("click", () => {
-
-    showScreen(button.dataset.screen);
-
-  });
-
-});
-
-
-navButtons.forEach(button => {
-
-  button.addEventListener("click", () => {
-
-    showScreen(button.dataset.screen);
+      }
+    );
 
   });
-
-});
-
-
-backEmployeesBtn.addEventListener("click", () => {
-
-  selectedEmployeeId = null;
-
-  showScreen("employeesScreen");
-
-  renderEmployees();
-
-});
 
 
 /* =========================
@@ -260,591 +274,746 @@ backEmployeesBtn.addEventListener("click", () => {
 ========================= */
 
 const savedTheme =
-  localStorage.getItem("dryniel_theme");
+  localStorage.getItem(
+    "dryniel_theme"
+  );
+
 
 if (savedTheme === "dark") {
-  document.body.classList.add("dark-theme");
+
+  document.body
+    .classList
+    .add("dark");
+
 }
 
 
-themeBtn.addEventListener("click", () => {
+updateThemeButton();
 
-  document.body.classList.toggle("dark-theme");
 
-  const dark =
-    document.body.classList.contains("dark-theme");
+if (themeBtn) {
 
-  localStorage.setItem(
-    "dryniel_theme",
-    dark ? "dark" : "light"
+  themeBtn.addEventListener(
+    "click",
+    function() {
+
+      document.body
+        .classList
+        .toggle("dark");
+
+
+      const theme =
+        document.body
+          .classList
+          .contains("dark")
+          ? "dark"
+          : "light";
+
+
+      localStorage.setItem(
+        "dryniel_theme",
+        theme
+      );
+
+
+      updateThemeButton();
+
+    }
   );
 
-});
+}
+
+
+function updateThemeButton() {
+
+  if (!themeBtn) {
+    return;
+  }
+
+  themeBtn.textContent =
+    document.body
+      .classList
+      .contains("dark")
+      ? "☀"
+      : "☾";
+}
 
 
 /* =========================
    ORÇAMENTOS
 ========================= */
 
-function addService(service = null) {
+function addService(service) {
 
-  const fragment =
-    serviceTemplate.content.cloneNode(true);
+  if (!service) {
 
-  const item =
-    fragment.querySelector(".service-item");
-
-  const description =
-    item.querySelector(".service-description");
-
-  const quantity =
-    item.querySelector(".service-quantity");
-
-  const price =
-    item.querySelector(".service-price");
-
-  const removeBtn =
-    item.querySelector(".remove-service-btn");
-
-
-  if (service) {
-
-    description.value =
-      service.description || "";
-
-    quantity.value =
-      service.quantity ?? 1;
-
-    price.value =
-      service.price ?? 0;
+    service = {
+      description: "",
+      value: ""
+    };
 
   }
 
 
-  description.addEventListener(
+  const fragment =
+    serviceTemplate
+      .content
+      .cloneNode(true);
+
+
+  const row =
+    fragment.querySelector(
+      ".service-row"
+    );
+
+
+  const descriptionInput =
+    fragment.querySelector(
+      ".service-description"
+    );
+
+
+  const valueInput =
+    fragment.querySelector(
+      ".service-value"
+    );
+
+
+  const removeButton =
+    fragment.querySelector(
+      ".remove-service"
+    );
+
+
+  descriptionInput.value =
+    service.description || "";
+
+
+  valueInput.value =
+    service.value || "";
+
+
+  valueInput.addEventListener(
     "input",
     updateBudgetSummary
   );
 
-  quantity.addEventListener(
-    "input",
-    updateBudgetSummary
+
+  removeButton.addEventListener(
+    "click",
+    function() {
+
+      row.remove();
+
+      updateBudgetSummary();
+
+
+      if (
+        serviceList.children.length === 0
+      ) {
+
+        addService();
+
+      }
+
+    }
   );
 
-  price.addEventListener(
-    "input",
-    updateBudgetSummary
+
+  serviceList.appendChild(
+    fragment
   );
 
 
-  removeBtn.addEventListener("click", () => {
-
-    item.remove();
-
-    updateServiceTitles();
-    updateBudgetSummary();
-
-  });
-
-
-  serviceList.appendChild(fragment);
-
-  updateServiceTitles();
   updateBudgetSummary();
 }
 
 
-function updateServiceTitles() {
+function getServicesFromForm() {
 
-  const items =
-    serviceList.querySelectorAll(".service-item");
+  const rows =
+    serviceList.querySelectorAll(
+      ".service-row"
+    );
 
-  items.forEach((item, index) => {
 
-    const title =
-      item.querySelector(".service-title");
+  const services = [];
 
-    title.textContent =
-      `Serviço ${index + 1}`;
+
+  rows.forEach(function(row) {
+
+    const description =
+      row.querySelector(
+        ".service-description"
+      ).value.trim();
+
+
+    const value =
+      Number(
+        row.querySelector(
+          ".service-value"
+        ).value
+      ) || 0;
+
+
+    if (
+      description !== "" ||
+      value > 0
+    ) {
+
+      services.push({
+        description: description,
+        value: value
+      });
+
+    }
 
   });
 
+
+  return services;
 }
 
 
 function updateBudgetSummary() {
 
-  const items =
-    serviceList.querySelectorAll(".service-item");
+  const services =
+    getServicesFromForm();
+
 
   let total = 0;
 
 
-  items.forEach(item => {
+  services.forEach(
+    function(service) {
 
-    const quantity =
-      Number(
-        item.querySelector(".service-quantity").value
-      ) || 0;
+      total +=
+        Number(service.value) || 0;
 
-    const price =
-      Number(
-        item.querySelector(".service-price").value
-      ) || 0;
-
-    const subtotal =
-      quantity * price;
-
-    total += subtotal;
-
-
-    const subtotalElement =
-      item.querySelector(
-        ".service-subtotal strong"
-      );
-
-    subtotalElement.textContent =
-      formatCurrency(subtotal);
-
-  });
+    }
+  );
 
 
   serviceCount.textContent =
-    items.length;
+    services.length;
+
 
   budgetTotal.textContent =
     formatCurrency(total);
 }
 
 
-function getServicesFromForm() {
-
-  const items =
-    serviceList.querySelectorAll(".service-item");
-
-  return Array.from(items).map(item => {
-
-    return {
-
-      description:
-        item.querySelector(
-          ".service-description"
-        ).value.trim(),
-
-      quantity:
-        Number(
-          item.querySelector(
-            ".service-quantity"
-          ).value
-        ) || 0,
-
-      price:
-        Number(
-          item.querySelector(
-            ".service-price"
-          ).value
-        ) || 0
-
-    };
-
-  });
-
-}
-
-
-function calculateBudgetTotal(services) {
-
-  return services.reduce(
-    (total, service) => {
-
-      return total +
-        (
-          (Number(service.quantity) || 0) *
-          (Number(service.price) || 0)
-        );
-
-    },
-    0
-  );
-
-}
-
-
 function resetBudgetForm() {
-
-  editingBudgetId = null;
 
   budgetForm.reset();
 
-  serviceList.innerHTML = "";
+  editingBudgetId.value = "";
 
-  budgetDetails.innerHTML = "";
+  serviceList.innerHTML = "";
 
   addService();
 
   updateBudgetSummary();
-
-  const saveButton =
-    document.getElementById("saveBudgetBtn");
-
-  saveButton.textContent =
-    "Salvar orçamento";
 }
 
 
-newBudgetBtn.addEventListener("click", () => {
+addServiceBtn.addEventListener(
+  "click",
+  function() {
 
-  resetBudgetForm();
+    addService();
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-});
+  }
+);
 
 
-addServiceBtn.addEventListener("click", () => {
+newBudgetBtn.addEventListener(
+  "click",
+  function() {
 
-  addService();
+    resetBudgetForm();
 
-});
-
-
-budgetForm.addEventListener("submit", event => {
-
-  event.preventDefault();
-
-
-  const services =
-    getServicesFromForm();
-
-
-  if (!clientName.value.trim()) {
-
-    alert("Digite o nome do cliente.");
+    showScreen(
+      "budgetsScreen"
+    );
 
     clientName.focus();
 
-    return;
   }
+);
 
 
-  if (services.length === 0) {
+budgetForm.addEventListener(
+  "submit",
+  function(event) {
 
-    alert(
-      "Adicione pelo menos um serviço ao orçamento."
-    );
-
-    return;
-  }
+    event.preventDefault();
 
 
-  const invalidService =
-    services.some(service =>
-      !service.description
-    );
+    const services =
+      getServicesFromForm();
 
 
-  if (invalidService) {
+    if (services.length === 0) {
 
-    alert(
-      "Preencha a descrição de todos os serviços."
-    );
-
-    return;
-  }
-
-
-  const budget = {
-
-    id:
-      editingBudgetId ||
-      generateId(),
-
-    client:
-      clientName.value.trim(),
-
-    address:
-      clientAddress.value.trim(),
-
-    notes:
-      budgetNotes.value.trim(),
-
-    services,
-
-    total:
-      calculateBudgetTotal(services),
-
-    date:
-      new Date().toISOString()
-
-  };
-
-
-  if (editingBudgetId) {
-
-    const index =
-      budgets.findIndex(
-        item =>
-          item.id === editingBudgetId
+      alert(
+        "Adicione pelo menos um serviço."
       );
 
-    if (index !== -1) {
+      return;
+    }
 
-      budget.date =
-        budgets[index].date ||
-        budget.date;
 
-      budgets[index] = budget;
+    let total = 0;
+
+
+    services.forEach(
+      function(service) {
+
+        total +=
+          Number(service.value) || 0;
+
+      }
+    );
+
+
+    const id =
+      editingBudgetId.value ||
+      makeId();
+
+
+    const budget = {
+
+      id: id,
+
+      clientName:
+        clientName.value.trim(),
+
+      clientAddress:
+        clientAddress.value.trim(),
+
+      notes:
+        budgetNotes.value.trim(),
+
+      services: services,
+
+      total: total,
+
+      updatedAt:
+        new Date().toISOString()
+
+    };
+
+
+    const existingIndex =
+      budgets.findIndex(
+        function(item) {
+
+          return item.id === id;
+
+        }
+      );
+
+
+    if (existingIndex >= 0) {
+
+      budgets[existingIndex] =
+        budget;
+
+    } else {
+
+      budgets.unshift(
+        budget
+      );
 
     }
 
-  } else {
 
-    budgets.unshift(budget);
+    saveData(
+      "dryniel_budgets",
+      budgets
+    );
+
+
+    renderBudgets();
+
+    resetBudgetForm();
+
+
+    alert(
+      "Orçamento salvo com sucesso."
+    );
 
   }
+);
 
 
-  saveBudgets();
-  renderBudgets();
-  resetBudgetForm();
-
-  alert("Orçamento salvo com sucesso.");
-
-});
-
+/* =========================
+   LISTA DE ORÇAMENTOS
+========================= */
 
 function renderBudgets() {
-
-  budgetList.innerHTML = "";
-
 
   if (budgets.length === 0) {
 
     budgetList.innerHTML =
-      `<p class="empty-message">
-        Nenhum orçamento salvo.
-      </p>`;
+      '<div class="empty-state">' +
+      "Nenhum orçamento salvo." +
+      "</div>";
 
     return;
   }
 
 
-  budgets.forEach(budget => {
-
-    const item =
-      document.createElement("div");
-
-    item.className = "list-item";
+  let html = "";
 
 
-    item.innerHTML = `
+  budgets.forEach(
+    function(budget) {
 
-      <div class="list-item-header">
+      html +=
+        '<article class="list-card">' +
 
-        <div>
+        "<h4>" +
+        escapeHtml(
+          budget.clientName ||
+          "Cliente sem nome"
+        ) +
+        "</h4>" +
 
-          <div class="list-item-title">
-            ${escapeHTML(budget.client)}
-          </div>
+        "<p>" +
+        escapeHtml(
+          budget.clientAddress ||
+          "Sem endereço"
+        ) +
+        "</p>" +
 
-          <div class="list-item-subtitle">
-            ${
-              budget.address
-                ? escapeHTML(budget.address)
-                : "Endereço não informado"
-            }
-          </div>
+        '<p class="value">' +
+        formatCurrency(
+          budget.total
+        ) +
+        "</p>" +
 
-        </div>
+        '<div class="card-actions">' +
 
-        <div class="list-item-value">
-          ${formatCurrency(budget.total)}
-        </div>
+        '<button class="primary-btn" type="button" data-action="open-budget" data-id="' +
+        budget.id +
+        '">' +
+        "Abrir" +
+        "</button>" +
 
-      </div>
+        '<button class="secondary-btn" type="button" data-action="edit-budget" data-id="' +
+        budget.id +
+        '">' +
+        "Editar" +
+        "</button>" +
 
+        '<button class="secondary-btn" type="button" data-action="print-budget" data-id="' +
+        budget.id +
+        '">' +
+        "PDF" +
+        "</button>" +
 
-      <div class="list-actions">
+        '<button class="danger-btn" type="button" data-action="delete-budget" data-id="' +
+        budget.id +
+        '">' +
+        "Excluir" +
+        "</button>" +
 
-        <button
-          class="secondary-btn view-budget"
-          type="button"
-        >
-          Ver
-        </button>
+        "</div>" +
 
-        <button
-          class="secondary-btn edit-budget"
-          type="button"
-        >
-          Editar
-        </button>
+        "</article>";
 
-        <button
-          class="danger-btn delete-budget"
-          type="button"
-        >
-          Excluir
-        </button>
-
-      </div>
-
-    `;
-
-
-    item
-      .querySelector(".view-budget")
-      .addEventListener(
-        "click",
-        () => showBudgetDetails(budget.id)
-      );
+    }
+  );
 
 
-    item
-      .querySelector(".edit-budget")
-      .addEventListener(
-        "click",
-        () => editBudget(budget.id)
-      );
-
-
-    item
-      .querySelector(".delete-budget")
-      .addEventListener(
-        "click",
-        () => deleteBudget(budget.id)
-      );
-
-
-    budgetList.appendChild(item);
-
-  });
-
+  budgetList.innerHTML = html;
 }
 
 
-function showBudgetDetails(id) {
+budgetList.addEventListener(
+  "click",
+  function(event) {
+
+    const button =
+      event.target.closest(
+        "button[data-action]"
+      );
+
+
+    if (!button) {
+      return;
+    }
+
+
+    const action =
+      button.dataset.action;
+
+
+    const id =
+      button.dataset.id;
+
+
+    if (
+      action ===
+      "open-budget"
+    ) {
+
+      openBudget(id);
+
+    }
+
+
+    if (
+      action ===
+      "edit-budget"
+    ) {
+
+      editBudget(id);
+
+    }
+
+
+    if (
+      action ===
+      "print-budget"
+    ) {
+
+      printBudget(id);
+
+    }
+
+
+    if (
+      action ===
+      "delete-budget"
+    ) {
+
+      deleteBudget(id);
+
+    }
+
+  }
+);
+
+
+/* =========================
+   ABRIR ORÇAMENTO
+========================= */
+
+function openBudget(id) {
 
   const budget =
-    budgets.find(item => item.id === id);
+    budgets.find(
+      function(item) {
 
-  if (!budget) return;
-
-
-  const servicesHTML =
-    budget.services.map(
-      (service, index) => {
-
-        const subtotal =
-          (Number(service.quantity) || 0) *
-          (Number(service.price) || 0);
-
-        return `
-
-          <div class="details-service">
-
-            <strong>
-              Serviço ${index + 1}
-            </strong>
-
-            <p>
-              ${escapeHTML(service.description)}
-            </p>
-
-            <p>
-              ${service.quantity}
-              ×
-              ${formatCurrency(service.price)}
-              =
-              <strong>
-                ${formatCurrency(subtotal)}
-              </strong>
-            </p>
-
-          </div>
-
-        `;
+        return item.id === id;
 
       }
-    ).join("");
+    );
 
 
-  budgetDetails.innerHTML = `
+  if (!budget) {
+    return;
+  }
 
-    <div class="details-card">
 
-      <h3>
-        Orçamento - ${escapeHTML(budget.client)}
-      </h3>
+  let servicesHtml = "";
 
-      <p>
-        <strong>Cliente:</strong>
-        ${escapeHTML(budget.client)}
-      </p>
 
-      <p>
-        <strong>Endereço:</strong>
-        ${
-          budget.address
-            ? escapeHTML(budget.address)
-            : "Não informado"
-        }
-      </p>
+  budget.services.forEach(
+    function(service) {
 
-      ${servicesHTML}
+      servicesHtml +=
 
-      ${
+        "<tr>" +
+
+        "<td>" +
+        escapeHtml(
+          service.description
+        ) +
+        "</td>" +
+
+        "<td>" +
+        formatCurrency(
+          service.value
+        ) +
+        "</td>" +
+
+        "</tr>";
+
+    }
+  );
+
+
+  let notesHtml = "";
+
+
+  if (budget.notes) {
+
+    notesHtml =
+
+      '<div class="detail-block">' +
+
+      "<h3>Observações</h3>" +
+
+      "<p>" +
+      escapeHtml(
         budget.notes
-          ? `
-            <p>
-              <strong>Observações:</strong><br>
-              ${escapeHTML(budget.notes)}
-            </p>
-          `
-          : ""
+      ) +
+      "</p>" +
+
+      "</div>";
+
+  }
+
+
+  budgetDetails.innerHTML =
+
+    '<div class="detail-block">' +
+
+    "<h3>Cliente</h3>" +
+
+    "<p><strong>" +
+    escapeHtml(
+      budget.clientName || "-"
+    ) +
+    "</strong></p>" +
+
+    "<p>" +
+    escapeHtml(
+      budget.clientAddress || "-"
+    ) +
+    "</p>" +
+
+    "</div>" +
+
+
+    '<div class="detail-block">' +
+
+    "<h3>Serviços</h3>" +
+
+    '<table class="detail-services">' +
+
+    "<thead>" +
+
+    "<tr>" +
+
+    "<th>Descrição</th>" +
+
+    "<th>Valor</th>" +
+
+    "</tr>" +
+
+    "</thead>" +
+
+    "<tbody>" +
+
+    servicesHtml +
+
+    "</tbody>" +
+
+    "</table>" +
+
+    "</div>" +
+
+
+    notesHtml +
+
+
+    '<div class="detail-total">' +
+
+    "<span>Total</span>" +
+
+    "<span>" +
+    formatCurrency(
+      budget.total
+    ) +
+    "</span>" +
+
+    "</div>" +
+
+
+    '<div class="card-actions">' +
+
+    '<button class="secondary-btn" type="button" id="detailEditBtn">' +
+    "Editar" +
+    "</button>" +
+
+    '<button class="primary-btn" type="button" id="detailPrintBtn">' +
+    "Gerar PDF" +
+    "</button>" +
+
+    "</div>";
+
+
+  document
+    .getElementById(
+      "detailEditBtn"
+    )
+    .addEventListener(
+      "click",
+      function() {
+
+        editBudget(id);
+
       }
-
-      <div class="details-total">
-
-        <span>Total</span>
-
-        <span>
-          ${formatCurrency(budget.total)}
-        </span>
-
-      </div>
-
-    </div>
-
-  `;
+    );
 
 
-  budgetDetails.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
+  document
+    .getElementById(
+      "detailPrintBtn"
+    )
+    .addEventListener(
+      "click",
+      function() {
 
+        window.print();
+
+      }
+    );
+
+
+  showScreen(
+    "budgetDetailsScreen"
+  );
 }
 
+
+/* =========================
+   EDITAR ORÇAMENTO
+========================= */
 
 function editBudget(id) {
 
   const budget =
-    budgets.find(item => item.id === id);
+    budgets.find(
+      function(item) {
 
-  if (!budget) return;
+        return item.id === id;
+
+      }
+    );
 
 
-  editingBudgetId = id;
+  if (!budget) {
+    return;
+  }
+
+
+  editingBudgetId.value =
+    budget.id;
+
 
   clientName.value =
-    budget.client || "";
+    budget.clientName || "";
+
 
   clientAddress.value =
-    budget.address || "";
+    budget.clientAddress || "";
+
 
   budgetNotes.value =
     budget.notes || "";
@@ -853,24 +1022,40 @@ function editBudget(id) {
   serviceList.innerHTML = "";
 
 
-  budget.services.forEach(service => {
+  budget.services.forEach(
+    function(service) {
 
-    addService(service);
+      addService(service);
 
-  });
-
-
-  document.getElementById(
-    "saveBudgetBtn"
-  ).textContent =
-    "Atualizar orçamento";
+    }
+  );
 
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  updateBudgetSummary();
 
+
+  showScreen(
+    "budgetsScreen"
+  );
+
+
+  clientName.focus();
+}
+
+
+function printBudget(id) {
+
+  openBudget(id);
+
+
+  setTimeout(
+    function() {
+
+      window.print();
+
+    },
+    200
+  );
 }
 
 
@@ -878,23 +1063,32 @@ function deleteBudget(id) {
 
   const confirmed =
     confirm(
-      "Deseja realmente excluir este orçamento?"
+      "Deseja excluir este orçamento?"
     );
 
-  if (!confirmed) return;
+
+  if (!confirmed) {
+    return;
+  }
 
 
   budgets =
     budgets.filter(
-      item => item.id !== id
+      function(item) {
+
+        return item.id !== id;
+
+      }
     );
 
 
-  saveBudgets();
+  saveData(
+    "dryniel_budgets",
+    budgets
+  );
+
+
   renderBudgets();
-
-  budgetDetails.innerHTML = "";
-
 }
 
 
@@ -902,149 +1096,245 @@ function deleteBudget(id) {
    OBRAS
 ========================= */
 
-workForm.addEventListener("submit", event => {
+workForm.addEventListener(
+  "submit",
+  function(event) {
 
-  event.preventDefault();
-
-
-  const work = {
-
-    id: generateId(),
-
-    name:
-      workName.value.trim(),
-
-    client:
-      workClient.value.trim(),
-
-    address:
-      workAddress.value.trim(),
-
-    status:
-      workStatus.value,
-
-    date:
-      new Date().toISOString()
-
-  };
+    event.preventDefault();
 
 
-  works.unshift(work);
+    const id =
+      editingWorkId.value ||
+      makeId();
 
-  saveWorks();
 
-  workForm.reset();
+    const work = {
 
-  renderWorks();
+      id: id,
 
-});
+      name:
+        workName.value.trim(),
+
+      client:
+        workClient.value.trim(),
+
+      address:
+        workAddress.value.trim(),
+
+      notes:
+        workNotes.value.trim()
+
+    };
+
+
+    const existingIndex =
+      works.findIndex(
+        function(item) {
+
+          return item.id === id;
+
+        }
+      );
+
+
+    if (existingIndex >= 0) {
+
+      works[existingIndex] =
+        work;
+
+    } else {
+
+      works.unshift(
+        work
+      );
+
+    }
+
+
+    saveData(
+      "dryniel_works",
+      works
+    );
+
+
+    workForm.reset();
+
+    editingWorkId.value = "";
+
+    renderWorks();
+
+  }
+);
 
 
 function renderWorks() {
 
-  workList.innerHTML = "";
-
-
   if (works.length === 0) {
 
     workList.innerHTML =
-      `<p class="empty-message">
-        Nenhuma obra cadastrada.
-      </p>`;
+      '<div class="empty-state">' +
+      "Nenhuma obra cadastrada." +
+      "</div>";
 
     return;
   }
 
 
-  works.forEach(work => {
-
-    const item =
-      document.createElement("div");
-
-    item.className = "list-item";
+  let html = "";
 
 
-    item.innerHTML = `
+  works.forEach(
+    function(work) {
 
-      <div class="list-item-title">
-        ${escapeHTML(work.name)}
-      </div>
+      html +=
 
-      <div class="list-item-subtitle">
+        '<article class="list-card">' +
 
-        ${
-          work.client
-            ? "Cliente: " +
-              escapeHTML(work.client)
-            : "Cliente não informado"
-        }
+        "<h4>" +
+        escapeHtml(work.name) +
+        "</h4>" +
 
-      </div>
+        "<p>" +
+        escapeHtml(
+          work.client ||
+          "Sem cliente informado"
+        ) +
+        "</p>" +
 
-      ${
-        work.address
-          ? `
-            <div class="list-item-subtitle">
-              ${escapeHTML(work.address)}
-            </div>
-          `
-          : ""
-      }
+        "<p>" +
+        escapeHtml(
+          work.address ||
+          "Sem endereço informado"
+        ) +
+        "</p>" +
 
-      <span class="status-badge">
-        ${escapeHTML(work.status)}
-      </span>
+        '<div class="card-actions">' +
+
+        '<button class="secondary-btn" type="button" data-action="edit-work" data-id="' +
+        work.id +
+        '">' +
+        "Editar" +
+        "</button>" +
+
+        '<button class="danger-btn" type="button" data-action="delete-work" data-id="' +
+        work.id +
+        '">' +
+        "Excluir" +
+        "</button>" +
+
+        "</div>" +
+
+        "</article>";
+
+    }
+  );
 
 
-      <div class="list-actions">
-
-        <button
-          class="danger-btn delete-work"
-          type="button"
-        >
-          Excluir
-        </button>
-
-      </div>
-
-    `;
+  workList.innerHTML = html;
+}
 
 
-    item
-      .querySelector(".delete-work")
-      .addEventListener(
-        "click",
-        () => deleteWork(work.id)
+workList.addEventListener(
+  "click",
+  function(event) {
+
+    const button =
+      event.target.closest(
+        "button[data-action]"
       );
 
 
-    workList.appendChild(item);
-
-  });
-
-}
+    if (!button) {
+      return;
+    }
 
 
-function deleteWork(id) {
-
-  const confirmed =
-    confirm(
-      "Deseja excluir esta obra?"
-    );
-
-  if (!confirmed) return;
+    const action =
+      button.dataset.action;
 
 
-  works =
-    works.filter(
-      work => work.id !== id
-    );
+    const id =
+      button.dataset.id;
 
 
-  saveWorks();
-  renderWorks();
+    const work =
+      works.find(
+        function(item) {
 
-}
+          return item.id === id;
+
+        }
+      );
+
+
+    if (!work) {
+      return;
+    }
+
+
+    if (
+      action ===
+      "edit-work"
+    ) {
+
+      editingWorkId.value =
+        work.id;
+
+      workName.value =
+        work.name || "";
+
+      workClient.value =
+        work.client || "";
+
+      workAddress.value =
+        work.address || "";
+
+      workNotes.value =
+        work.notes || "";
+
+      workName.focus();
+
+    }
+
+
+    if (
+      action ===
+      "delete-work"
+    ) {
+
+      const confirmed =
+        confirm(
+          "Deseja excluir esta obra?"
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      works =
+        works.filter(
+          function(item) {
+
+            return item.id !== id;
+
+          }
+        );
+
+
+      saveData(
+        "dryniel_works",
+        works
+      );
+
+
+      renderWorks();
+
+    }
+
+  }
+);
 
 
 /* =========================
@@ -1053,31 +1343,35 @@ function deleteWork(id) {
 
 employeeForm.addEventListener(
   "submit",
-  event => {
+  function(event) {
 
     event.preventDefault();
 
 
-    const employee = {
+    employees.unshift({
 
-      id: generateId(),
+      id: makeId(),
 
       name:
         employeeName.value.trim(),
 
       dailyRate:
-        Number(employeeDailyRate.value) || 0,
+        Number(
+          employeeDailyRate.value
+        ) || 0,
 
-      dailies: [],
+      dailyEntries: [],
 
       payments: []
 
-    };
+    });
 
 
-    employees.push(employee);
+    saveData(
+      "dryniel_employees",
+      employees
+    );
 
-    saveEmployees();
 
     employeeForm.reset();
 
@@ -1087,207 +1381,337 @@ employeeForm.addEventListener(
 );
 
 
+function calculateEmployeeTotals(
+  employee
+) {
+
+  const entries =
+    employee.dailyEntries || [];
+
+
+  const payments =
+    employee.payments || [];
+
+
+  let days = 0;
+
+
+  entries.forEach(
+    function(entry) {
+
+      days +=
+        Number(
+          entry.quantity
+        ) || 0;
+
+    }
+  );
+
+
+  const gross =
+    days *
+    (
+      Number(
+        employee.dailyRate
+      ) || 0
+    );
+
+
+  let paid = 0;
+
+
+  payments.forEach(
+    function(payment) {
+
+      paid +=
+        Number(
+          payment.amount
+        ) || 0;
+
+    }
+  );
+
+
+  return {
+
+    days: days,
+
+    gross: gross,
+
+    paid: paid,
+
+    balance:
+      gross - paid
+
+  };
+}
+
+
 function renderEmployees() {
 
-  employeeList.innerHTML = "";
-
-
-  if (employees.length === 0) {
+  if (
+    employees.length === 0
+  ) {
 
     employeeList.innerHTML =
-      `<p class="empty-message">
-        Nenhum funcionário cadastrado.
-      </p>`;
+      '<div class="empty-state">' +
+      "Nenhum funcionário cadastrado." +
+      "</div>";
 
     return;
   }
 
 
-  employees.forEach(employee => {
-
-    const totalDays =
-      employee.dailies.reduce(
-        (total, daily) =>
-          total +
-          (Number(daily.quantity) || 0),
-        0
-      );
+  let html = "";
 
 
-    const totalValue =
-      totalDays *
-      (Number(employee.dailyRate) || 0);
+  employees.forEach(
+    function(employee) {
+
+      const totals =
+        calculateEmployeeTotals(
+          employee
+        );
 
 
-    const paid =
-      employee.payments.reduce(
-        (total, payment) =>
-          total +
-          (Number(payment.value) || 0),
-        0
-      );
+      html +=
+
+        '<article class="list-card">' +
+
+        "<h4>" +
+        escapeHtml(
+          employee.name
+        ) +
+        "</h4>" +
+
+        "<p>Diária: " +
+        formatCurrency(
+          employee.dailyRate
+        ) +
+        "</p>" +
+
+        '<p class="value">' +
+        "Saldo: " +
+        formatCurrency(
+          totals.balance
+        ) +
+        "</p>" +
+
+        '<div class="card-actions">' +
+
+        '<button class="primary-btn" type="button" data-action="open-employee" data-id="' +
+        employee.id +
+        '">' +
+        "Abrir página" +
+        "</button>" +
+
+        '<button class="danger-btn" type="button" data-action="delete-employee" data-id="' +
+        employee.id +
+        '">' +
+        "Excluir" +
+        "</button>" +
+
+        "</div>" +
+
+        "</article>";
+
+    }
+  );
 
 
-    const balance =
-      totalValue - paid;
-
-
-    const item =
-      document.createElement("div");
-
-    item.className = "list-item";
-
-
-    item.innerHTML = `
-
-      <div class="list-item-header">
-
-        <div>
-
-          <div class="list-item-title">
-            ${escapeHTML(employee.name)}
-          </div>
-
-          <div class="list-item-subtitle">
-            Diária:
-            ${formatCurrency(employee.dailyRate)}
-          </div>
-
-          <div class="list-item-subtitle">
-            ${totalDays} diária(s)
-          </div>
-
-        </div>
-
-        <div class="list-item-value">
-          ${formatCurrency(balance)}
-        </div>
-
-      </div>
-
-
-      <div class="list-actions">
-
-        <button
-          class="primary-btn open-employee"
-          type="button"
-        >
-          Abrir
-        </button>
-
-        <button
-          class="danger-btn delete-employee"
-          type="button"
-        >
-          Excluir
-        </button>
-
-      </div>
-
-    `;
-
-
-    item
-      .querySelector(".open-employee")
-      .addEventListener(
-        "click",
-        () => openEmployee(employee.id)
-      );
-
-
-    item
-      .querySelector(".delete-employee")
-      .addEventListener(
-        "click",
-        () => deleteEmployee(employee.id)
-      );
-
-
-    employeeList.appendChild(item);
-
-  });
-
+  employeeList.innerHTML =
+    html;
 }
 
+
+employeeList.addEventListener(
+  "click",
+  function(event) {
+
+    const button =
+      event.target.closest(
+        "button[data-action]"
+      );
+
+
+    if (!button) {
+      return;
+    }
+
+
+    const action =
+      button.dataset.action;
+
+
+    const id =
+      button.dataset.id;
+
+
+    if (
+      action ===
+      "open-employee"
+    ) {
+
+      openEmployee(id);
+
+    }
+
+
+    if (
+      action ===
+      "delete-employee"
+    ) {
+
+      const confirmed =
+        confirm(
+          "Deseja excluir este funcionário e todo o histórico dele?"
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      employees =
+        employees.filter(
+          function(employee) {
+
+            return (
+              employee.id !== id
+            );
+
+          }
+        );
+
+
+      saveData(
+        "dryniel_employees",
+        employees
+      );
+
+
+      renderEmployees();
+
+    }
+
+  }
+);
+
+
+/* =========================
+   PÁGINA DO FUNCIONÁRIO
+========================= */
 
 function openEmployee(id) {
 
-  selectedEmployeeId = id;
+  const employee =
+    employees.find(
+      function(item) {
+
+        return item.id === id;
+
+      }
+    );
+
+
+  if (!employee) {
+    return;
+  }
+
+
+  currentEmployeeId = id;
+
+
+  employeeDetailsTitle.textContent =
+    employee.name;
+
+
+  setTodayDefaults();
 
   renderEmployeeDetails();
 
-  showScreen("employeeDetailsScreen");
 
-}
-
-
-function getSelectedEmployee() {
-
-  return employees.find(
-    employee =>
-      employee.id === selectedEmployeeId
+  showScreen(
+    "employeeDetailsScreen"
   );
-
 }
 
 
-function deleteEmployee(id) {
+function setTodayDefaults() {
 
-  const employee =
-    employees.find(
-      item => item.id === id
-    );
-
-
-  if (!employee) return;
+  const today =
+    new Date()
+      .toISOString()
+      .slice(0, 10);
 
 
-  const confirmed =
-    confirm(
-      `Deseja excluir o funcionário ${employee.name} e todo o histórico dele?`
-    );
+  if (!dailyDate.value) {
 
-  if (!confirmed) return;
+    dailyDate.value =
+      today;
 
-
-  employees =
-    employees.filter(
-      item => item.id !== id
-    );
+  }
 
 
-  saveEmployees();
-  renderEmployees();
+  if (!paymentDate.value) {
 
+    paymentDate.value =
+      today;
+
+  }
 }
 
 
 /* =========================
-   DIÁRIAS
+   ADICIONAR DIÁRIA
 ========================= */
 
 dailyForm.addEventListener(
   "submit",
-  event => {
+  function(event) {
 
     event.preventDefault();
 
 
     const employee =
-      getSelectedEmployee();
+      employees.find(
+        function(item) {
 
-    if (!employee) return;
+          return (
+            item.id ===
+            currentEmployeeId
+          );
+
+        }
+      );
 
 
-    employee.dailies.push({
+    if (!employee) {
+      return;
+    }
 
-      id: generateId(),
+
+    if (
+      !employee.dailyEntries
+    ) {
+
+      employee.dailyEntries = [];
+
+    }
+
+
+    employee.dailyEntries.unshift({
+
+      id: makeId(),
 
       date:
         dailyDate.value,
 
       quantity:
-        Number(dailyQuantity.value) || 1,
+        Number(
+          dailyQuantity.value
+        ) || 1,
 
       note:
         dailyNote.value.trim()
@@ -1295,57 +1719,93 @@ dailyForm.addEventListener(
     });
 
 
-    saveEmployees();
+    saveData(
+      "dryniel_employees",
+      employees
+    );
+
 
     dailyForm.reset();
 
-    dailyQuantity.value = 1;
+    dailyQuantity.value = "1";
 
-    setDefaultDates();
+    setTodayDefaults();
 
     renderEmployeeDetails();
+
+    renderEmployees();
 
   }
 );
 
 
 /* =========================
-   PAGAMENTOS
+   REGISTRAR PAGAMENTO
 ========================= */
 
 paymentForm.addEventListener(
   "submit",
-  event => {
+  function(event) {
 
     event.preventDefault();
 
 
     const employee =
-      getSelectedEmployee();
+      employees.find(
+        function(item) {
 
-    if (!employee) return;
+          return (
+            item.id ===
+            currentEmployeeId
+          );
+
+        }
+      );
 
 
-    employee.payments.push({
+    if (!employee) {
+      return;
+    }
 
-      id: generateId(),
+
+    if (!employee.payments) {
+
+      employee.payments = [];
+
+    }
+
+
+    employee.payments.unshift({
+
+      id: makeId(),
 
       date:
         paymentDate.value,
 
-      value:
-        Number(paymentValue.value) || 0
+      amount:
+        Number(
+          paymentAmount.value
+        ) || 0,
+
+      note:
+        paymentNote.value.trim()
 
     });
 
 
-    saveEmployees();
+    saveData(
+      "dryniel_employees",
+      employees
+    );
+
 
     paymentForm.reset();
 
-    setDefaultDates();
+    setTodayDefaults();
 
     renderEmployeeDetails();
+
+    renderEmployees();
 
   }
 );
@@ -1358,370 +1818,348 @@ paymentForm.addEventListener(
 function renderEmployeeDetails() {
 
   const employee =
-    getSelectedEmployee();
+    employees.find(
+      function(item) {
 
-  if (!employee) return;
+        return (
+          item.id ===
+          currentEmployeeId
+        );
 
-
-  employee.dailies =
-    employee.dailies || [];
-
-  employee.payments =
-    employee.payments || [];
-
-
-  const totalDays =
-    employee.dailies.reduce(
-      (total, daily) =>
-        total +
-        (Number(daily.quantity) || 0),
-      0
+      }
     );
 
 
-  const totalValue =
-    totalDays *
-    (Number(employee.dailyRate) || 0);
-
-
-  const paid =
-    employee.payments.reduce(
-      (total, payment) =>
-        total +
-        (Number(payment.value) || 0),
-      0
-    );
-
-
-  const balance =
-    totalValue - paid;
-
-
-  employeeDetailsName.textContent =
-    employee.name;
-
-
-  employeeTotalDays.textContent =
-    totalDays;
-
-
-  employeeTotalValue.textContent =
-    formatCurrency(totalValue);
-
-
-  employeePaidValue.textContent =
-    formatCurrency(paid);
-
-
-  employeeBalanceValue.textContent =
-    formatCurrency(balance);
-
-
-  renderEmployeeHistory(employee);
-
-}
-
-
-/* =========================
-   HISTÓRICO FUNCIONÁRIO
-========================= */
-
-function renderEmployeeHistory(employee) {
-
-  employeeHistory.innerHTML = "";
-
-
-  const events = [];
-
-
-  employee.dailies.forEach(daily => {
-
-    events.push({
-
-      type: "daily",
-
-      id: daily.id,
-
-      date: daily.date,
-
-      quantity:
-        Number(daily.quantity) || 0,
-
-      note:
-        daily.note || ""
-
-    });
-
-  });
-
-
-  employee.payments.forEach(payment => {
-
-    events.push({
-
-      type: "payment",
-
-      id: payment.id,
-
-      date: payment.date,
-
-      value:
-        Number(payment.value) || 0
-
-    });
-
-  });
-
-
-  events.sort(
-    (a, b) =>
-      String(b.date).localeCompare(
-        String(a.date)
-      )
-  );
-
-
-  if (events.length === 0) {
-
-    employeeHistory.innerHTML =
-      `<p class="empty-message">
-        Nenhuma diária ou pagamento registrado.
-      </p>`;
-
+  if (!employee) {
     return;
   }
 
 
-  events.forEach(event => {
-
-    const item =
-      document.createElement("div");
-
-
-    if (event.type === "daily") {
-
-      const value =
-        event.quantity *
-        (Number(employee.dailyRate) || 0);
+  const totals =
+    calculateEmployeeTotals(
+      employee
+    );
 
 
-      item.className =
-        "history-item";
+  employeeDetailsTitle.textContent =
+    employee.name;
 
 
-      item.innerHTML = `
-
-        <strong>
-          ${event.quantity} diária(s)
-          — ${formatCurrency(value)}
-        </strong>
-
-        <small>
-          ${formatDate(event.date)}
-        </small>
-
-        ${
-          event.note
-            ? `
-              <small>
-                ${escapeHTML(event.note)}
-              </small>
-            `
-            : ""
-        }
-
-        <div class="list-actions">
-
-          <button
-            class="danger-btn delete-history"
-            type="button"
-          >
-            Excluir
-          </button>
-
-        </div>
-
-      `;
+  employeeDaysTotal.textContent =
+    totals.days.toLocaleString(
+      "pt-BR"
+    );
 
 
-      item
-        .querySelector(".delete-history")
-        .addEventListener(
-          "click",
-          () => deleteDaily(event.id)
-        );
-
-    } else {
-
-      item.className =
-        "history-item payment";
+  employeeGrossTotal.textContent =
+    formatCurrency(
+      totals.gross
+    );
 
 
-      item.innerHTML = `
-
-        <strong>
-          Pagamento:
-          ${formatCurrency(event.value)}
-        </strong>
-
-        <small>
-          ${formatDate(event.date)}
-        </small>
-
-        <div class="list-actions">
-
-          <button
-            class="danger-btn delete-history"
-            type="button"
-          >
-            Excluir
-          </button>
-
-        </div>
-
-      `;
+  employeePaidTotal.textContent =
+    formatCurrency(
+      totals.paid
+    );
 
 
-      item
-        .querySelector(".delete-history")
-        .addEventListener(
-          "click",
-          () => deletePayment(event.id)
-        );
+  employeeBalance.textContent =
+    formatCurrency(
+      totals.balance
+    );
 
+
+  const entries =
+    employee.dailyEntries || [];
+
+
+  const payments =
+    employee.payments || [];
+
+
+  if (entries.length === 0) {
+
+    dailyList.innerHTML =
+      '<div class="empty-state">' +
+      "Nenhuma diária registrada." +
+      "</div>";
+
+  } else {
+
+    let dailyHtml = "";
+
+
+    entries.forEach(
+      function(entry) {
+
+        const entryValue =
+          Number(
+            entry.quantity
+          ) *
+          Number(
+            employee.dailyRate
+          );
+
+
+        dailyHtml +=
+
+          '<article class="list-card">' +
+
+          "<h4>" +
+          formatDate(
+            entry.date
+          ) +
+          " — " +
+          entry.quantity +
+          " diária(s)" +
+          "</h4>" +
+
+          "<p>" +
+          (
+            entry.note
+              ? escapeHtml(
+                  entry.note
+                )
+              : "Sem observação"
+          ) +
+          "</p>" +
+
+          '<p class="value">' +
+          formatCurrency(
+            entryValue
+          ) +
+          "</p>" +
+
+          '<div class="card-actions">' +
+
+          '<button class="danger-btn" type="button" data-action="delete-daily" data-id="' +
+          entry.id +
+          '">' +
+          "Excluir" +
+          "</button>" +
+
+          "</div>" +
+
+          "</article>";
+
+      }
+    );
+
+
+    dailyList.innerHTML =
+      dailyHtml;
+  }
+
+
+  if (
+    payments.length === 0
+  ) {
+
+    paymentList.innerHTML =
+      '<div class="empty-state">' +
+      "Nenhum pagamento registrado." +
+      "</div>";
+
+  } else {
+
+    let paymentHtml = "";
+
+
+    payments.forEach(
+      function(payment) {
+
+        paymentHtml +=
+
+          '<article class="list-card">' +
+
+          "<h4>" +
+          formatDate(
+            payment.date
+          ) +
+          "</h4>" +
+
+          "<p>" +
+          (
+            payment.note
+              ? escapeHtml(
+                  payment.note
+                )
+              : "Sem observação"
+          ) +
+          "</p>" +
+
+          '<p class="value">' +
+          formatCurrency(
+            payment.amount
+          ) +
+          "</p>" +
+
+          '<div class="card-actions">' +
+
+          '<button class="danger-btn" type="button" data-action="delete-payment" data-id="' +
+          payment.id +
+          '">' +
+          "Excluir" +
+          "</button>" +
+
+          "</div>" +
+
+          "</article>";
+
+      }
+    );
+
+
+    paymentList.innerHTML =
+      paymentHtml;
+  }
+}
+
+
+/* =========================
+   EXCLUIR DIÁRIA
+========================= */
+
+dailyList.addEventListener(
+  "click",
+  function(event) {
+
+    const button =
+      event.target.closest(
+        'button[data-action="delete-daily"]'
+      );
+
+
+    if (!button) {
+      return;
     }
 
 
-    employeeHistory.appendChild(item);
+    const employee =
+      employees.find(
+        function(item) {
 
-  });
+          return (
+            item.id ===
+            currentEmployeeId
+          );
 
-}
-
-
-function deleteDaily(id) {
-
-  const employee =
-    getSelectedEmployee();
-
-  if (!employee) return;
+        }
+      );
 
 
-  const confirmed =
-    confirm(
-      "Deseja excluir esta diária?"
-    );
-
-  if (!confirmed) return;
+    if (!employee) {
+      return;
+    }
 
 
-  employee.dailies =
-    employee.dailies.filter(
-      daily => daily.id !== id
-    );
+    employee.dailyEntries =
+      (
+        employee.dailyEntries ||
+        []
+      ).filter(
+        function(entry) {
+
+          return (
+            entry.id !==
+            button.dataset.id
+          );
+
+        }
+      );
 
 
-  saveEmployees();
-  renderEmployeeDetails();
-  renderEmployees();
-
-}
-
-
-function deletePayment(id) {
-
-  const employee =
-    getSelectedEmployee();
-
-  if (!employee) return;
-
-
-  const confirmed =
-    confirm(
-      "Deseja excluir este pagamento?"
-    );
-
-  if (!confirmed) return;
-
-
-  employee.payments =
-    employee.payments.filter(
-      payment => payment.id !== id
+    saveData(
+      "dryniel_employees",
+      employees
     );
 
 
-  saveEmployees();
-  renderEmployeeDetails();
-  renderEmployees();
+    renderEmployeeDetails();
 
-}
+    renderEmployees();
+
+  }
+);
 
 
 /* =========================
-   DATAS PADRÃO
+   EXCLUIR PAGAMENTO
 ========================= */
 
-function getToday() {
+paymentList.addEventListener(
+  "click",
+  function(event) {
 
-  const today = new Date();
-
-  const year =
-    today.getFullYear();
-
-  const month =
-    String(
-      today.getMonth() + 1
-    ).padStart(2, "0");
-
-  const day =
-    String(
-      today.getDate()
-    ).padStart(2, "0");
+    const button =
+      event.target.closest(
+        'button[data-action="delete-payment"]'
+      );
 
 
-  return `${year}-${month}-${day}`;
-}
+    if (!button) {
+      return;
+    }
 
 
-function setDefaultDates() {
+    const employee =
+      employees.find(
+        function(item) {
 
-  const today =
-    getToday();
+          return (
+            item.id ===
+            currentEmployeeId
+          );
+
+        }
+      );
 
 
-  if (!dailyDate.value) {
-    dailyDate.value = today;
+    if (!employee) {
+      return;
+    }
+
+
+    employee.payments =
+      (
+        employee.payments ||
+        []
+      ).filter(
+        function(payment) {
+
+          return (
+            payment.id !==
+            button.dataset.id
+          );
+
+        }
+      );
+
+
+    saveData(
+      "dryniel_employees",
+      employees
+    );
+
+
+    renderEmployeeDetails();
+
+    renderEmployees();
+
   }
-
-
-  if (!paymentDate.value) {
-    paymentDate.value = today;
-  }
-
-}
+);
 
 
 /* =========================
-   INICIALIZAÇÃO
+   INICIALIZAÇÃO DO APP
 ========================= */
 
-function initializeApp() {
+addService();
 
-  showScreen("homeScreen");
+renderBudgets();
 
-  renderBudgets();
+renderWorks();
 
-  renderWorks();
+renderEmployees();
 
-  renderEmployees();
-
-  serviceList.innerHTML = "";
-
-  addService();
-
-  setDefaultDates();
-
-}
-
-
-initializeApp();
+showScreen("homeScreen");
