@@ -1,186 +1,288 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta name="theme-color" content="#0b5d73">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b6f86" />
   <title>DRYNIEL - Construção a Seco</title>
-
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-
-  <!-- =========================
-       CABEÇALHO
-  ========================== -->
-
   <header class="top-header">
-
-    <div class="brand">
+    <div>
       <h1>DRYNIEL</h1>
       <p>CONSTRUÇÃO A SECO</p>
     </div>
 
-    <button
-      id="themeBtn"
-      class="theme-btn"
-      type="button"
-      aria-label="Alternar tema"
-    >
-      ◐
-    </button>
-
+    <button id="themeBtn" class="icon-btn" type="button" aria-label="Alternar tema">☾</button>
   </header>
 
+  <main class="app-shell">
 
-  <!-- =========================
-       CONTEÚDO PRINCIPAL
-  ========================== -->
-
-  <main class="app-container">
-
-
-    <!-- =========================
-         TELA INÍCIO
-    ========================== -->
-
-    <section
-      id="homeScreen"
-      class="screen active"
-    >
-
+    <!-- INÍCIO -->
+    <section id="homeScreen" class="screen active">
       <div class="page-header">
         <h2>Início</h2>
         <p>Gestão da DRYNIEL</p>
       </div>
 
-
       <div class="menu-grid">
-
-        <button
-          class="menu-card"
-          type="button"
-          data-screen="budgetsScreen"
-        >
+        <button class="menu-card" type="button" data-screen="budgetsScreen">
           <span class="menu-icon">▤</span>
-
-          <span class="menu-text">
-            <strong>Orçamentos</strong>
-            <small>Criar e consultar</small>
-          </span>
+          <strong>Orçamentos</strong>
+          <small>Criar e consultar</small>
         </button>
 
-
-        <button
-          class="menu-card"
-          type="button"
-          data-screen="worksScreen"
-        >
+        <button class="menu-card" type="button" data-screen="worksScreen">
           <span class="menu-icon">▣</span>
-
-          <span class="menu-text">
-            <strong>Obras</strong>
-            <small>Cadastrar obras</small>
-          </span>
+          <strong>Obras</strong>
+          <small>Cadastrar obras</small>
         </button>
 
-
-        <button
-          class="menu-card"
-          type="button"
-          data-screen="employeesScreen"
-        >
+        <button class="menu-card" type="button" data-screen="employeesScreen">
           <span class="menu-icon">♙</span>
-
-          <span class="menu-text">
-            <strong>Funcionários</strong>
-            <small>Diárias e pagamentos</small>
-          </span>
+          <strong>Funcionários</strong>
+          <small>Diárias e pagamentos</small>
         </button>
-
       </div>
-
     </section>
 
-
-
-    <!-- =========================
-         TELA ORÇAMENTOS
-    ========================== -->
-
-    <section
-      id="budgetsScreen"
-      class="screen"
-    >
-
-      <div class="page-header page-header-row">
-
+    <!-- ORÇAMENTOS -->
+    <section id="budgetsScreen" class="screen">
+      <div class="page-header row-between">
         <div>
           <h2>Orçamentos</h2>
           <p>Crie e consulte seus orçamentos</p>
         </div>
-
-        <button
-          id="newBudgetBtn"
-          class="primary-btn"
-          type="button"
-        >
-          + Novo
-        </button>
-
+        <button id="newBudgetBtn" class="primary-btn" type="button">+ Novo</button>
       </div>
 
-
-      <!-- FORMULÁRIO -->
-
-      <form id="budgetForm">
-
-
-        <!-- DADOS DO CLIENTE -->
-
-        <div class="card">
+      <div class="layout-grid">
+        <form id="budgetForm" class="panel">
+          <input type="hidden" id="editingBudgetId" />
 
           <h3>Dados do cliente</h3>
 
-          <div class="form-group">
+          <label for="clientName">Nome do cliente</label>
+          <input id="clientName" type="text" placeholder="Nome do cliente" required />
 
-            <label for="clientName">
-              Nome do cliente
-            </label>
+          <label for="clientAddress">Endereço</label>
+          <input id="clientAddress" type="text" placeholder="Endereço do cliente ou da obra" />
 
-            <input
-              id="clientName"
-              type="text"
-              placeholder="Nome do cliente"
-              required
-            >
-
+          <div class="section-title-row">
+            <h3>Serviços</h3>
+            <button id="addServiceBtn" class="secondary-btn" type="button">+ Serviço</button>
           </div>
 
+          <div id="serviceList"></div>
 
-          <div class="form-group">
+          <label for="budgetNotes">Observações</label>
+          <textarea id="budgetNotes" rows="4" placeholder="Observações do orçamento"></textarea>
 
-            <label for="clientAddress">
-              Endereço
-            </label>
-
-            <input
-              id="clientAddress"
-              type="text"
-              placeholder="Endereço do cliente ou da obra"
-            >
-
+          <div class="summary-box">
+            <div>
+              <span>Serviços</span>
+              <strong id="serviceCount">0</strong>
+            </div>
+            <div>
+              <span>Total</span>
+              <strong id="budgetTotal">R$ 0,00</strong>
+            </div>
           </div>
 
+          <button id="saveBudgetBtn" class="primary-btn full" type="submit">Salvar orçamento</button>
+        </form>
+
+        <div class="panel">
+          <h3>Meus orçamentos</h3>
+          <div id="budgetList" class="stack-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DETALHES DO ORÇAMENTO -->
+    <section id="budgetDetailsScreen" class="screen">
+      <div class="page-header row-between">
+        <div>
+          <h2>Orçamento</h2>
+          <p>Detalhes completos</p>
+        </div>
+        <button class="secondary-btn back-to-budgets" type="button">Voltar</button>
+      </div>
+
+      <div id="budgetDetails" class="panel"></div>
+    </section>
+
+    <!-- OBRAS -->
+    <section id="worksScreen" class="screen">
+      <div class="page-header">
+        <h2>Obras</h2>
+        <p>Cadastre e acompanhe suas obras</p>
+      </div>
+
+      <div class="layout-grid">
+        <form id="workForm" class="panel">
+          <input type="hidden" id="editingWorkId" />
+
+          <h3>Nova obra</h3>
+
+          <label for="workName">Nome da obra</label>
+          <input id="workName" type="text" placeholder="Ex.: Reforma apartamento" required />
+
+          <label for="workClient">Cliente</label>
+          <input id="workClient" type="text" placeholder="Nome do cliente" />
+
+          <label for="workAddress">Endereço</label>
+          <input id="workAddress" type="text" placeholder="Endereço da obra" />
+
+          <label for="workNotes">Observações</label>
+          <textarea id="workNotes" rows="4" placeholder="Informações importantes"></textarea>
+
+          <button class="primary-btn full" type="submit">Salvar obra</button>
+        </form>
+
+        <div class="panel">
+          <h3>Obras cadastradas</h3>
+          <div id="workList" class="stack-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FUNCIONÁRIOS -->
+    <section id="employeesScreen" class="screen">
+      <div class="page-header">
+        <h2>Funcionários</h2>
+        <p>Controle individual de diárias e pagamentos</p>
+      </div>
+
+      <div class="layout-grid">
+        <form id="employeeForm" class="panel">
+          <h3>Novo funcionário</h3>
+
+          <label for="employeeName">Nome</label>
+          <input id="employeeName" type="text" placeholder="Nome do funcionário" required />
+
+          <label for="employeeDailyRate">Valor da diária</label>
+          <input id="employeeDailyRate" type="number" min="0" step="0.01" placeholder="0,00" required />
+
+          <button class="primary-btn full" type="submit">Adicionar funcionário</button>
+        </form>
+
+        <div class="panel">
+          <h3>Equipe</h3>
+          <div id="employeeList" class="stack-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PÁGINA INDIVIDUAL DO FUNCIONÁRIO -->
+    <section id="employeeDetailsScreen" class="screen">
+      <div class="page-header row-between">
+        <div>
+          <h2 id="employeeDetailsTitle">Funcionário</h2>
+          <p>Diárias e pagamentos</p>
+        </div>
+        <button class="secondary-btn back-to-employees" type="button">Voltar</button>
+      </div>
+
+      <div class="layout-grid">
+        <form id="dailyForm" class="panel">
+          <h3>Adicionar diária</h3>
+
+          <label for="dailyDate">Data</label>
+          <input id="dailyDate" type="date" required />
+
+          <label for="dailyQuantity">Quantidade de diárias</label>
+          <input id="dailyQuantity" type="number" min="0.5" step="0.5" value="1" required />
+
+          <label for="dailyNote">Observação</label>
+          <input id="dailyNote" type="text" placeholder="Ex.: Obra João" />
+
+          <button class="primary-btn full" type="submit">Adicionar diária</button>
+        </form>
+
+        <form id="paymentForm" class="panel">
+          <h3>Registrar pagamento</h3>
+
+          <label for="paymentDate">Data</label>
+          <input id="paymentDate" type="date" required />
+
+          <label for="paymentAmount">Valor pago</label>
+          <input id="paymentAmount" type="number" min="0" step="0.01" placeholder="0,00" required />
+
+          <label for="paymentNote">Observação</label>
+          <input id="paymentNote" type="text" placeholder="Ex.: PIX" />
+
+          <button class="primary-btn full" type="submit">Registrar pagamento</button>
+        </form>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <span>Diárias acumuladas</span>
+          <strong id="employeeDaysTotal">0</strong>
+        </div>
+        <div class="summary-card">
+          <span>Total gerado</span>
+          <strong id="employeeGrossTotal">R$ 0,00</strong>
+        </div>
+        <div class="summary-card">
+          <span>Total pago</span>
+          <strong id="employeePaidTotal">R$ 0,00</strong>
+        </div>
+        <div class="summary-card">
+          <span>Saldo</span>
+          <strong id="employeeBalance">R$ 0,00</strong>
+        </div>
+      </div>
+
+      <div class="layout-grid">
+        <div class="panel">
+          <h3>Histórico de diárias</h3>
+          <div id="dailyList" class="stack-list"></div>
         </div>
 
+        <div class="panel">
+          <h3>Histórico de pagamentos</h3>
+          <div id="paymentList" class="stack-list"></div>
+        </div>
+      </div>
+    </section>
 
+    <template id="serviceTemplate">
+      <div class="service-row">
+        <div class="service-fields">
+          <input class="service-description" type="text" placeholder="Descrição do serviço" required />
+          <input class="service-value" type="number" min="0" step="0.01" placeholder="Valor" required />
+        </div>
+        <button class="danger-btn remove-service" type="button">Excluir</button>
+      </div>
+    </template>
+  </main>
 
-        <!--
+  <nav class="bottom-nav">
+    <button class="nav-btn active" type="button" data-screen="homeScreen">
+      <span>⌂</span>
+      <small>Início</small>
+    </button>
+
+    <button class="nav-btn" type="button" data-screen="budgetsScreen">
+      <span>▤</span>
+      <small>Orçamentos</small>
+    </button>
+
+    <button class="nav-btn" type="button" data-screen="worksScreen">
+      <span>▣</span>
+      <small>Obras</small>
+    </button>
+
+    <button class="nav-btn" type="button" data-screen="employeesScreen">
+      <span>♙</span>
+      <small>Funcionários</small>
+    </button>
+  </nav>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
