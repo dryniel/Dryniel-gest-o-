@@ -1,7 +1,6 @@
-/* ========================================
-   DRYNIEL - CONSTRUÇÃO A SECO
-   CSS compatível com index.html + app.js
-======================================== */
+/* =========================
+   RESET
+========================= */
 
 * {
   box-sizing: border-box;
@@ -18,8 +17,16 @@
   --primary-dark: #07566a;
   --border: #dce2e7;
   --danger: #c0392b;
+  --danger-dark: #962d22;
+  --success: #1e8449;
+  --warning: #b9770e;
   --shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
+
+
+/* =========================
+   TEMA ESCURO
+========================= */
 
 body.dark {
   --bg: #11181d;
@@ -32,6 +39,11 @@ body.dark {
   --shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
 }
 
+
+/* =========================
+   GERAL
+========================= */
+
 html {
   scroll-behavior: smooth;
 }
@@ -41,39 +53,46 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   background: var(--bg);
   color: var(--text);
-  padding-bottom: 85px;
+  padding-bottom: 86px;
 }
 
 button,
 input,
-textarea {
-  font-family: inherit;
+textarea,
+select {
+  font: inherit;
 }
 
 button {
   cursor: pointer;
 }
 
-/* ========================================
+input,
+textarea,
+select,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+/* =========================
    CABEÇALHO
-======================================== */
+========================= */
 
 .top-header {
   position: sticky;
   top: 0;
-  z-index: 100;
-
-  min-height: 76px;
-
+  z-index: 20;
+  min-height: 78px;
   padding: 14px 18px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
 
   background: var(--primary);
-  color: white;
-
+  color: #ffffff;
   box-shadow: var(--shadow);
 }
 
@@ -85,106 +104,137 @@ button {
 
 .top-header p {
   margin-top: 6px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 1.5px;
+  opacity: 0.95;
 }
 
 .icon-btn {
   width: 42px;
   height: 42px;
+  flex-shrink: 0;
 
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 50%;
 
   background: rgba(255, 255, 255, 0.12);
-  color: white;
+  color: #ffffff;
 
   font-size: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ========================================
+
+/* =========================
    CONTEÚDO
-======================================== */
+========================= */
 
 .app-shell {
-  width: calc(100% - 24px);
-  max-width: 1100px;
-
+  width: min(1120px, calc(100% - 28px));
   margin: 0 auto;
-
-  padding-top: 20px;
+  padding: 22px 0 28px;
 }
 
-/* MUITO IMPORTANTE:
-   somente a tela ativa aparece */
+
+/* =========================
+   TELAS
+========================= */
 
 .screen {
-  display: none !important;
+  display: none;
 }
 
 .screen.active {
-  display: block !important;
+  display: block;
 }
 
-/* ========================================
-   TÍTULOS
-======================================== */
+
+/* =========================
+   CABEÇALHO DAS PÁGINAS
+========================= */
 
 .page-header {
   margin-bottom: 20px;
 }
 
 .page-header h2 {
-  margin-bottom: 6px;
-
-  font-size: 30px;
+  font-size: clamp(26px, 5vw, 38px);
+  margin-bottom: 8px;
   line-height: 1.15;
 }
 
 .page-header p {
   color: var(--muted);
-  font-size: 15px;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
-.row-between {
+.row-between,
+.section-title-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-
+  justify-content: space-between;
   gap: 12px;
 }
 
-/* ========================================
-   MENU INICIAL
-======================================== */
+
+/* =========================
+   GRIDS
+========================= */
+
+.menu-grid,
+.layout-grid,
+.summary-grid {
+  display: grid;
+  gap: 16px;
+}
 
 .menu-grid {
-  display: grid;
   grid-template-columns: repeat(3, 1fr);
+}
 
-  gap: 14px;
+.layout-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.summary-grid {
+  grid-template-columns: repeat(4, 1fr);
+  margin: 16px 0;
+}
+
+
+/* =========================
+   MENU INICIAL
+========================= */
+
+.menu-card,
+.panel,
+.summary-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: var(--shadow);
 }
 
 .menu-card {
-  min-height: 135px;
+  min-height: 145px;
+  padding: 22px 16px;
 
-  padding: 20px 16px;
-
-  border: 1px solid var(--border);
-  border-radius: 16px;
-
-  background: var(--card);
   color: var(--text);
-
-  box-shadow: var(--shadow);
-
   text-align: left;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 8px;
 
-  gap: 7px;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .menu-card:active {
@@ -197,128 +247,123 @@ button {
 }
 
 .menu-card strong {
-  font-size: 18px;
-}
-
-.menu-card small {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-/* ========================================
-   PAINÉIS
-======================================== */
-
-.layout-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  gap: 16px;
-
-  align-items: start;
-}
-
-.panel {
-  padding: 18px;
-
-  border: 1px solid var(--border);
-  border-radius: 16px;
-
-  background: var(--card);
-
-  box-shadow: var(--shadow);
-}
-
-.panel h3 {
-  margin-bottom: 15px;
   font-size: 19px;
 }
 
-/* ========================================
+.menu-card small {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+
+/* =========================
+   PAINÉIS
+========================= */
+
+.panel {
+  padding: 18px;
+}
+
+.panel h3 {
+  margin-bottom: 16px;
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+
+/* =========================
    FORMULÁRIOS
-======================================== */
+========================= */
 
 label {
   display: block;
-
-  margin-top: 14px;
-  margin-bottom: 7px;
-
+  margin: 14px 0 7px;
+  font-weight: 700;
   font-size: 14px;
-  font-weight: bold;
 }
 
 input,
-textarea {
-  display: block;
-
+textarea,
+select {
   width: 100%;
-
-  padding: 12px;
+  min-height: 46px;
 
   border: 1px solid var(--border);
   border-radius: 10px;
-
-  outline: none;
 
   background: var(--card);
   color: var(--text);
 
-  font-size: 16px;
+  padding: 12px 13px;
+  outline: none;
 }
 
 textarea {
   resize: vertical;
+  min-height: 100px;
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   border-color: var(--primary);
-
-  box-shadow:
-    0 0 0 3px
-    rgba(11, 111, 134, 0.12);
+  box-shadow: 0 0 0 3px rgba(11, 111, 134, 0.12);
 }
 
-/* ========================================
+input::placeholder,
+textarea::placeholder {
+  color: #8a949b;
+}
+
+
+/* =========================
    BOTÕES
-======================================== */
+========================= */
 
 .primary-btn,
 .secondary-btn,
-.danger-btn {
-  border: none;
-
+.danger-btn,
+.action-btn,
+.back-btn {
+  min-height: 44px;
   border-radius: 10px;
-
-  padding: 11px 14px;
-
-  font-weight: bold;
-  font-size: 14px;
+  padding: 10px 15px;
+  font-weight: 700;
 }
 
 .primary-btn {
+  border: 1px solid var(--primary);
   background: var(--primary);
-  color: white;
+  color: #ffffff;
 }
 
-.primary-btn:active {
+.primary-btn:hover {
   background: var(--primary-dark);
+  border-color: var(--primary-dark);
 }
 
-.secondary-btn {
-  background: #e9eef1;
-  color: #24323a;
+.secondary-btn,
+.back-btn {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
 }
 
-body.dark .secondary-btn {
-  background: #2b3942;
-  color: white;
+.secondary-btn:hover,
+.back-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .danger-btn {
-  background: #f8e4e1;
+  border: 1px solid var(--danger);
+  background: transparent;
   color: var(--danger);
+}
+
+.danger-btn:hover {
+  background: var(--danger);
+  color: #ffffff;
 }
 
 .full {
@@ -326,120 +371,141 @@ body.dark .secondary-btn {
   margin-top: 16px;
 }
 
-/* ========================================
-   SERVIÇOS
-======================================== */
 
-.section-title-row {
+/* =========================
+   SERVIÇOS DO ORÇAMENTO
+========================= */
+
+#serviceList {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 10px;
-
-  margin-top: 22px;
-  margin-bottom: 10px;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.section-title-row h3 {
-  margin: 0;
-}
+.service-item {
+  position: relative;
 
-.service-row {
-  margin-bottom: 10px;
-
-  padding: 12px;
+  padding: 16px;
+  margin-top: 12px;
 
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
+
+  background: var(--bg);
 }
 
 .service-fields {
   display: grid;
-  grid-template-columns: 1fr 145px;
+  grid-template-columns:
+    minmax(180px, 2fr)
+    minmax(90px, 0.7fr)
+    minmax(90px, 0.7fr)
+    minmax(120px, 1fr);
 
-  gap: 10px;
+  gap: 12px;
 }
 
-.remove-service {
-  margin-top: 10px;
+.service-number {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 10px;
+
+  border-radius: 50%;
+
+  background: var(--primary);
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 800;
 }
 
-/* ========================================
-   TOTAL DO ORÇAMENTO
-======================================== */
+.item-total-box {
+  margin-top: 12px;
+  padding: 13px;
 
-.summary-box {
-  margin-top: 18px;
-
-  padding: 14px;
+  border-radius: 10px;
+  background: var(--card);
 
   display: flex;
   justify-content: space-between;
-
-  gap: 15px;
-
-  border-radius: 12px;
-
-  background: rgba(11, 111, 134, 0.08);
+  align-items: center;
+  gap: 12px;
 }
 
-.summary-box div {
+.item-total-box span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.item-total-box strong {
+  color: var(--primary);
+  font-size: 18px;
+}
+
+.remove-service-btn {
+  margin-top: 12px;
+  padding: 10px 12px;
+
+  border: 1px solid var(--danger);
+  border-radius: 10px;
+
+  background: transparent;
+  color: var(--danger);
+
+  font-weight: 700;
+}
+
+
+/* =========================
+   RESUMOS
+========================= */
+
+.summary-box {
+  margin-top: 16px;
+  padding: 16px;
+
+  border: 1px solid var(--border);
+  border-radius: 14px;
+
+  background: var(--card);
+
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.summary-box span,
+.summary-card span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.summary-box strong,
+.summary-card strong {
+  font-size: 20px;
+  color: var(--primary);
+}
+
+.summary-card {
+  padding: 16px;
+
   display: flex;
   flex-direction: column;
-
-  gap: 4px;
+  gap: 7px;
 }
 
-.summary-box span {
-  font-size: 13px;
-  color: var(--muted);
-}
 
-.summary-box strong {
-  font-size: 20px;
-}
-
-/* ========================================
+/* =========================
    LISTAS
-======================================== */
+========================= */
 
 .stack-list {
   display: flex;
   flex-direction: column;
-
   gap: 10px;
-}
-
-.list-card {
-  padding: 14px;
-
-  border: 1px solid var(--border);
-  border-radius: 12px;
-
-  background: var(--card);
-}
-
-.list-card h4 {
-  margin-bottom: 5px;
-
-  font-size: 17px;
-}
-
-.list-card p {
-  margin-top: 4px;
-
-  color: var(--muted);
-
-  font-size: 14px;
-}
-
-.list-card .value {
-  margin-top: 8px;
-
-  color: var(--text);
-
-  font-weight: bold;
 }
 
 .empty-state {
@@ -448,31 +514,163 @@ body.dark .secondary-btn {
   border: 1px dashed var(--border);
   border-radius: 12px;
 
-  text-align: center;
-
   color: var(--muted);
+  text-align: center;
 }
 
-/* ========================================
-   AÇÕES DOS CARDS
-======================================== */
+.list-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  background: var(--card);
+
+  padding: 14px;
+}
+
+.list-card h4 {
+  margin-bottom: 5px;
+  font-size: 17px;
+}
+
+.list-card p {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.list-card .value {
+  margin-top: 8px;
+  color: var(--text);
+  font-weight: 700;
+}
 
 .card-actions {
-  margin-top: 12px;
-
   display: flex;
   flex-wrap: wrap;
-
   gap: 8px;
+  margin-top: 12px;
 }
 
 .card-actions button {
-  flex: 1 1 100px;
+  flex: 1 1 110px;
 }
 
-/* ========================================
+
+/* =========================
+   OBRAS
+========================= */
+
+#workList .list-card {
+  border-left: 4px solid var(--primary);
+}
+
+
+/* =========================
+   FUNCIONÁRIOS
+========================= */
+
+#employeeForm,
+#dailyForm,
+#paymentForm {
+  width: 100%;
+}
+
+#employeeList {
+  width: 100%;
+}
+
+#employeeList .list-card {
+  border-left: 4px solid var(--primary);
+}
+
+#employeeList .list-card h4 {
+  font-size: 18px;
+}
+
+#employeeList .list-card .value {
+  color: var(--primary);
+}
+
+
+/* =========================
+   DETALHES DO FUNCIONÁRIO
+========================= */
+
+#employeeDetailsScreen .layout-grid {
+  margin-bottom: 16px;
+}
+
+#employeeDetailsTitle {
+  color: var(--text);
+}
+
+
+/* Resumo financeiro do funcionário */
+
+.employee-summary,
+#employeeSummary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.employee-summary > div,
+#employeeSummary > div {
+  padding: 16px;
+
+  border: 1px solid var(--border);
+  border-radius: 14px;
+
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.employee-summary span,
+#employeeSummary span {
+  display: block;
+  margin-bottom: 6px;
+
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.employee-summary strong,
+#employeeSummary strong {
+  color: var(--primary);
+  font-size: 20px;
+}
+
+
+/* =========================
+   HISTÓRICO DE DIÁRIAS
+========================= */
+
+#dailyHistory,
+#paymentHistory {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#dailyHistory .list-card,
+#paymentHistory .list-card {
+  position: relative;
+}
+
+#dailyHistory .list-card {
+  border-left: 4px solid var(--success);
+}
+
+#paymentHistory .list-card {
+  border-left: 4px solid var(--primary);
+}
+
+
+/* =========================
    DETALHES DO ORÇAMENTO
-======================================== */
+========================= */
 
 .detail-block {
   margin-bottom: 18px;
@@ -484,18 +682,14 @@ body.dark .secondary-btn {
 
 .detail-services {
   width: 100%;
-
-  margin-top: 10px;
-
   border-collapse: collapse;
+  margin-top: 10px;
 }
 
 .detail-services th,
 .detail-services td {
-  padding: 10px 6px;
-
+  padding: 10px;
   border-bottom: 1px solid var(--border);
-
   text-align: left;
 }
 
@@ -506,103 +700,78 @@ body.dark .secondary-btn {
 
 .detail-total {
   margin-top: 18px;
-
   padding-top: 14px;
 
   border-top: 2px solid var(--border);
 
   display: flex;
   justify-content: space-between;
-
   gap: 12px;
 
-  font-size: 21px;
-  font-weight: bold;
+  font-size: 22px;
+  font-weight: 800;
 }
 
-/* ========================================
-   RESUMO DO FUNCIONÁRIO
-======================================== */
 
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+/* =========================
+   AÇÕES
+========================= */
 
-  gap: 12px;
-
-  margin: 16px 0;
-}
-
-.summary-card {
-  padding: 16px;
-
+.action-btn {
   border: 1px solid var(--border);
-  border-radius: 14px;
-
   background: var(--card);
-
-  box-shadow: var(--shadow);
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 7px;
+  color: var(--text);
 }
 
-.summary-card span {
-  color: var(--muted);
-  font-size: 13px;
+.action-btn.primary-action {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
 }
 
-.summary-card strong {
-  font-size: 20px;
+.action-btn.danger-action {
+  color: var(--danger);
+  border-color: var(--danger);
 }
 
-/* ========================================
-   MENU INFERIOR
-======================================== */
+
+/* =========================
+   NAVEGAÇÃO INFERIOR
+========================= */
 
 .bottom-nav {
   position: fixed;
-
   left: 0;
   right: 0;
   bottom: 0;
 
-  z-index: 200;
+  z-index: 30;
 
-  min-height: 70px;
+  min-height: 72px;
 
   padding:
-    5px
-    7px
-    calc(5px + env(safe-area-inset-bottom));
+    6px
+    8px
+    calc(6px + env(safe-area-inset-bottom));
 
   display: grid;
-
-  grid-template-columns:
-    repeat(4, 1fr);
-
-  gap: 4px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
 
   background: var(--card);
 
-  border-top:
-    1px solid var(--border);
+  border-top: 1px solid var(--border);
 
-  box-shadow:
-    0 -4px 14px
-    rgba(0, 0, 0, 0.07);
+  box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.07);
 }
 
 .nav-btn {
   min-width: 0;
 
-  border: none;
-  border-radius: 11px;
+  border: 0;
+  border-radius: 12px;
 
   background: transparent;
-
   color: var(--muted);
 
   display: flex;
@@ -610,34 +779,42 @@ body.dark .secondary-btn {
   align-items: center;
   justify-content: center;
 
-  gap: 2px;
+  gap: 3px;
+
+  padding: 6px 2px;
+
+  font-size: 20px;
 }
 
 .nav-btn span {
-  font-size: 21px;
+  display: block;
+  font-size: 11px;
 }
 
 .nav-btn small {
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .nav-btn.active {
-  background:
-    rgba(11, 111, 134, 0.11);
-
+  background: rgba(11, 111, 134, 0.11);
   color: var(--primary);
-
-  font-weight: bold;
+  font-weight: 700;
 }
 
-/* ========================================
-   CELULAR
-======================================== */
+
+/* =========================
+   RESPONSIVO - CELULAR
+========================= */
 
 @media (max-width: 760px) {
 
   body {
-    padding-bottom: 82px;
+    padding-bottom: 80px;
+  }
+
+  .app-shell {
+    width: calc(100% - 20px);
+    padding-top: 16px;
   }
 
   .top-header {
@@ -646,94 +823,166 @@ body.dark .secondary-btn {
   }
 
   .top-header h1 {
-    font-size: 22px;
+    font-size: 21px;
   }
 
   .top-header p {
     font-size: 10px;
   }
 
-  .app-shell {
-    width: calc(100% - 20px);
-
-    padding-top: 16px;
-  }
-
-  .page-header h2 {
-    font-size: 27px;
-  }
-
   .menu-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .layout-grid,
+  .summary-grid {
     grid-template-columns: 1fr;
   }
 
   .menu-card {
-    min-height: 100px;
+    min-height: 112px;
+    padding: 16px 12px;
   }
 
-  .layout-grid {
-    grid-template-columns: 1fr;
+  .menu-card strong {
+    font-size: 16px;
   }
 
-  .summary-grid {
-    grid-template-columns:
-      repeat(2, 1fr);
+  .menu-card small {
+    font-size: 12px;
+  }
+
+  .menu-icon {
+    font-size: 27px;
+  }
+
+  .page-header h2 {
+    font-size: 29px;
+  }
+
+  .page-header p {
+    font-size: 14px;
+  }
+
+  .panel {
+    padding: 16px;
+  }
+
+  .row-between {
+    align-items: flex-start;
   }
 
   .service-fields {
     grid-template-columns: 1fr;
   }
 
-  .row-between {
-    align-items: flex-start;
+  .employee-summary,
+  #employeeSummary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bottom-nav {
+    min-height: 68px;
   }
 }
 
-/* ========================================
-   TELAS MUITO PEQUENAS
-======================================== */
 
-@media (max-width: 390px) {
+/* =========================
+   CELULAR PEQUENO
+========================= */
 
-  .summary-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 430px) {
+
+  .app-shell {
+    width: calc(100% - 16px);
+  }
+
+  .menu-grid {
+    gap: 8px;
+  }
+
+  .menu-card {
+    min-height: 105px;
+    border-radius: 14px;
   }
 
   .panel {
+    border-radius: 14px;
     padding: 14px;
   }
 
   .page-header h2 {
-    font-size: 25px;
+    font-size: 27px;
   }
 
+  .row-between {
+    flex-direction: column;
+  }
+
+  .row-between .secondary-btn {
+    width: 100%;
+  }
+
+  .employee-summary,
+  #employeeSummary {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .employee-summary > div,
+  #employeeSummary > div {
+    padding: 12px;
+  }
+
+  .employee-summary strong,
+  #employeeSummary strong {
+    font-size: 17px;
+  }
+
+  .card-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .bottom-nav {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .nav-btn {
+    font-size: 18px;
+  }
+
+  .nav-btn span,
   .nav-btn small {
-    font-size: 9px;
+    font-size: 10px;
   }
 }
 
-/* ========================================
-   IMPRESSÃO / PDF
-======================================== */
+
+/* =========================
+   IMPRESSÃO
+========================= */
 
 @media print {
 
   body {
-    background: white;
-    color: black;
+    background: #ffffff;
+    color: #000000;
     padding: 0;
   }
 
   .top-header,
   .bottom-nav,
   .back-to-budgets,
+  .back-to-employees,
   .card-actions {
     display: none !important;
   }
 
   .app-shell {
     width: 100%;
-    max-width: none;
     padding: 0;
   }
 
@@ -746,7 +995,7 @@ body.dark .secondary-btn {
   }
 
   #budgetDetails {
-    border: none;
+    border: 0;
     box-shadow: none;
   }
 }
