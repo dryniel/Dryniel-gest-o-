@@ -1,6 +1,23 @@
+/* =========================================================
+   DRYNIEL - CONSTRUÇÃO A SECO
+   APP.JS COMPLETO
+========================================================= */
+
+
+/* =========================================================
+   ELEMENTOS PRINCIPAIS
+========================================================= */
+
 const screens = document.querySelectorAll(".screen");
 const navButtons = document.querySelectorAll(".nav-btn");
 const menuButtons = document.querySelectorAll(".menu-card");
+
+const themeBtn = document.getElementById("themeBtn");
+
+
+/* =========================================================
+   ORÇAMENTOS
+========================================================= */
 
 const budgetForm = document.getElementById("budgetForm");
 const budgetList = document.getElementById("budgetList");
@@ -11,7 +28,6 @@ const serviceTemplate = document.getElementById("serviceTemplate");
 
 const addServiceBtn = document.getElementById("addServiceBtn");
 const newBudgetBtn = document.getElementById("newBudgetBtn");
-const themeBtn = document.getElementById("themeBtn");
 
 const budgetTotal = document.getElementById("budgetTotal");
 const serviceCount = document.getElementById("serviceCount");
@@ -20,25 +36,98 @@ const clientName = document.getElementById("clientName");
 const clientAddress = document.getElementById("clientAddress");
 const budgetNotes = document.getElementById("budgetNotes");
 
+
+/* =========================================================
+   OBRAS
+========================================================= */
+
+const workForm = document.getElementById("workForm");
+const workList = document.getElementById("workList");
+
+const workName = document.getElementById("workName");
+const workAddress = document.getElementById("workAddress");
+const workClient = document.getElementById("workClient");
+const workNotes = document.getElementById("workNotes");
+
+
+/* =========================================================
+   FUNCIONÁRIOS
+========================================================= */
+
+const employeeForm = document.getElementById("employeeForm");
+const employeeList = document.getElementById("employeeList");
+
+const employeeName = document.getElementById("employeeName");
+const employeePhone = document.getElementById("employeePhone");
+const employeeDailyRate = document.getElementById("employeeDailyRate");
+
+const employeeDetails = document.getElementById("employeeDetails");
+
+
+/* =========================================================
+   DADOS SALVOS
+========================================================= */
+
 let budgets =
   JSON.parse(localStorage.getItem("dryniel_budgets")) || [];
 
+let works =
+  JSON.parse(localStorage.getItem("dryniel_works")) || [];
 
-/* =========================
+let employees =
+  JSON.parse(localStorage.getItem("dryniel_employees")) || [];
+
+let currentEmployeeId = null;
+
+
+/* =========================================================
    FORMATAÇÃO
-========================= */
+========================================================= */
 
 function formatCurrency(value) {
+
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL"
   }).format(Number(value) || 0);
+
 }
 
 
-/* =========================
+function formatDate(dateString) {
+
+  if (!dateString) {
+    return "";
+  }
+
+  const date = new Date(dateString + "T12:00:00");
+
+  return date.toLocaleDateString("pt-BR");
+
+}
+
+
+/* =========================================================
+   SEGURANÇA DO TEXTO
+========================================================= */
+
+function escapeHTML(text) {
+
+  const div = document.createElement("div");
+
+  div.textContent =
+    text == null
+      ? ""
+      : String(text);
+
+  return div.innerHTML;
+
+}
+
+
+/* =========================================================
    NAVEGAÇÃO
-========================= */
+========================================================= */
 
 function showScreen(screenId) {
 
@@ -46,50 +135,90 @@ function showScreen(screenId) {
     screen.classList.remove("active");
   });
 
-  const target = document.getElementById(screenId);
+  const target =
+    document.getElementById(screenId);
 
   if (target) {
     target.classList.add("active");
   }
 
   navButtons.forEach(button => {
+
     button.classList.toggle(
       "active",
       button.dataset.screen === screenId
     );
+
   });
 
   window.scrollTo({
     top: 0,
     behavior: "smooth"
   });
+
 }
 
+
+/* =========================================================
+   MENU PRINCIPAL
+========================================================= */
 
 menuButtons.forEach(button => {
 
   button.addEventListener("click", () => {
 
-    const screenId = button.dataset.screen;
+    const screenId =
+      button.dataset.screen;
 
-    showScreen(screenId);
+    if (screenId) {
+      showScreen(screenId);
+    }
 
   });
 
 });
 
+
+/* =========================================================
+   MENU INFERIOR
+========================================================= */
 
 navButtons.forEach(button => {
 
   button.addEventListener("click", () => {
 
-    const screenId = button.dataset.screen;
+    const screenId =
+      button.dataset.screen;
 
-    showScreen(screenId);
+    if (screenId) {
+      showScreen(screenId);
+    }
 
   });
 
 });
+
+
+/* =========================================================
+   BOTÕES VOLTAR
+========================================================= */
+
+document
+  .querySelectorAll("[data-back-screen]")
+  .forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      const screen =
+        button.dataset.backScreen;
+
+      if (screen) {
+        showScreen(screen);
+      }
+
+    });
+
+  });
 
 
 document
@@ -105,9 +234,22 @@ document
   });
 
 
-/* =========================
-   TEMA
-========================= */
+document
+  .querySelectorAll(".back-to-employees")
+  .forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      showScreen("employeesScreen");
+
+    });
+
+  });
+
+
+/* =========================================================
+   TEMA CLARO / ESCURO
+========================================================= */
 
 const savedTheme =
   localStorage.getItem("dryniel_theme");
@@ -138,11 +280,20 @@ if (themeBtn) {
 }
 
 
-/* =========================
-   SERVIÇOS
-========================= */
+/* =========================================================
+   ORÇAMENTOS
+========================================================= */
+
+
+/* =========================================================
+   ADICIONAR SERVIÇO
+========================================================= */
 
 function addService(data = {}) {
+
+  if (!serviceTemplate || !serviceList) {
+    return;
+  }
 
   const fragment =
     serviceTemplate.content.cloneNode(true);
@@ -163,39 +314,60 @@ function addService(data = {}) {
     fragment.querySelector(".remove-service-btn");
 
 
-  description.value =
-    data.description || "";
+  if (description) {
+    description.value =
+      data.description || "";
+  }
 
-  quantity.value =
-    data.quantity || 1;
+  if (quantity) {
+    quantity.value =
+      data.quantity || 1;
+  }
 
-  value.value =
-    data.value || "";
-
-
-  quantity.addEventListener(
-    "input",
-    calculateBudget
-  );
-
-  value.addEventListener(
-    "input",
-    calculateBudget
-  );
+  if (value) {
+    value.value =
+      data.value || "";
+  }
 
 
-  removeButton.addEventListener(
-    "click",
-    () => {
+  if (quantity) {
 
-      serviceItem.remove();
+    quantity.addEventListener(
+      "input",
+      calculateBudget
+    );
 
-      updateServiceNumbers();
+  }
 
-      calculateBudget();
 
-    }
-  );
+  if (value) {
+
+    value.addEventListener(
+      "input",
+      calculateBudget
+    );
+
+  }
+
+
+  if (removeButton) {
+
+    removeButton.addEventListener(
+      "click",
+      () => {
+
+        if (serviceItem) {
+          serviceItem.remove();
+        }
+
+        updateServiceNumbers();
+
+        calculateBudget();
+
+      }
+    );
+
+  }
 
 
   serviceList.appendChild(fragment);
@@ -203,19 +375,25 @@ function addService(data = {}) {
   updateServiceNumbers();
 
   calculateBudget();
+
 }
 
 
-/* =========================
+/* =========================================================
    NUMERAÇÃO DOS SERVIÇOS
-========================= */
+========================================================= */
 
 function updateServiceNumbers() {
+
+  if (!serviceList) {
+    return;
+  }
 
   const services =
     serviceList.querySelectorAll(
       ".service-item"
     );
+
 
   services.forEach(
     (service, index) => {
@@ -225,8 +403,12 @@ function updateServiceNumbers() {
           ".service-number"
         );
 
-      title.textContent =
-        "Serviço " + (index + 1);
+      if (title) {
+
+        title.textContent =
+          "Serviço " + (index + 1);
+
+      }
 
     }
   );
@@ -234,11 +416,15 @@ function updateServiceNumbers() {
 }
 
 
-/* =========================
+/* =========================================================
    CÁLCULO DO ORÇAMENTO
-========================= */
+========================================================= */
 
 function calculateBudget() {
+
+  if (!serviceList) {
+    return;
+  }
 
   const services =
     serviceList.querySelectorAll(
@@ -247,50 +433,74 @@ function calculateBudget() {
 
   let total = 0;
 
+
   services.forEach(service => {
+
+    const quantityField =
+      service.querySelector(
+        ".service-quantity"
+      );
+
+    const valueField =
+      service.querySelector(
+        ".service-value"
+      );
+
 
     const quantity =
       Number(
-        service.querySelector(
-          ".service-quantity"
-        ).value
+        quantityField?.value
       ) || 0;
 
     const value =
       Number(
-        service.querySelector(
-          ".service-value"
-        ).value
+        valueField?.value
       ) || 0;
+
 
     const subtotal =
       quantity * value;
 
     total += subtotal;
 
+
     const subtotalElement =
       service.querySelector(
         ".service-subtotal-value"
       );
 
-    subtotalElement.textContent =
-      formatCurrency(subtotal);
+
+    if (subtotalElement) {
+
+      subtotalElement.textContent =
+        formatCurrency(subtotal);
+
+    }
 
   });
 
 
-  serviceCount.textContent =
-    services.length;
+  if (serviceCount) {
 
-  budgetTotal.textContent =
-    formatCurrency(total);
+    serviceCount.textContent =
+      services.length;
+
+  }
+
+
+  if (budgetTotal) {
+
+    budgetTotal.textContent =
+      formatCurrency(total);
+
+  }
 
 }
 
 
-/* =========================
+/* =========================================================
    BOTÃO ADICIONAR SERVIÇO
-========================= */
+========================================================= */
 
 if (addServiceBtn) {
 
@@ -306,21 +516,32 @@ if (addServiceBtn) {
 }
 
 
-/* =========================
-   NOVO ORÇAMENTO
-========================= */
+/* =========================================================
+   LIMPAR ORÇAMENTO
+========================================================= */
 
 function clearBudgetForm() {
 
-  budgetForm.reset();
+  if (budgetForm) {
+    budgetForm.reset();
+  }
 
-  serviceList.innerHTML = "";
+  if (serviceList) {
 
-  addService();
+    serviceList.innerHTML = "";
+
+    addService();
+
+  }
 
   calculateBudget();
+
 }
 
+
+/* =========================================================
+   NOVO ORÇAMENTO
+========================================================= */
 
 if (newBudgetBtn) {
 
@@ -332,7 +553,9 @@ if (newBudgetBtn) {
 
       showScreen("budgetsScreen");
 
-      clientName.focus();
+      if (clientName) {
+        clientName.focus();
+      }
 
     }
   );
@@ -340,164 +563,263 @@ if (newBudgetBtn) {
 }
 
 
-/* =========================
+/* =========================================================
    SALVAR ORÇAMENTO
-========================= */
+========================================================= */
 
-budgetForm.addEventListener(
-  "submit",
-  event => {
+if (budgetForm) {
 
-    event.preventDefault();
+  budgetForm.addEventListener(
+    "submit",
+    event => {
 
-
-    const name =
-      clientName.value.trim();
-
-    const address =
-      clientAddress.value.trim();
-
-    const notes =
-      budgetNotes.value.trim();
+      event.preventDefault();
 
 
-    if (!name) {
+      const name =
+        clientName
+          ? clientName.value.trim()
+          : "";
 
-      alert(
-        "Informe o nome do cliente."
-      );
+      const address =
+        clientAddress
+          ? clientAddress.value.trim()
+          : "";
 
-      clientName.focus();
-
-      return;
-
-    }
-
-
-    const serviceElements =
-      serviceList.querySelectorAll(
-        ".service-item"
-      );
+      const notes =
+        budgetNotes
+          ? budgetNotes.value.trim()
+          : "";
 
 
-    if (serviceElements.length === 0) {
+      if (!name) {
 
-      alert(
-        "Adicione pelo menos um serviço."
-      );
+        alert(
+          "Informe o nome do cliente."
+        );
 
-      return;
+        if (clientName) {
+          clientName.focus();
+        }
 
-    }
-
-
-    const services = [];
-
-    let total = 0;
-
-
-    serviceElements.forEach(service => {
-
-      const description =
-        service
-          .querySelector(
-            ".service-description"
-          )
-          .value
-          .trim();
-
-      const quantity =
-        Number(
-          service.querySelector(
-            ".service-quantity"
-          ).value
-        ) || 0;
-
-      const value =
-        Number(
-          service.querySelector(
-            ".service-value"
-          ).value
-        ) || 0;
-
-      const subtotal =
-        quantity * value;
-
-
-      if (description) {
-
-        services.push({
-          description,
-          quantity,
-          value,
-          subtotal
-        });
-
-        total += subtotal;
+        return;
 
       }
 
-    });
+
+      const serviceElements =
+        serviceList
+          ? serviceList.querySelectorAll(
+              ".service-item"
+            )
+          : [];
 
 
-    if (services.length === 0) {
+      if (
+        serviceElements.length === 0
+      ) {
 
-      alert(
-        "Preencha pelo menos um serviço."
+        alert(
+          "Adicione pelo menos um serviço."
+        );
+
+        return;
+
+      }
+
+
+      const services = [];
+
+      let total = 0;
+
+
+      serviceElements.forEach(
+        service => {
+
+          const descriptionField =
+            service.querySelector(
+              ".service-description"
+            );
+
+          const quantityField =
+            service.querySelector(
+              ".service-quantity"
+            );
+
+          const valueField =
+            service.querySelector(
+              ".service-value"
+            );
+
+
+          const description =
+            descriptionField
+              ? descriptionField.value.trim()
+              : "";
+
+
+          const quantity =
+            Number(
+              quantityField?.value
+            ) || 0;
+
+
+          const value =
+            Number(
+              valueField?.value
+            ) || 0;
+
+
+          const subtotal =
+            quantity * value;
+
+
+          if (description) {
+
+            services.push({
+
+              description,
+              quantity,
+              value,
+              subtotal
+
+            });
+
+            total += subtotal;
+
+          }
+
+        }
       );
 
-      return;
+
+      if (services.length === 0) {
+
+        alert(
+          "Preencha pelo menos um serviço."
+        );
+
+        return;
+
+      }
+
+
+      const budget = {
+
+        id: Date.now(),
+
+        client: name,
+
+        address,
+
+        notes,
+
+        services,
+
+        total,
+
+        createdAt:
+          new Date().toISOString()
+
+      };
+
+
+      budgets.unshift(budget);
+
+
+      saveBudgets();
+
+      renderBudgets();
+
+      clearBudgetForm();
+
+
+      alert(
+        "Orçamento salvo com sucesso!"
+      );
 
     }
+  );
+
+}
 
 
-    const budget = {
+/* =========================================================
+   SALVAR NO CELULAR
+========================================================= */
 
-      id: Date.now(),
+function saveBudgets() {
 
-      client: name,
+  localStorage.setItem(
+    "dryniel_budgets",
+    JSON.stringify(budgets)
+  );
 
-      address,
-
-      notes,
-
-      services,
-
-      total,
-
-      createdAt:
-        new Date().toISOString()
-
-    };
+}
 
 
-    budgets.unshift(budget);
+/* =========================================================
+   TOTAL DO ORÇAMENTO
+========================================================= */
+
+function getBudgetTotal(budget) {
+
+  if (
+    typeof budget.total === "number"
+  ) {
+
+    return budget.total;
+
+  }
 
 
-    localStorage.setItem(
-      "dryniel_budgets",
-      JSON.stringify(budgets)
-    );
+  if (
+    Array.isArray(budget.services)
+  ) {
+
+    return budget.services.reduce(
+      (sum, service) => {
+
+        const quantity =
+          Number(
+            service.quantity
+          ) || 0;
+
+        const value =
+          Number(
+            service.value
+          ) || 0;
 
 
-    renderBudgets();
+        return (
+          sum +
+          quantity * value
+        );
 
-    clearBudgetForm();
-
-
-    alert(
-      "Orçamento salvo com sucesso!"
+      },
+      0
     );
 
   }
-);
 
 
-/* =========================
-   MOSTRAR ORÇAMENTOS
-========================= */
+  return (
+    Number(budget.value) || 0
+  );
+
+}
+
+
+/* =========================================================
+   LISTA DE ORÇAMENTOS
+========================================================= */
 
 function renderBudgets() {
+
+  if (!budgetList) {
+    return;
+  }
+
 
   budgetList.innerHTML = "";
 
@@ -505,9 +827,15 @@ function renderBudgets() {
   if (budgets.length === 0) {
 
     budgetList.innerHTML = `
+
       <div class="card">
-        <p>Nenhum orçamento salvo.</p>
+
+        <p>
+          Nenhum orçamento salvo.
+        </p>
+
       </div>
+
     `;
 
     return;
@@ -532,31 +860,42 @@ function renderBudgets() {
 
     card.innerHTML = `
 
-      <h3>${escapeHTML(
-        budget.client || "Cliente"
-      )}</h3>
+      <h3>
+        ${escapeHTML(
+          budget.client || "Cliente"
+        )}
+      </h3>
 
       ${
         budget.address
-          ? `<p>${escapeHTML(
-              budget.address
-            )}</p>`
+          ? `
+            <p>
+              ${escapeHTML(
+                budget.address
+              )}
+            </p>
+          `
           : ""
       }
 
       <p>
+
         ${serviceQuantity}
+
         ${
           serviceQuantity === 1
             ? "serviço"
             : "serviços"
         }
+
       </p>
 
       <div class="budget-card-total">
+
         ${formatCurrency(
           getBudgetTotal(budget)
         )}
+
       </div>
 
       <div class="budget-actions">
@@ -576,14 +915,19 @@ function renderBudgets() {
         </button>
 
       </div>
+
     `;
 
 
-    card
-      .querySelector(
+    const viewButton =
+      card.querySelector(
         ".view-budget-btn"
-      )
-      .addEventListener(
+      );
+
+
+    if (viewButton) {
+
+      viewButton.addEventListener(
         "click",
         () => {
 
@@ -594,12 +938,18 @@ function renderBudgets() {
         }
       );
 
+    }
 
-    card
-      .querySelector(
+
+    const deleteButton =
+      card.querySelector(
         ".delete-budget-btn"
-      )
-      .addEventListener(
+      );
+
+
+    if (deleteButton) {
+
+      deleteButton.addEventListener(
         "click",
         () => {
 
@@ -610,6 +960,8 @@ function renderBudgets() {
         }
       );
 
+    }
+
 
     budgetList.appendChild(card);
 
@@ -618,59 +970,9 @@ function renderBudgets() {
 }
 
 
-/* =========================
-   TOTAL COMPATÍVEL COM
-   ORÇAMENTOS ANTIGOS
-========================= */
-
-function getBudgetTotal(budget) {
-
-  if (
-    typeof budget.total === "number"
-  ) {
-    return budget.total;
-  }
-
-
-  if (
-    Array.isArray(budget.services)
-  ) {
-
-    return budget.services.reduce(
-      (sum, service) => {
-
-        const quantity =
-          Number(
-            service.quantity
-          ) || 0;
-
-        const value =
-          Number(
-            service.value
-          ) || 0;
-
-        return (
-          sum +
-          quantity * value
-        );
-
-      },
-      0
-    );
-
-  }
-
-
-  return (
-    Number(budget.value) || 0
-  );
-
-}
-
-
-/* =========================
+/* =========================================================
    DETALHES DO ORÇAMENTO
-========================= */
+========================================================= */
 
 function showBudgetDetails(id) {
 
@@ -680,7 +982,7 @@ function showBudgetDetails(id) {
     );
 
 
-  if (!budget) {
+  if (!budget || !budgetDetails) {
     return;
   }
 
@@ -696,9 +998,7 @@ function showBudgetDetails(id) {
       (service, index) => {
 
         const subtotal =
-          Number(
-            service.subtotal
-          ) ||
+          Number(service.subtotal) ||
           (
             Number(service.quantity) *
             Number(service.value)
@@ -721,7 +1021,9 @@ function showBudgetDetails(id) {
 
             <p>
               Quantidade:
-              ${service.quantity}
+              ${escapeHTML(
+                service.quantity
+              )}
             </p>
 
             <p>
@@ -732,12 +1034,16 @@ function showBudgetDetails(id) {
             </p>
 
             <p>
+
               <strong>
+
                 Subtotal:
                 ${formatCurrency(
                   subtotal
                 )}
+
               </strong>
+
             </p>
 
           </div>
@@ -757,11 +1063,6 @@ function showBudgetDetails(id) {
           ${escapeHTML(
             budget.description || ""
           )}
-        </p>
-
-        <p>
-          Quantidade:
-          ${budget.quantity || 1}
         </p>
 
       </div>
@@ -798,6 +1099,7 @@ function showBudgetDetails(id) {
       ${
         budget.notes
           ? `
+
             <div class="detail-service">
 
               <strong>
@@ -811,18 +1113,23 @@ function showBudgetDetails(id) {
               </p>
 
             </div>
+
           `
           : ""
       }
 
       <div class="detail-total">
 
-        <span>Total</span>
+        <span>
+          Total
+        </span>
 
         <span>
+
           ${formatCurrency(
             getBudgetTotal(budget)
           )}
+
         </span>
 
       </div>
@@ -839,9 +1146,9 @@ function showBudgetDetails(id) {
 }
 
 
-/* =========================
+/* =========================================================
    EXCLUIR ORÇAMENTO
-========================= */
+========================================================= */
 
 function deleteBudget(id) {
 
@@ -863,40 +1170,1127 @@ function deleteBudget(id) {
     );
 
 
-  localStorage.setItem(
-    "dryniel_budgets",
-    JSON.stringify(budgets)
-  );
-
+  saveBudgets();
 
   renderBudgets();
 
 }
 
 
-/* =========================
-   SEGURANÇA DO TEXTO
-========================= */
+/* =========================================================
+   OBRAS
+========================================================= */
 
-function escapeHTML(text) {
+function saveWorks() {
 
-  const div =
-    document.createElement("div");
-
-  div.textContent =
-    text == null
-      ? ""
-      : String(text);
-
-  return div.innerHTML;
+  localStorage.setItem(
+    "dryniel_works",
+    JSON.stringify(works)
+  );
 
 }
 
 
-/* =========================
-   INICIALIZAÇÃO
-========================= */
+/* =========================================================
+   CADASTRAR OBRA
+========================================================= */
+
+if (workForm) {
+
+  workForm.addEventListener(
+    "submit",
+    event => {
+
+      event.preventDefault();
+
+
+      const name =
+        workName
+          ? workName.value.trim()
+          : "";
+
+
+      if (!name) {
+
+        alert(
+          "Informe o nome da obra."
+        );
+
+        return;
+
+      }
+
+
+      const work = {
+
+        id: Date.now(),
+
+        name,
+
+        client:
+          workClient
+            ? workClient.value.trim()
+            : "",
+
+        address:
+          workAddress
+            ? workAddress.value.trim()
+            : "",
+
+        notes:
+          workNotes
+            ? workNotes.value.trim()
+            : "",
+
+        createdAt:
+          new Date().toISOString()
+
+      };
+
+
+      works.unshift(work);
+
+      saveWorks();
+
+      renderWorks();
+
+      workForm.reset();
+
+
+      alert(
+        "Obra cadastrada com sucesso!"
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   MOSTRAR OBRAS
+========================================================= */
+
+function renderWorks() {
+
+  if (!workList) {
+    return;
+  }
+
+
+  workList.innerHTML = "";
+
+
+  if (works.length === 0) {
+
+    workList.innerHTML = `
+
+      <div class="card">
+
+        <p>
+          Nenhuma obra cadastrada.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  works.forEach(work => {
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "work-card card";
+
+
+    card.innerHTML = `
+
+      <h3>
+        ${escapeHTML(
+          work.name
+        )}
+      </h3>
+
+      ${
+        work.client
+          ? `
+            <p>
+              Cliente:
+              ${escapeHTML(
+                work.client
+              )}
+            </p>
+          `
+          : ""
+      }
+
+      ${
+        work.address
+          ? `
+            <p>
+              ${escapeHTML(
+                work.address
+              )}
+            </p>
+          `
+          : ""
+      }
+
+      ${
+        work.notes
+          ? `
+            <p>
+              ${escapeHTML(
+                work.notes
+              )}
+            </p>
+          `
+          : ""
+      }
+
+      <button
+        type="button"
+        class="delete-work-btn"
+      >
+        Excluir obra
+      </button>
+
+    `;
+
+
+    const deleteButton =
+      card.querySelector(
+        ".delete-work-btn"
+      );
+
+
+    deleteButton.addEventListener(
+      "click",
+      () => {
+
+        const confirmed =
+          confirm(
+            "Deseja excluir esta obra?"
+          );
+
+
+        if (!confirmed) {
+          return;
+        }
+
+
+        works =
+          works.filter(
+            item =>
+              item.id !== work.id
+          );
+
+
+        saveWorks();
+
+        renderWorks();
+
+      }
+    );
+
+
+    workList.appendChild(card);
+
+  });
+
+}
+
+
+/* =========================================================
+   FUNCIONÁRIOS
+========================================================= */
+
+function saveEmployees() {
+
+  localStorage.setItem(
+    "dryniel_employees",
+    JSON.stringify(employees)
+  );
+
+}
+
+
+/* =========================================================
+   CADASTRAR FUNCIONÁRIO
+========================================================= */
+
+if (employeeForm) {
+
+  employeeForm.addEventListener(
+    "submit",
+    event => {
+
+      event.preventDefault();
+
+
+      const name =
+        employeeName
+          ? employeeName.value.trim()
+          : "";
+
+
+      const phone =
+        employeePhone
+          ? employeePhone.value.trim()
+          : "";
+
+
+      const dailyRate =
+        Number(
+          employeeDailyRate?.value
+        ) || 0;
+
+
+      if (!name) {
+
+        alert(
+          "Informe o nome do funcionário."
+        );
+
+        if (employeeName) {
+          employeeName.focus();
+        }
+
+        return;
+
+      }
+
+
+      if (dailyRate <= 0) {
+
+        alert(
+          "Informe o valor da diária."
+        );
+
+        return;
+
+      }
+
+
+      const employee = {
+
+        id: Date.now(),
+
+        name,
+
+        phone,
+
+        dailyRate,
+
+        days: [],
+
+        createdAt:
+          new Date().toISOString()
+
+      };
+
+
+      employees.unshift(employee);
+
+
+      saveEmployees();
+
+      renderEmployees();
+
+      employeeForm.reset();
+
+
+      alert(
+        "Funcionário cadastrado com sucesso!"
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   TOTAL DO FUNCIONÁRIO
+========================================================= */
+
+function getEmployeeTotal(employee) {
+
+  if (!employee) {
+    return 0;
+  }
+
+
+  if (!Array.isArray(employee.days)) {
+    return 0;
+  }
+
+
+  return employee.days.reduce(
+    (total, day) => {
+
+      const value =
+        Number(day.value) ||
+        Number(employee.dailyRate) ||
+        0;
+
+
+      return total + value;
+
+    },
+    0
+  );
+
+}
+
+
+/* =========================================================
+   LISTAR FUNCIONÁRIOS
+========================================================= */
+
+function renderEmployees() {
+
+  if (!employeeList) {
+    return;
+  }
+
+
+  employeeList.innerHTML = "";
+
+
+  if (employees.length === 0) {
+
+    employeeList.innerHTML = `
+
+      <div class="card">
+
+        <p>
+          Nenhum funcionário cadastrado.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  employees.forEach(employee => {
+
+    if (!Array.isArray(employee.days)) {
+      employee.days = [];
+    }
+
+
+    const total =
+      getEmployeeTotal(employee);
+
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "employee-card card";
+
+
+    card.innerHTML = `
+
+      <h3>
+        ${escapeHTML(
+          employee.name
+        )}
+      </h3>
+
+      ${
+        employee.phone
+          ? `
+            <p>
+              ${escapeHTML(
+                employee.phone
+              )}
+            </p>
+          `
+          : ""
+      }
+
+      <p>
+        Valor da diária:
+        <strong>
+          ${formatCurrency(
+            employee.dailyRate
+          )}
+        </strong>
+      </p>
+
+      <p>
+        Diárias lançadas:
+        <strong>
+          ${employee.days.length}
+        </strong>
+      </p>
+
+      <div class="employee-total">
+
+        Total:
+
+        <strong>
+          ${formatCurrency(total)}
+        </strong>
+
+      </div>
+
+      <div class="budget-actions">
+
+        <button
+          type="button"
+          class="open-employee-btn"
+        >
+          Abrir funcionário
+        </button>
+
+        <button
+          type="button"
+          class="delete-employee-btn"
+        >
+          Excluir
+        </button>
+
+      </div>
+
+    `;
+
+
+    const openButton =
+      card.querySelector(
+        ".open-employee-btn"
+      );
+
+
+    openButton.addEventListener(
+      "click",
+      () => {
+
+        openEmployee(
+          employee.id
+        );
+
+      }
+    );
+
+
+    const deleteButton =
+      card.querySelector(
+        ".delete-employee-btn"
+      );
+
+
+    deleteButton.addEventListener(
+      "click",
+      () => {
+
+        deleteEmployee(
+          employee.id
+        );
+
+      }
+    );
+
+
+    employeeList.appendChild(card);
+
+  });
+
+}
+
+
+/* =========================================================
+   ABRIR PÁGINA DO FUNCIONÁRIO
+========================================================= */
+
+function openEmployee(id) {
+
+  currentEmployeeId = id;
+
+  renderEmployeeDetails();
+
+  showScreen(
+    "employeeDetailsScreen"
+  );
+
+}
+
+
+/* =========================================================
+   DETALHES DO FUNCIONÁRIO
+========================================================= */
+
+function renderEmployeeDetails() {
+
+  if (!employeeDetails) {
+    return;
+  }
+
+
+  const employee =
+    employees.find(
+      item =>
+        item.id === currentEmployeeId
+    );
+
+
+  if (!employee) {
+    return;
+  }
+
+
+  if (!Array.isArray(employee.days)) {
+    employee.days = [];
+  }
+
+
+  const total =
+    getEmployeeTotal(employee);
+
+
+  let daysHTML = "";
+
+
+  if (employee.days.length === 0) {
+
+    daysHTML = `
+
+      <div class="card">
+
+        <p>
+          Nenhuma diária lançada.
+        </p>
+
+      </div>
+
+    `;
+
+  } else {
+
+    employee.days
+      .slice()
+      .reverse()
+      .forEach(day => {
+
+        daysHTML += `
+
+          <div class="daily-item">
+
+            <div>
+
+              <strong>
+                ${formatDate(
+                  day.date
+                )}
+              </strong>
+
+              ${
+                day.work
+                  ? `
+                    <p>
+                      Obra:
+                      ${escapeHTML(
+                        day.work
+                      )}
+                    </p>
+                  `
+                  : ""
+              }
+
+              ${
+                day.notes
+                  ? `
+                    <p>
+                      ${escapeHTML(
+                        day.notes
+                      )}
+                    </p>
+                  `
+                  : ""
+              }
+
+            </div>
+
+            <div>
+
+              <strong>
+                ${formatCurrency(
+                  day.value
+                )}
+              </strong>
+
+              <button
+                type="button"
+                class="delete-day-btn"
+                data-day-id="${day.id}"
+              >
+                Excluir
+              </button>
+
+            </div>
+
+          </div>
+
+        `;
+
+      });
+
+  }
+
+
+  employeeDetails.innerHTML = `
+
+    <div class="card employee-profile">
+
+      <h2>
+        ${escapeHTML(
+          employee.name
+        )}
+      </h2>
+
+      ${
+        employee.phone
+          ? `
+            <p>
+              Telefone:
+              ${escapeHTML(
+                employee.phone
+              )}
+            </p>
+          `
+          : ""
+      }
+
+      <p>
+
+        Valor da diária:
+
+        <strong>
+          ${formatCurrency(
+            employee.dailyRate
+          )}
+        </strong>
+
+      </p>
+
+      <p>
+
+        Total de diárias:
+
+        <strong>
+          ${employee.days.length}
+        </strong>
+
+      </p>
+
+      <div class="detail-total">
+
+        <span>
+          Total acumulado
+        </span>
+
+        <span>
+          ${formatCurrency(total)}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        Adicionar diária
+      </h3>
+
+      <form id="dailyForm">
+
+        <label>
+          Data
+        </label>
+
+        <input
+          id="dailyDate"
+          type="date"
+          required
+        >
+
+
+        <label>
+          Obra / Local
+        </label>
+
+        <input
+          id="dailyWork"
+          type="text"
+          placeholder="Ex.: Obra João"
+        >
+
+
+        <label>
+          Valor da diária
+        </label>
+
+        <input
+          id="dailyValue"
+          type="number"
+          min="0"
+          step="0.01"
+          value="${employee.dailyRate}"
+        >
+
+
+        <label>
+          Observações
+        </label>
+
+        <textarea
+          id="dailyNotes"
+          placeholder="Observações da diária"
+        ></textarea>
+
+
+        <button
+          type="submit"
+          class="primary-btn"
+        >
+          Adicionar diária
+        </button>
+
+      </form>
+
+    </div>
+
+
+    <div class="daily-history">
+
+      <h3>
+        Histórico de diárias
+      </h3>
+
+      ${daysHTML}
+
+    </div>
+
+  `;
+
+
+  const dailyDate =
+    document.getElementById(
+      "dailyDate"
+    );
+
+
+  if (dailyDate) {
+
+    dailyDate.value =
+      new Date()
+        .toISOString()
+        .split("T")[0];
+
+  }
+
+
+  const dailyForm =
+    document.getElementById(
+      "dailyForm"
+    );
+
+
+  if (dailyForm) {
+
+    dailyForm.addEventListener(
+      "submit",
+      event => {
+
+        event.preventDefault();
+
+        addDailyEntry();
+
+      }
+    );
+
+  }
+
+
+  employeeDetails
+    .querySelectorAll(
+      ".delete-day-btn"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const id =
+            Number(
+              button.dataset.dayId
+            );
+
+          deleteDailyEntry(id);
+
+        }
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+   ADICIONAR DIÁRIA
+========================================================= */
+
+function addDailyEntry() {
+
+  const employee =
+    employees.find(
+      item =>
+        item.id === currentEmployeeId
+    );
+
+
+  if (!employee) {
+    return;
+  }
+
+
+  const dateField =
+    document.getElementById(
+      "dailyDate"
+    );
+
+  const workField =
+    document.getElementById(
+      "dailyWork"
+    );
+
+  const valueField =
+    document.getElementById(
+      "dailyValue"
+    );
+
+  const notesField =
+    document.getElementById(
+      "dailyNotes"
+    );
+
+
+  const date =
+    dateField?.value || "";
+
+  const work =
+    workField?.value.trim() || "";
+
+  const value =
+    Number(
+      valueField?.value
+    ) ||
+    Number(employee.dailyRate) ||
+    0;
+
+  const notes =
+    notesField?.value.trim() || "";
+
+
+  if (!date) {
+
+    alert(
+      "Informe a data da diária."
+    );
+
+    return;
+
+  }
+
+
+  if (!Array.isArray(employee.days)) {
+    employee.days = [];
+  }
+
+
+  employee.days.push({
+
+    id: Date.now(),
+
+    date,
+
+    work,
+
+    value,
+
+    notes
+
+  });
+
+
+  saveEmployees();
+
+  renderEmployees();
+
+  renderEmployeeDetails();
+
+}
+
+
+/* =========================================================
+   EXCLUIR DIÁRIA
+========================================================= */
+
+function deleteDailyEntry(dayId) {
+
+  const employee =
+    employees.find(
+      item =>
+        item.id === currentEmployeeId
+    );
+
+
+  if (!employee) {
+    return;
+  }
+
+
+  const confirmed =
+    confirm(
+      "Deseja excluir esta diária?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  employee.days =
+    employee.days.filter(
+      day =>
+        day.id !== dayId
+    );
+
+
+  saveEmployees();
+
+  renderEmployees();
+
+  renderEmployeeDetails();
+
+}
+
+
+/* =========================================================
+   EXCLUIR FUNCIONÁRIO
+========================================================= */
+
+function deleteEmployee(id) {
+
+  const employee =
+    employees.find(
+      item =>
+        item.id === id
+    );
+
+
+  if (!employee) {
+    return;
+  }
+
+
+  const confirmed =
+    confirm(
+      `Deseja excluir o funcionário ${employee.name}?`
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  employees =
+    employees.filter(
+      item =>
+        item.id !== id
+    );
+
+
+  saveEmployees();
+
+  renderEmployees();
+
+}
+
+
+/* =========================================================
+   COMPATIBILIDADE COM FUNCIONÁRIOS ANTIGOS
+========================================================= */
+
+employees =
+  employees.map(employee => {
+
+    return {
+
+      ...employee,
+
+      dailyRate:
+        Number(
+          employee.dailyRate ||
+          employee.value ||
+          0
+        ),
+
+      days:
+        Array.isArray(employee.days)
+          ? employee.days
+          : []
+
+    };
+
+  });
+
+
+saveEmployees();
+
+
+/* =========================================================
+   INICIALIZAÇÃO DO APLICATIVO
+========================================================= */
 
 renderBudgets();
 
-clearBudgetForm();
+renderWorks();
+
+renderEmployees();
+
+
+if (
+  serviceList &&
+  serviceTemplate &&
+  serviceList.children.length === 0
+) {
+
+  addService();
+
+}
+
+
+calculateBudget();
+
+
+/* =========================================================
+   FIM
+========================================================= */
