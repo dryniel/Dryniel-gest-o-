@@ -1,7 +1,3 @@
-/* =========================
-   RESET
-========================= */
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -13,48 +9,41 @@
   --card: #ffffff;
   --text: #17202a;
   --muted: #68737d;
-
-  --primary: #0b5d73;
-  --primary-dark: #07495b;
-  --primary-light: #e8f3f6;
-
+  --primary: #0b6f86;
+  --primary-dark: #07566a;
   --border: #dce2e7;
-
   --danger: #c0392b;
-  --danger-light: #fbeaea;
-
+  --danger-dark: #962d22;
   --success: #1e8449;
-  --success-dark: #176b3b;
-  --success-light: #e9f6ee;
-
-  --warning: #b9770e;
-
-  --shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-
-  --radius: 12px;
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
-
-/* =========================
-   BODY
-========================= */
+body.dark {
+  --bg: #11181d;
+  --card: #1a242b;
+  --text: #eef4f6;
+  --muted: #aab5ba;
+  --primary: #0e7f99;
+  --primary-dark: #0a657a;
+  --border: #30414b;
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+}
 
 html {
   scroll-behavior: smooth;
 }
 
 body {
+  min-height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
   background: var(--bg);
   color: var(--text);
-  min-height: 100vh;
-  padding-bottom: 90px;
+  padding-bottom: 86px;
 }
 
 button,
 input,
-textarea,
-select {
+textarea {
   font: inherit;
 }
 
@@ -62,77 +51,49 @@ button {
   cursor: pointer;
 }
 
-
-/* =========================
-   CABEÇALHO
-========================= */
-
 .top-header {
-  background: var(--primary);
-  color: #ffffff;
-
-  min-height: 82px;
-
-  padding: 16px 18px;
-
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  min-height: 78px;
+  padding: 14px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  position: sticky;
-  top: 0;
-  z-index: 100;
-
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  gap: 16px;
+  background: var(--primary);
+  color: #fff;
+  box-shadow: var(--shadow);
 }
 
-.brand h1 {
-  font-size: 25px;
+.top-header h1 {
+  font-size: 24px;
+  line-height: 1;
   letter-spacing: 2px;
-  font-weight: 800;
 }
 
-.brand p {
-  margin-top: 3px;
-  font-size: 11px;
-  letter-spacing: 1.8px;
-  opacity: 0.9;
+.top-header p {
+  margin-top: 6px;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  opacity: 0.95;
 }
 
-.theme-btn {
+.icon-btn {
   width: 42px;
   height: 42px;
-
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 50%;
-
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-
-  font-size: 22px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 20px;
 }
 
-
-/* =========================
-   CONTAINER
-========================= */
-
-.app-container {
-  width: 100%;
-  max-width: 900px;
-
+.app-shell {
+  width: min(1120px, calc(100% - 28px));
   margin: 0 auto;
-  padding: 18px 14px 30px;
+  padding: 22px 0 28px;
 }
-
-
-/* =========================
-   TELAS
-========================= */
 
 .screen {
   display: none;
@@ -142,239 +103,136 @@ button {
   display: block;
 }
 
-
-/* =========================
-   CABEÇALHO DAS PÁGINAS
-========================= */
-
 .page-header {
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .page-header h2 {
-  font-size: 25px;
-  color: var(--text);
+  font-size: clamp(26px, 5vw, 38px);
+  margin-bottom: 8px;
 }
 
 .page-header p {
   color: var(--muted);
-  font-size: 14px;
-  margin-top: 5px;
+  font-size: 16px;
 }
 
-.page-header-row {
+.row-between,
+.section-title-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
 }
 
-
-/* =========================
-   MENU INICIAL
-========================= */
+.menu-grid,
+.layout-grid,
+.summary-grid {
+  display: grid;
+  gap: 16px;
+}
 
 .menu-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.layout-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.summary-grid {
+  grid-template-columns: repeat(4, 1fr);
+  margin: 16px 0;
+}
+
+.menu-card,
+.panel,
+.summary-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: var(--shadow);
 }
 
 .menu-card {
-  width: 100%;
-  min-height: 95px;
-
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-
-  background: var(--card);
+  min-height: 145px;
+  padding: 22px 16px;
   color: var(--text);
-
-  padding: 18px;
-
-  display: flex;
-  align-items: center;
-  gap: 18px;
-
   text-align: left;
-
-  box-shadow: var(--shadow);
-
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
 }
 
-.menu-card:active {
-  transform: scale(0.98);
+.menu-card:hover {
+  transform: translateY(-1px);
 }
 
 .menu-icon {
-  width: 55px;
-  height: 55px;
-
-  flex-shrink: 0;
-
-  border-radius: 12px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: var(--primary-light);
-  color: var(--primary);
-
   font-size: 30px;
-  font-weight: bold;
+  color: var(--primary);
 }
 
-.menu-text {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+.menu-card strong {
+  font-size: 19px;
 }
 
-.menu-text strong {
-  font-size: 18px;
-}
-
-.menu-text small {
+.menu-card small {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
 }
 
+.panel {
+  padding: 18px;
+}
 
-/* =========================
-   CARDS
-========================= */
-
-.card {
-  background: var(--card);
-
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-
-  padding: 17px;
-
+.panel h3 {
   margin-bottom: 16px;
-
-  box-shadow: var(--shadow);
-}
-
-.card h3 {
-  font-size: 18px;
-  margin-bottom: 16px;
-}
-
-.card-title-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  gap: 10px;
-
-  margin-bottom: 14px;
-}
-
-.card-title-row h3 {
-  margin-bottom: 0;
-}
-
-
-/* =========================
-   FORMULÁRIOS
-========================= */
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group:last-child {
-  margin-bottom: 0;
+  font-size: 20px;
 }
 
 label {
   display: block;
-
-  margin-bottom: 6px;
-
-  color: var(--text);
-
-  font-size: 13px;
+  margin: 14px 0 7px;
   font-weight: 700;
+  font-size: 14px;
 }
 
 input,
-textarea,
-select {
+textarea {
   width: 100%;
-
   border: 1px solid var(--border);
-  border-radius: 9px;
-
+  border-radius: 10px;
   background: var(--card);
   color: var(--text);
-
   padding: 12px 13px;
-
   outline: none;
-
-  font-size: 16px;
 }
 
 textarea {
   resize: vertical;
-  min-height: 85px;
 }
 
 input:focus,
-textarea:focus,
-select:focus {
+textarea:focus {
   border-color: var(--primary);
-
-  box-shadow:
-    0 0 0 3px rgba(11, 93, 115, 0.1);
+  box-shadow: 0 0 0 3px rgba(11, 111, 134, 0.12);
 }
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-
-/* =========================
-   BOTÕES
-========================= */
 
 .primary-btn,
 .secondary-btn,
-.success-btn,
-.danger-btn,
-.back-btn {
-  border: none;
-  border-radius: 9px;
-
-  padding: 11px 15px;
-
+.danger-btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 14px;
   font-weight: 700;
-
-  transition:
-    opacity 0.15s ease,
-    transform 0.15s ease;
-}
-
-.primary-btn:active,
-.secondary-btn:active,
-.success-btn:active,
-.danger-btn:active,
-.back-btn:active {
-  transform: scale(0.97);
 }
 
 .primary-btn {
   background: var(--primary);
-  color: #ffffff;
+  color: #fff;
 }
 
 .primary-btn:hover {
@@ -382,401 +240,200 @@ select:focus {
 }
 
 .secondary-btn {
-  background: var(--primary-light);
-  color: var(--primary);
+  background: #e9eef1;
+  color: #24323a;
 }
 
-.success-btn {
-  background: var(--success);
-  color: #ffffff;
-}
-
-.success-btn:hover {
-  background: var(--success-dark);
+body.dark .secondary-btn {
+  background: #2b3942;
+  color: #fff;
 }
 
 .danger-btn {
-  background: var(--danger-light);
+  background: #f8e4e1;
   color: var(--danger);
 }
 
-.back-btn {
-  background: transparent;
-  color: var(--primary);
-
-  padding-left: 0;
-
-  margin-bottom: 12px;
+.danger-btn:hover {
+  background: #f1ceca;
+  color: var(--danger-dark);
 }
 
-.full-btn {
+.full {
   width: 100%;
+  margin-top: 16px;
 }
 
+.section-title-row {
+  margin: 22px 0 10px;
+}
 
-/* =========================
-   SERVIÇOS DO ORÇAMENTO
-========================= */
+.section-title-row h3 {
+  margin: 0;
+}
 
-.service-item {
+.service-row {
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
 
-  background: var(--bg);
+.service-fields {
+  display: grid;
+  grid-template-columns: 1fr 150px;
+  gap: 10px;
+}
 
+.remove-service {
+  margin-top: 10px;
+}
+
+.summary-box {
+  margin-top: 18px;
+  border-radius: 12px;
   padding: 14px;
-
-  margin-bottom: 14px;
-}
-
-.service-header {
+  background: rgba(11, 111, 134, 0.08);
   display: flex;
   justify-content: space-between;
-  align-items: center;
-
-  margin-bottom: 12px;
+  gap: 16px;
 }
 
-.service-title {
-  color: var(--primary);
-}
-
-.remove-service-btn {
-  width: 34px;
-  height: 34px;
-
-  border: none;
-  border-radius: 50%;
-
-  background: var(--danger-light);
-  color: var(--danger);
-
-  font-size: 22px;
-  line-height: 1;
-
+.summary-box div {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.service-subtotal {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  border-top: 1px solid var(--border);
-
-  margin-top: 5px;
-  padding-top: 12px;
-
+.summary-box span,
+.summary-card span {
   color: var(--muted);
-
-  font-size: 14px;
+  font-size: 13px;
 }
 
-.service-subtotal strong {
-  color: var(--text);
-}
-
-
-/* =========================
-   RESUMO DO ORÇAMENTO
-========================= */
-
-.summary-card {
-  background: var(--primary-light);
-}
-
-.summary-line {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  padding: 7px 0;
-}
-
-.total-line {
-  border-top: 1px solid var(--border);
-
-  margin-top: 6px;
-  padding-top: 14px;
-
-  margin-bottom: 15px;
-
+.summary-box strong,
+.summary-card strong {
   font-size: 20px;
 }
 
-.total-line strong {
-  color: var(--primary);
+.summary-card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
 
-
-/* =========================
-   LISTAS SALVAS
-========================= */
-
-.saved-list {
+.stack-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.empty-message {
+.empty-state {
+  padding: 20px 12px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
   color: var(--muted);
   text-align: center;
-
-  padding: 20px 10px;
-
-  font-size: 14px;
 }
 
-.list-item {
+.list-card {
   border: 1px solid var(--border);
-  border-radius: 10px;
-
-  background: var(--bg);
-
-  padding: 13px;
-}
-
-.list-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-
-  gap: 10px;
-}
-
-.list-item-title {
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.list-item-subtitle {
-  color: var(--muted);
-
-  font-size: 13px;
-
-  margin-top: 4px;
-}
-
-.list-item-value {
-  color: var(--primary);
-
-  font-weight: 800;
-
-  white-space: nowrap;
-}
-
-.list-actions {
-  display: flex;
-  flex-wrap: wrap;
-
-  gap: 8px;
-
-  margin-top: 12px;
-}
-
-.list-actions button {
-  flex: 1;
-
-  min-width: 90px;
-
-  border: none;
-  border-radius: 8px;
-
-  padding: 9px 10px;
-
-  font-size: 13px;
-  font-weight: 700;
-}
-
-
-/* =========================
-   DETALHES DO ORÇAMENTO
-========================= */
-
-.details-area {
-  margin-top: 15px;
-}
-
-.details-card {
+  border-radius: 12px;
   background: var(--card);
-
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-
-  padding: 17px;
-
-  box-shadow: var(--shadow);
+  padding: 14px;
 }
 
-.details-card h3 {
-  margin-bottom: 12px;
-}
-
-.details-card p {
-  margin-bottom: 7px;
-  line-height: 1.5;
-}
-
-.details-service {
-  border-top: 1px solid var(--border);
-
-  padding: 12px 0;
-}
-
-.details-total {
-  border-top: 2px solid var(--primary);
-
-  margin-top: 10px;
-  padding-top: 14px;
-
-  display: flex;
-  justify-content: space-between;
-
-  font-size: 20px;
-  font-weight: 800;
-}
-
-
-/* =========================
-   FUNCIONÁRIOS
-========================= */
-
-.employee-summary-grid {
-  display: grid;
-
-  grid-template-columns:
-    repeat(2, 1fr);
-
-  gap: 10px;
-
-  margin-bottom: 16px;
-}
-
-.stat-card {
-  background: var(--card);
-
-  border: 1px solid var(--border);
-  border-radius: 10px;
-
-  padding: 15px 10px;
-
-  text-align: center;
-
-  box-shadow: var(--shadow);
-}
-
-.stat-card span {
-  display: block;
-
-  color: var(--muted);
-
-  font-size: 12px;
-
-  margin-bottom: 7px;
-}
-
-.stat-card strong {
-  color: var(--primary);
-
+.list-card h4 {
+  margin-bottom: 5px;
   font-size: 17px;
 }
 
-
-/* =========================
-   HISTÓRICO
-========================= */
-
-.history-item {
-  border-left: 4px solid var(--primary);
-
-  background: var(--bg);
-
-  border-radius: 7px;
-
-  padding: 12px;
-
-  margin-bottom: 9px;
-}
-
-.history-item.payment {
-  border-left-color: var(--success);
-}
-
-.history-item strong {
-  display: block;
-  margin-bottom: 4px;
-}
-
-.history-item small {
+.list-card p {
   color: var(--muted);
+  font-size: 14px;
+  margin-top: 4px;
 }
 
-
-/* =========================
-   STATUS DAS OBRAS
-========================= */
-
-.status-badge {
-  display: inline-block;
-
-  padding: 5px 9px;
-
-  border-radius: 20px;
-
+.list-card .value {
   margin-top: 8px;
-
-  font-size: 11px;
+  color: var(--text);
   font-weight: 700;
-
-  background: var(--primary-light);
-  color: var(--primary);
 }
 
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
 
-/* =========================
-   NAVEGAÇÃO INFERIOR
-========================= */
+.card-actions button {
+  flex: 1 1 110px;
+}
+
+.detail-block {
+  margin-bottom: 18px;
+}
+
+.detail-block h3 {
+  margin-bottom: 8px;
+}
+
+.detail-services {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.detail-services th,
+.detail-services td {
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.detail-services th:last-child,
+.detail-services td:last-child {
+  text-align: right;
+}
+
+.detail-total {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 2px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 22px;
+  font-weight: 800;
+}
 
 .bottom-nav {
   position: fixed;
-
-  bottom: 0;
   left: 0;
   right: 0;
-
+  bottom: 0;
+  z-index: 30;
   height: 72px;
-
-  background: var(--card);
-
-  border-top: 1px solid var(--border);
-
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
   display: grid;
-  grid-template-columns:
-    repeat(4, 1fr);
-
-  z-index: 200;
-
-  box-shadow:
-    0 -2px 10px rgba(0, 0, 0, 0.07);
-
-  padding-bottom:
-    env(safe-area-inset-bottom);
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.07);
 }
 
 .nav-btn {
-  border: none;
-
+  border: 0;
+  border-radius: 12px;
   background: transparent;
   color: var(--muted);
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   gap: 3px;
 }
 
@@ -785,95 +442,73 @@ select:focus {
 }
 
 .nav-btn small {
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .nav-btn.active {
+  background: rgba(11, 111, 134, 0.11);
   color: var(--primary);
   font-weight: 700;
 }
 
-
-/* =========================
-   TEMA ESCURO
-========================= */
-
-body.dark-theme {
-  --bg: #11181c;
-  --card: #1b252b;
-  --text: #f0f4f5;
-  --muted: #a9b4b9;
-
-  --primary: #1b829c;
-  --primary-dark: #156b81;
-  --primary-light: #18343d;
-
-  --border: #344249;
-
-  --danger-light: #3b2222;
-  --success-light: #1d3829;
-
-  --shadow:
-    0 3px 12px rgba(0, 0, 0, 0.25);
-}
-
-
-/* =========================
-   TELAS MAIORES
-========================= */
-
-@media (min-width: 650px) {
-
-  .app-container {
-    padding: 25px 20px 40px;
+@media (max-width: 760px) {
+  .app-shell {
+    width: min(100% - 20px, 1120px);
+    padding-top: 16px;
   }
 
-  .menu-grid {
-    grid-template-columns:
-      repeat(3, 1fr);
+  .menu-grid,
+  .layout-grid,
+  .summary-grid {
+    grid-template-columns: 1fr;
   }
 
   .menu-card {
-    flex-direction: column;
-    justify-content: center;
-
-    min-height: 160px;
-
-    text-align: center;
+    min-height: 105px;
   }
 
-  .employee-summary-grid {
-    grid-template-columns:
-      repeat(4, 1fr);
-  }
-}
-
-
-/* =========================
-   CELULARES PEQUENOS
-========================= */
-
-@media (max-width: 380px) {
-
-  .app-container {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-
-  .card {
-    padding: 14px;
-  }
-
-  .form-row {
+  .service-fields {
     grid-template-columns: 1fr;
-    gap: 0;
   }
 
-  .page-header-row {
+  .row-between {
     align-items: flex-start;
   }
 
-  .primary-btn {
-    font-size: 14px;
+  .page-header h2 {
+    font-size: 29px;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+    padding: 0;
+  }
+
+  .top-header,
+  .bottom-nav,
+  .back-to-budgets,
+  .card-actions {
+    display: none !important;
+  }
+
+  .app-shell {
+    width: 100%;
+    padding: 0;
+  }
+
+  .screen {
+    display: none !important;
+  }
+
+  #budgetDetailsScreen.active {
+    display: block !important;
+  }
+
+  #budgetDetails {
+    border: 0;
+    box-shadow: none;
   }
 }
