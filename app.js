@@ -1,51 +1,125 @@
-const screens = document.querySelectorAll(".screen");
-const navButtons = document.querySelectorAll(".nav-btn");
-const menuButtons = document.querySelectorAll(".menu-card");
+const screens =
+  document.querySelectorAll(".screen");
 
-const themeBtn = document.getElementById("themeBtn");
+const navButtons =
+  document.querySelectorAll(".nav-btn");
 
-const budgetForm = document.getElementById("budgetForm");
-const budgetList = document.getElementById("budgetList");
-const budgetDetails = document.getElementById("budgetDetails");
-const serviceList = document.getElementById("serviceList");
-const serviceTemplate = document.getElementById("serviceTemplate");
-const addServiceBtn = document.getElementById("addServiceBtn");
-const newBudgetBtn = document.getElementById("newBudgetBtn");
-const budgetTotal = document.getElementById("budgetTotal");
-const serviceCount = document.getElementById("serviceCount");
+const menuButtons =
+  document.querySelectorAll(".menu-card");
 
-const clientName = document.getElementById("clientName");
-const clientAddress = document.getElementById("clientAddress");
-const budgetNotes = document.getElementById("budgetNotes");
-const editingBudgetId = document.getElementById("editingBudgetId");
+const themeBtn =
+  document.getElementById("themeBtn");
 
-const workForm = document.getElementById("workForm");
-const workList = document.getElementById("workList");
-const workName = document.getElementById("workName");
-const workClient = document.getElementById("workClient");
-const workAddress = document.getElementById("workAddress");
-const workNotes = document.getElementById("workNotes");
-const editingWorkId = document.getElementById("editingWorkId");
 
-const employeeForm = document.getElementById("employeeForm");
-const employeeList = document.getElementById("employeeList");
-const employeeName = document.getElementById("employeeName");
-const employeeDailyRate = document.getElementById("employeeDailyRate");
+const budgetForm =
+  document.getElementById("budgetForm");
+
+const budgetList =
+  document.getElementById("budgetList");
+
+const budgetDetails =
+  document.getElementById("budgetDetails");
+
+const serviceList =
+  document.getElementById("serviceList");
+
+const serviceTemplate =
+  document.getElementById("serviceTemplate");
+
+const addServiceBtn =
+  document.getElementById("addServiceBtn");
+
+const newBudgetBtn =
+  document.getElementById("newBudgetBtn");
+
+const budgetTotal =
+  document.getElementById("budgetTotal");
+
+const serviceCount =
+  document.getElementById("serviceCount");
+
+const clientName =
+  document.getElementById("clientName");
+
+const clientAddress =
+  document.getElementById("clientAddress");
+
+const budgetNotes =
+  document.getElementById("budgetNotes");
+
+const editingBudgetId =
+  document.getElementById("editingBudgetId");
+
+
+const workForm =
+  document.getElementById("workForm");
+
+const workList =
+  document.getElementById("workList");
+
+const workName =
+  document.getElementById("workName");
+
+const workClient =
+  document.getElementById("workClient");
+
+const workAddress =
+  document.getElementById("workAddress");
+
+const workNotes =
+  document.getElementById("workNotes");
+
+const editingWorkId =
+  document.getElementById("editingWorkId");
+
+
+const employeeForm =
+  document.getElementById("employeeForm");
+
+const employeeList =
+  document.getElementById("employeeList");
+
+const employeeName =
+  document.getElementById("employeeName");
+
+const employeeDailyRate =
+  document.getElementById("employeeDailyRate");
 
 const employeeDetailsTitle =
   document.getElementById("employeeDetailsTitle");
 
-const dailyForm = document.getElementById("dailyForm");
-const dailyDate = document.getElementById("dailyDate");
-const dailyQuantity = document.getElementById("dailyQuantity");
-const dailyNote = document.getElementById("dailyNote");
-const dailyList = document.getElementById("dailyList");
 
-const paymentForm = document.getElementById("paymentForm");
-const paymentDate = document.getElementById("paymentDate");
-const paymentAmount = document.getElementById("paymentAmount");
-const paymentNote = document.getElementById("paymentNote");
-const paymentList = document.getElementById("paymentList");
+const dailyForm =
+  document.getElementById("dailyForm");
+
+const dailyDate =
+  document.getElementById("dailyDate");
+
+const dailyQuantity =
+  document.getElementById("dailyQuantity");
+
+const dailyNote =
+  document.getElementById("dailyNote");
+
+const dailyList =
+  document.getElementById("dailyList");
+
+
+const paymentForm =
+  document.getElementById("paymentForm");
+
+const paymentDate =
+  document.getElementById("paymentDate");
+
+const paymentAmount =
+  document.getElementById("paymentAmount");
+
+const paymentNote =
+  document.getElementById("paymentNote");
+
+const paymentList =
+  document.getElementById("paymentList");
+
 
 const employeeDaysTotal =
   document.getElementById("employeeDaysTotal");
@@ -64,9 +138,14 @@ const employeeBalance =
    DADOS
 ========================= */
 
-let budgets = loadData("dryniel_budgets", []);
-let works = loadData("dryniel_works", []);
-let employees = loadData("dryniel_employees", []);
+let budgets =
+  loadData("dryniel_budgets", []);
+
+let works =
+  loadData("dryniel_works", []);
+
+let employees =
+  loadData("dryniel_employees", []);
 
 let currentEmployeeId = null;
 
@@ -75,35 +154,53 @@ let currentEmployeeId = null;
    FUNÇÕES GERAIS
 ========================= */
 
-function loadData(key, fallback) {
+function loadData(
+  key,
+  fallback
+) {
+
   try {
-    const saved = JSON.parse(localStorage.getItem(key));
+
+    const saved =
+      JSON.parse(
+        localStorage.getItem(key)
+      );
 
     return Array.isArray(saved)
       ? saved
       : fallback;
 
   } catch (error) {
+
     return fallback;
+
   }
+
 }
 
 
-function saveData(key, value) {
+function saveData(
+  key,
+  value
+) {
+
   localStorage.setItem(
     key,
     JSON.stringify(value)
   );
+
 }
 
 
 function makeId() {
+
   return (
     Date.now().toString(36) +
     Math.random()
       .toString(36)
       .slice(2, 8)
   );
+
 }
 
 
@@ -118,6 +215,7 @@ function formatCurrency(value) {
   ).format(
     Number(value) || 0
   );
+
 }
 
 
@@ -141,6 +239,7 @@ function formatDate(dateString) {
     "/" +
     parts[0]
   );
+
 }
 
 
@@ -155,6 +254,7 @@ function escapeHtml(value) {
       : String(value);
 
   return div.innerHTML;
+
 }
 
 
@@ -164,109 +264,136 @@ function escapeHtml(value) {
 
 function showScreen(screenId) {
 
-  screens.forEach(function(screen) {
+  screens.forEach(
+    function(screen) {
 
-    if (screen.id === screenId) {
-      screen.classList.add("active");
+      if (
+        screen.id === screenId
+      ) {
 
-    } else {
-      screen.classList.remove("active");
+        screen.classList.add(
+          "active"
+        );
+
+      } else {
+
+        screen.classList.remove(
+          "active"
+        );
+
+      }
+
     }
+  );
 
-  });
 
+  navButtons.forEach(
+    function(button) {
 
-  navButtons.forEach(function(button) {
+      if (
+        button.dataset.screen ===
+        screenId
+      ) {
 
-    if (
-      button.dataset.screen ===
-      screenId
-    ) {
+        button.classList.add(
+          "active"
+        );
 
-      button.classList.add("active");
+      } else {
 
-    } else {
+        button.classList.remove(
+          "active"
+        );
 
-      button.classList.remove("active");
+      }
+
     }
-
-  });
+  );
 
 
   window.scrollTo(0, 0);
+
 }
 
 
-navButtons.forEach(function(button) {
+navButtons.forEach(
+  function(button) {
 
-  button.addEventListener(
-    "click",
-    function() {
+    button.addEventListener(
+      "click",
+      function() {
 
-      showScreen(
-        button.dataset.screen
-      );
+        showScreen(
+          button.dataset.screen
+        );
 
-    }
-  );
+      }
+    );
 
-});
+  }
+);
 
 
-menuButtons.forEach(function(button) {
+menuButtons.forEach(
+  function(button) {
 
-  button.addEventListener(
-    "click",
-    function() {
+    button.addEventListener(
+      "click",
+      function() {
 
-      showScreen(
-        button.dataset.screen
-      );
+        showScreen(
+          button.dataset.screen
+        );
 
-    }
-  );
+      }
+    );
 
-});
+  }
+);
 
 
 document
   .querySelectorAll(
     ".back-to-budgets"
   )
-  .forEach(function(button) {
+  .forEach(
+    function(button) {
 
-    button.addEventListener(
-      "click",
-      function() {
+      button.addEventListener(
+        "click",
+        function() {
 
-        showScreen(
-          "budgetsScreen"
-        );
+          showScreen(
+            "budgetsScreen"
+          );
 
-      }
-    );
+        }
+      );
 
-  });
+    }
+  );
 
 
 document
   .querySelectorAll(
     ".back-to-employees"
   )
-  .forEach(function(button) {
+  .forEach(
+    function(button) {
 
-    button.addEventListener(
-      "click",
-      function() {
+      button.addEventListener(
+        "click",
+        function() {
 
-        showScreen(
-          "employeesScreen"
-        );
+          showScreen(
+            "employeesScreen"
+          );
 
-      }
-    );
+        }
+      );
 
-  });
+    }
+  );
 
 
 /* =========================
@@ -291,44 +418,36 @@ if (savedTheme === "dark") {
 updateThemeButton();
 
 
-if (themeBtn) {
+themeBtn.addEventListener(
+  "click",
+  function() {
 
-  themeBtn.addEventListener(
-    "click",
-    function() {
+    document.body
+      .classList
+      .toggle("dark");
 
+
+    const theme =
       document.body
         .classList
-        .toggle("dark");
+        .contains("dark")
+        ? "dark"
+        : "light";
 
 
-      const theme =
-        document.body
-          .classList
-          .contains("dark")
-          ? "dark"
-          : "light";
+    localStorage.setItem(
+      "dryniel_theme",
+      theme
+    );
 
 
-      localStorage.setItem(
-        "dryniel_theme",
-        theme
-      );
+    updateThemeButton();
 
-
-      updateThemeButton();
-
-    }
-  );
-
-}
+  }
+);
 
 
 function updateThemeButton() {
-
-  if (!themeBtn) {
-    return;
-  }
 
   themeBtn.textContent =
     document.body
@@ -336,11 +455,12 @@ function updateThemeButton() {
       .contains("dark")
       ? "☀"
       : "☾";
+
 }
 
 
 /* =========================
-   ORÇAMENTOS
+   SERVIÇOS DO ORÇAMENTO
 ========================= */
 
 function addService(service) {
@@ -393,31 +513,40 @@ function addService(service) {
     service.value || "";
 
 
-  valueInput.addEventListener(
-    "input",
-    updateBudgetSummary
-  );
+  descriptionInput
+    .addEventListener(
+      "input",
+      updateBudgetSummary
+    );
 
 
-  removeButton.addEventListener(
-    "click",
-    function() {
-
-      row.remove();
-
-      updateBudgetSummary();
+  valueInput
+    .addEventListener(
+      "input",
+      updateBudgetSummary
+    );
 
 
-      if (
-        serviceList.children.length === 0
-      ) {
+  removeButton
+    .addEventListener(
+      "click",
+      function() {
 
-        addService();
+        row.remove();
+
+        if (
+          serviceList.children.length ===
+          0
+        ) {
+
+          addService();
+
+        }
+
+        updateBudgetSummary();
 
       }
-
-    }
-  );
+    );
 
 
   serviceList.appendChild(
@@ -426,6 +555,7 @@ function addService(service) {
 
 
   updateBudgetSummary();
+
 }
 
 
@@ -440,38 +570,46 @@ function getServicesFromForm() {
   const services = [];
 
 
-  rows.forEach(function(row) {
+  rows.forEach(
+    function(row) {
 
-    const description =
-      row.querySelector(
-        ".service-description"
-      ).value.trim();
-
-
-    const value =
-      Number(
-        row.querySelector(
-          ".service-value"
-        ).value
-      ) || 0;
+      const description =
+        row
+          .querySelector(
+            ".service-description"
+          )
+          .value
+          .trim();
 
 
-    if (
-      description !== "" ||
-      value > 0
-    ) {
+      const value =
+        Number(
+          row
+            .querySelector(
+              ".service-value"
+            )
+            .value
+        ) || 0;
 
-      services.push({
-        description: description,
-        value: value
-      });
+
+      if (
+        description !== "" ||
+        value > 0
+      ) {
+
+        services.push({
+          description: description,
+          value: value
+        });
+
+      }
 
     }
-
-  });
+  );
 
 
   return services;
+
 }
 
 
@@ -500,6 +638,7 @@ function updateBudgetSummary() {
 
   budgetTotal.textContent =
     formatCurrency(total);
+
 }
 
 
@@ -514,6 +653,7 @@ function resetBudgetForm() {
   addService();
 
   updateBudgetSummary();
+
 }
 
 
@@ -543,6 +683,10 @@ newBudgetBtn.addEventListener(
 );
 
 
+/* =========================
+   SALVAR ORÇAMENTO
+========================= */
+
 budgetForm.addEventListener(
   "submit",
   function(event) {
@@ -554,13 +698,16 @@ budgetForm.addEventListener(
       getServicesFromForm();
 
 
-    if (services.length === 0) {
+    if (
+      services.length === 0
+    ) {
 
       alert(
         "Adicione pelo menos um serviço."
       );
 
       return;
+
     }
 
 
@@ -615,7 +762,9 @@ budgetForm.addEventListener(
       );
 
 
-    if (existingIndex >= 0) {
+    if (
+      existingIndex >= 0
+    ) {
 
       budgets[existingIndex] =
         budget;
@@ -649,12 +798,14 @@ budgetForm.addEventListener(
 
 
 /* =========================
-   LISTA DE ORÇAMENTOS
+   LISTAR ORÇAMENTOS
 ========================= */
 
 function renderBudgets() {
 
-  if (budgets.length === 0) {
+  if (
+    budgets.length === 0
+  ) {
 
     budgetList.innerHTML =
       '<div class="empty-state">' +
@@ -662,6 +813,7 @@ function renderBudgets() {
       "</div>";
 
     return;
+
   }
 
 
@@ -672,6 +824,7 @@ function renderBudgets() {
     function(budget) {
 
       html +=
+
         '<article class="list-card">' +
 
         "<h4>" +
@@ -728,7 +881,9 @@ function renderBudgets() {
   );
 
 
-  budgetList.innerHTML = html;
+  budgetList.innerHTML =
+    html;
+
 }
 
 
@@ -979,6 +1134,7 @@ function openBudget(id) {
   showScreen(
     "budgetDetailsScreen"
   );
+
 }
 
 
@@ -1040,6 +1196,7 @@ function editBudget(id) {
 
 
   clientName.focus();
+
 }
 
 
@@ -1056,6 +1213,7 @@ function printBudget(id) {
     },
     200
   );
+
 }
 
 
@@ -1089,6 +1247,7 @@ function deleteBudget(id) {
 
 
   renderBudgets();
+
 }
 
 
@@ -1137,7 +1296,9 @@ workForm.addEventListener(
       );
 
 
-    if (existingIndex >= 0) {
+    if (
+      existingIndex >= 0
+    ) {
 
       works[existingIndex] =
         work;
@@ -1169,7 +1330,9 @@ workForm.addEventListener(
 
 function renderWorks() {
 
-  if (works.length === 0) {
+  if (
+    works.length === 0
+  ) {
 
     workList.innerHTML =
       '<div class="empty-state">' +
@@ -1177,6 +1340,7 @@ function renderWorks() {
       "</div>";
 
     return;
+
   }
 
 
@@ -1191,7 +1355,9 @@ function renderWorks() {
         '<article class="list-card">' +
 
         "<h4>" +
-        escapeHtml(work.name) +
+        escapeHtml(
+          work.name
+        ) +
         "</h4>" +
 
         "<p>" +
@@ -1230,7 +1396,9 @@ function renderWorks() {
   );
 
 
-  workList.innerHTML = html;
+  workList.innerHTML =
+    html;
+
 }
 
 
@@ -1444,6 +1612,7 @@ function calculateEmployeeTotals(
       gross - paid
 
   };
+
 }
 
 
@@ -1459,6 +1628,7 @@ function renderEmployees() {
       "</div>";
 
     return;
+
   }
 
 
@@ -1521,6 +1691,7 @@ function renderEmployees() {
 
   employeeList.innerHTML =
     html;
+
 }
 
 
@@ -1635,6 +1806,7 @@ function openEmployee(id) {
   showScreen(
     "employeeDetailsScreen"
   );
+
 }
 
 
@@ -1660,11 +1832,12 @@ function setTodayDefaults() {
       today;
 
   }
+
 }
 
 
 /* =========================
-   ADICIONAR DIÁRIA
+   DIÁRIAS
 ========================= */
 
 dailyForm.addEventListener(
@@ -1740,7 +1913,7 @@ dailyForm.addEventListener(
 
 
 /* =========================
-   REGISTRAR PAGAMENTO
+   PAGAMENTOS
 ========================= */
 
 paymentForm.addEventListener(
@@ -1768,7 +1941,9 @@ paymentForm.addEventListener(
     }
 
 
-    if (!employee.payments) {
+    if (
+      !employee.payments
+    ) {
 
       employee.payments = [];
 
@@ -1877,7 +2052,9 @@ function renderEmployeeDetails() {
     employee.payments || [];
 
 
-  if (entries.length === 0) {
+  if (
+    entries.length === 0
+  ) {
 
     dailyList.innerHTML =
       '<div class="empty-state">' +
@@ -1948,6 +2125,7 @@ function renderEmployeeDetails() {
 
     dailyList.innerHTML =
       dailyHtml;
+
   }
 
 
@@ -2012,7 +2190,9 @@ function renderEmployeeDetails() {
 
     paymentList.innerHTML =
       paymentHtml;
+
   }
+
 }
 
 
@@ -2151,7 +2331,7 @@ paymentList.addEventListener(
 
 
 /* =========================
-   INICIALIZAÇÃO DO APP
+   INICIAR APP
 ========================= */
 
 addService();
