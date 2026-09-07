@@ -15,79 +15,127 @@
       <p>CONSTRUÇÃO A SECO</p>
     </div>
 
-    <button id="themeBtn" class="theme-btn" type="button">↻</button>
+    <button id="themeBtn" class="theme-btn" type="button">
+      ↻
+    </button>
   </header>
+
 
   <main>
 
-    <!-- TELA INÍCIO -->
-    <section id="homeScreen" class="screen">
+    <!-- =========================
+         TELA INÍCIO
+    ========================== -->
+    <section id="homeScreen" class="screen active">
+
       <div class="page-header">
         <h2>Início</h2>
       </div>
 
       <div class="menu-grid">
 
-        <button class="menu-card" data-screen="budgetsScreen">
+        <button
+          class="menu-card"
+          data-screen="budgetsScreen"
+          type="button"
+        >
           <span class="menu-icon">▤</span>
           <strong>Orçamentos</strong>
           <small>Criar e consultar</small>
         </button>
 
-        <button class="menu-card" data-screen="worksScreen">
+
+        <button
+          class="menu-card"
+          data-screen="worksScreen"
+          type="button"
+        >
           <span class="menu-icon">▣</span>
           <strong>Obras</strong>
           <small>Controle de obras</small>
         </button>
 
-        <button class="menu-card" data-screen="expensesScreen">
+
+        <button
+          class="menu-card"
+          data-screen="expensesScreen"
+          type="button"
+        >
           <span class="menu-icon">$</span>
           <strong>Gastos</strong>
           <small>Registrar despesas</small>
         </button>
 
-        <button class="menu-card" data-screen="dailyScreen">
+
+        <button
+          class="menu-card"
+          data-screen="dailyScreen"
+          type="button"
+        >
           <span class="menu-icon">👷</span>
           <strong>Diárias</strong>
           <small>Funcionários</small>
         </button>
 
-        <button class="menu-card" data-screen="financeScreen">
+
+        <button
+          class="menu-card"
+          data-screen="financeScreen"
+          type="button"
+        >
           <span class="menu-icon">▤</span>
           <strong>Financeiro</strong>
           <small>Resumo financeiro</small>
         </button>
 
       </div>
+
     </section>
 
 
-    <!-- TELA ORÇAMENTOS -->
-    <section id="budgetsScreen" class="screen active">
+    <!-- =========================
+         TELA ORÇAMENTOS
+    ========================== -->
+    <section id="budgetsScreen" class="screen">
 
       <div class="page-header">
+
         <h2>Orçamentos</h2>
 
-        <button id="newBudgetBtn" class="primary-btn small-btn" type="button">
+        <button
+          id="newBudgetBtn"
+          class="primary-btn small-btn"
+          type="button"
+        >
           + Novo
         </button>
+
       </div>
 
 
       <form id="budgetForm" class="card">
 
-        <label for="clientName">Cliente</label>
+        <label for="clientName">
+          Cliente
+        </label>
+
         <input
           id="clientName"
           type="text"
           autocomplete="off"
+          placeholder="Nome do cliente"
         />
 
-        <label for="clientAddress">Endereço</label>
+
+        <label for="clientAddress">
+          Endereço
+        </label>
+
         <input
           id="clientAddress"
           type="text"
           autocomplete="off"
+          placeholder="Endereço da obra"
         />
 
 
@@ -100,7 +148,9 @@
         <div id="serviceList"></div>
 
 
-        <!-- TEMPLATE DO SERVIÇO -->
+        <!-- =========================
+             TEMPLATE DE SERVIÇO
+        ========================== -->
         <template id="serviceTemplate">
 
           <div class="service-item">
@@ -121,7 +171,9 @@
             </div>
 
 
-            <label>Descrição</label>
+            <label>
+              Descrição
+            </label>
 
             <textarea
               class="service-description"
@@ -133,7 +185,10 @@
             <div class="service-values">
 
               <div>
-                <label>Quantidade</label>
+
+                <label>
+                  Quantidade
+                </label>
 
                 <input
                   class="service-quantity"
@@ -142,11 +197,15 @@
                   step="1"
                   value="1"
                 />
+
               </div>
 
 
               <div>
-                <label>Valor unitário (R$)</label>
+
+                <label>
+                  Valor unitário (R$)
+                </label>
 
                 <input
                   class="service-value"
@@ -154,17 +213,22 @@
                   min="0"
                   step="0.01"
                   inputmode="decimal"
+                  placeholder="0,00"
                 />
+
               </div>
 
             </div>
 
 
             <div class="service-subtotal">
+
               Subtotal:
+
               <strong class="service-subtotal-value">
                 R$ 0,00
               </strong>
+
             </div>
 
           </div>
@@ -181,11 +245,14 @@
         </button>
 
 
-        <label for="budgetNotes">Observações</label>
+        <label for="budgetNotes">
+          Observações
+        </label>
 
         <textarea
           id="budgetNotes"
           rows="4"
+          placeholder="Informações adicionais do orçamento"
         ></textarea>
 
 
@@ -193,14 +260,21 @@
 
           <div>
             <span>Serviços</span>
-            <strong id="serviceCount">0</strong>
+
+            <strong id="serviceCount">
+              0
+            </strong>
           </div>
 
+
           <div class="total-box">
+
             <span>Total</span>
+
             <strong id="budgetTotal">
               R$ 0,00
             </strong>
+
           </div>
 
         </div>
@@ -223,8 +297,13 @@
     </section>
 
 
-    <!-- DETALHES DO ORÇAMENTO -->
-    <section id="budgetDetailsScreen" class="screen">
+    <!-- =========================
+         DETALHES DO ORÇAMENTO
+    ========================== -->
+    <section
+      id="budgetDetailsScreen"
+      class="screen"
+    >
 
       <button
         class="back-btn back-to-budgets"
@@ -233,12 +312,15 @@
         ← Voltar
       </button>
 
+
       <div id="budgetDetails"></div>
 
     </section>
 
 
-    <!-- OBRAS -->
+    <!-- =========================
+         TELA OBRAS
+    ========================== -->
     <section id="worksScreen" class="screen">
 
       <div class="page-header">
@@ -246,15 +328,19 @@
       </div>
 
       <div class="card">
+
         <p>
           Em breve teremos o controle de obras aqui.
         </p>
+
       </div>
 
     </section>
 
 
-    <!-- GASTOS -->
+    <!-- =========================
+         TELA GASTOS
+    ========================== -->
     <section id="expensesScreen" class="screen">
 
       <div class="page-header">
@@ -262,20 +348,25 @@
       </div>
 
       <div class="card">
+
         <p>
           Em breve teremos o controle de gastos aqui.
         </p>
+
       </div>
 
     </section>
 
 
-    <!-- DIÁRIAS / FUNCIONÁRIOS -->
+    <!-- =========================
+         TELA DIÁRIAS / FUNCIONÁRIOS
+    ========================== -->
     <section id="dailyScreen" class="screen">
 
       <div class="page-header">
         <h2>Funcionários</h2>
       </div>
+
 
       <div class="card">
 
@@ -286,7 +377,7 @@
 
         <p>
           Cada funcionário terá sua própria página,
-          histórico e total acumulado.
+          histórico de diárias e total acumulado.
         </p>
 
       </div>
@@ -294,17 +385,22 @@
     </section>
 
 
-    <!-- FINANCEIRO -->
+    <!-- =========================
+         TELA FINANCEIRO
+    ========================== -->
     <section id="financeScreen" class="screen">
 
       <div class="page-header">
         <h2>Financeiro</h2>
       </div>
 
+
       <div class="card">
+
         <p>
           Em breve teremos o resumo financeiro aqui.
         </p>
+
       </div>
 
     </section>
@@ -312,7 +408,9 @@
   </main>
 
 
-  <!-- MENU INFERIOR -->
+  <!-- =========================
+       MENU INFERIOR
+  ========================== -->
   <nav class="bottom-nav">
 
     <button
@@ -324,6 +422,7 @@
       <small>Início</small>
     </button>
 
+
     <button
       class="nav-btn"
       data-screen="worksScreen"
@@ -332,6 +431,7 @@
       <span>▣</span>
       <small>Obras</small>
     </button>
+
 
     <button
       class="nav-btn"
@@ -342,6 +442,7 @@
       <small>Gastos</small>
     </button>
 
+
     <button
       class="nav-btn"
       data-screen="dailyScreen"
@@ -350,6 +451,7 @@
       <span>👷</span>
       <small>Diárias</small>
     </button>
+
 
     <button
       class="nav-btn"
